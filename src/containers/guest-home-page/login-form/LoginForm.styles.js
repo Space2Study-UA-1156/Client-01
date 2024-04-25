@@ -2,7 +2,7 @@ export const styles = {
   form: {
     display: 'flex',
     flexDirection: 'column',
-    minWidth: { sm: '340px' }
+    maxWidth: { md: '343px' }
   },
   input: {
     maxWidth: '343px'
