@@ -37,7 +37,7 @@ export const styles = {
     lineHeight: '48px'
   },
   form: {
-    overflow: 'auto',
+    overflow: 'visible',
     maxWidth: { xs: '343px', md: '400px' },
     pt: '16px',
     pr: { xs: '8px', sm: '96px', md: '80px', lg: '96px' },
