@@ -29,7 +29,9 @@ const Navbar = () => {
   const { pathname } = useLocation()
   const { t } = useTranslation()
 
-  const homePath = userRole ? guestRoutes[userRole].path : guestRoutes.home.path
+  const homePath = userRole
+    ? guestRoutes[userRole].path
+    : guestRoutes.welcome.path
 
   const navigationItems = useMemo(() => {
     if (userRole === student) {
