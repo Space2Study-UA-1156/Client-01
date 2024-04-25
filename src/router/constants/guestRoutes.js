@@ -1,5 +1,5 @@
 export const guestRoutes = {
-  home: { route: '/', path: '/' },
+  home: { route: '/', path: '/#welcome' },
   welcome: { route: 'welcome', path: '/#welcome' },
   student: { route: 'student', path: 'student' },
   tutor: { route: 'tutor', path: 'tutor' },

@@ -1,6 +1,6 @@
 import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { matchPath, useLocation, Link } from 'react-router-dom'
+import { matchPath, useLocation } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -72,7 +72,7 @@ const Navbar = () => {
   return (
     <Box sx={styles.header}>
       <Button
-        component={Link}
+        component={HashLink}
         size={'small'}
         sx={styles.logoButton}
         to={homePath}
