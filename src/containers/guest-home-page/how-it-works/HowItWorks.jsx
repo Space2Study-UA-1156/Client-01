@@ -49,7 +49,7 @@ const HowItWorks = () => {
         <CardsWithButton
           array={isStudent ? tutorCardBoxArray : studentCardBoxArray}
           btnText={
-            isStudent
+            !isStudent
               ? t('guestHomePage.whatCanYouDo.learn.actionLabel')
               : t('guestHomePage.whatCanYouDo.teach.actionLabel')
           }
