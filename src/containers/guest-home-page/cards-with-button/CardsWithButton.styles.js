@@ -26,9 +26,6 @@ const side = {
   title: {
     typography: { xs: 'h6' },
     marginBottom: '8px'
-  },
-  description: {
-    typography: { xs: 'subtitle2' }
   }
 }
 
