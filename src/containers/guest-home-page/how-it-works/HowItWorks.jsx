@@ -53,7 +53,7 @@ const HowItWorks = () => {
               ? t('guestHomePage.whatCanYouDo.learn.actionLabel')
               : t('guestHomePage.whatCanYouDo.teach.actionLabel')
           }
-          isTutor={isTutor} //this ptoperty is changed
+          isTutor={isTutor} //the name of this property is changed
           role={isTutor ? tutor : student}
         />
       </Box>
