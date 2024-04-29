@@ -8,7 +8,7 @@ import LoginForm from '~/containers/guest-home-page/login-form/LoginForm'
 import useForm from '~/hooks/use-form'
 import { useModalContext } from '~/context/modal-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
-import { email } from '~/utils/validations/login'
+import { email, password } from '~/utils/validations/login'
 import loginImg from '~/assets/img/login-dialog/login.svg'
 import { login, snackbarVariants } from '~/constants'
 import { loginUser } from '~/redux/reducer'
@@ -35,7 +35,7 @@ const LoginDialog = () => {
         }
       },
       initialValues: { email: '', password: '' },
-      validations: { email }
+      validations: { email, password }
     }
   )
 
