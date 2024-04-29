@@ -22,9 +22,11 @@ export const styles = {
     fontWeight: '500'
   },
   breadCrumbs: {
+    '& li:nth-child(even)': { alignSelf: 'center' },
     '& ol': {
       flexWrap: 'nowrap',
       overflowX: 'auto',
+      alignItems: 'baseline',
       '&::-webkit-scrollbar': { display: 'none' }
     }
   }
