@@ -10,7 +10,7 @@ import { useModalContext } from '~/context/modal-context'
 
 import { styles } from '~/containers/guest-home-page/cards-with-button/CardsWithButton.styles'
 
-const CardsWithButton = ({ array, role, btnText, isStudent }) => {
+const CardsWithButton = ({ array, role, btnText, isTutor }) => {
   const { t } = useTranslation()
   const { openModal } = useModalContext()
 
@@ -47,7 +47,7 @@ const CardsWithButton = ({ array, role, btnText, isStudent }) => {
 
   return (
     <>
-      <Transition in={isStudent} timeout={300}>
+      <Transition in={isTutor} timeout={300}>
         {(state) => cards(state)}
       </Transition>
       <AppButton onClick={openDialog} size={'extraLarge'} sx={styles.button}>
