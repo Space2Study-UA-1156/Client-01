@@ -5,6 +5,7 @@ import { styles } from '~/components/tab/Tab.styles'
 const Tab = ({ activeTab, onClick, children }) => {
   return (
     <Button
+      aria-selected={activeTab}
       onClick={onClick}
       sx={[styles.defaultTab, activeTab && styles.activeTab]}
     >
