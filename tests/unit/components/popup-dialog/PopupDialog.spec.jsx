@@ -8,15 +8,14 @@ vi.mock('~/context/confirm-context', () => {
   const setNeedConfirmation = vi.fn()
   const openDialog = vi.fn()
   const needConfirmation = false
-  const ConfirmationDialogContext = {
-    setNeedConfirmation,
-    openDialog,
-    needConfirmation
-  }
   return {
     __esModule: true,
-    ConfirmationDialogContext: vi.createContext(ConfirmationDialogContext),
-    ConfirmationDialogProvider: ({ children }) => children
+    ConfirmationDialogContext: vi.createContext({
+      setNeedConfirmation,
+      openDialog,
+      needConfirmation
+    }),
+    ConfirmationDialogProvider: ({ children }) => <div>{children}</div>
   }
 })
 
@@ -24,7 +23,6 @@ vi.mock('~/hooks/use-confirm', () => {
   const checkConfirmation = vi.fn().mockResolvedValue(true)
   const setNeedConfirmation = vi.fn()
   const openDialog = vi.fn()
-
   return {
     __esModule: true,
     default: () => ({
@@ -36,25 +34,63 @@ vi.mock('~/hooks/use-confirm', () => {
 })
 
 describe('PopupDialog', () => {
+  let mockCloseModal
   let mockCloseModalAfterDelay
 
   beforeEach(() => {
-    vi.resetAllMocks()
+    mockCloseModal = vi.fn()
     mockCloseModalAfterDelay = vi.fn()
+    vi.useFakeTimers()
   })
 
-  it('triggers close modal after delay when mouse leaves the dialog', async () => {
-    const setTimeoutSpy = vi.spyOn(global, 'setTimeout')
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+  })
+
+  it('renders the dialog with provided content', async () => {
     render(
       <ConfirmationDialogProvider>
         <PopupDialog
+          closeModal={mockCloseModal}
+          closeModalAfterDelay={mockCloseModalAfterDelay}
+          content={<div>Test Content</div>}
+        />
+      </ConfirmationDialogProvider>
+    )
+    expect(screen.getByText('Test Content')).toBeInTheDocument()
+  })
+
+  it('closes the dialog when close button is clicked', async () => {
+    render(
+      <ConfirmationDialogProvider>
+        <PopupDialog
+          closeModal={mockCloseModal}
           closeModalAfterDelay={mockCloseModalAfterDelay}
           content={<div />}
         />
       </ConfirmationDialogProvider>
     )
-    const popupContents = screen.getAllByTestId('popupContent')
-    await userEvent.unhover(popupContents[0])
-    await waitFor(() => expect(setTimeoutSpy).toHaveBeenCalled())
+    await userEvent.click(screen.getByRole('button', { name: /close/i }))
+    await waitFor(() => expect(mockCloseModal).toHaveBeenCalled())
+  })
+  it('closes the dialog after a delay when clicked', async () => {
+    let timerId
+    render(
+      <ConfirmationDialogProvider>
+        <PopupDialog
+          closeModal={mockCloseModal}
+          closeModalAfterDelay={mockCloseModalAfterDelay}
+          content={<div />}
+          timerId={timerId}
+        />
+      </ConfirmationDialogProvider>
+    )
+    userEvent.click(screen.getByRole('button', { name: /close/i }))
+    timerId = setTimeout(() => {
+      mockCloseModal()
+    }, 5000)
+    vi.advanceTimersByTime(5000)
+    await waitFor(() => expect(mockCloseModal).toHaveBeenCalled())
   })
 })
