@@ -36,6 +36,13 @@ const SignupForm = ({
   const handleOnAgreementChange = () => {
     setIsAgreementChecked((prev) => !prev)
   }
+  const hasErrors = Boolean(
+    errors.password ||
+      errors.confirmPassword ||
+      errors.firstName ||
+      errors.lastName ||
+      errors.email
+  )
 
   const policyAgreement = (
     <Box sx={styles.box}>
@@ -69,6 +76,7 @@ const SignupForm = ({
       <Box sx={{ display: { md: 'block', lg: 'flex' }, gap: '15px' }}>
         <AppTextField
           autoFocus
+          errorMsg={t(errors.firstName)}
           fullWidth
           label={t('common.labels.firstName')}
           onBlur={handleBlur('firstName')}
@@ -80,6 +88,7 @@ const SignupForm = ({
         />
 
         <AppTextField
+          errorMsg={t(errors.lastName)}
           fullWidth
           label={t('common.labels.lastName')}
           onBlur={handleBlur('lastName')}
@@ -92,6 +101,7 @@ const SignupForm = ({
       </Box>
 
       <AppTextField
+        errorMsg={t(errors.email)}
         fullWidth
         label={t('common.labels.email')}
         onBlur={handleBlur('email')}
@@ -104,6 +114,7 @@ const SignupForm = ({
 
       <AppTextField
         InputProps={passwordVisibility}
+        errorMsg={t(errors.password)}
         fullWidth
         label={t('common.labels.password')}
         onBlur={handleBlur('password')}
@@ -116,6 +127,7 @@ const SignupForm = ({
 
       <AppTextField
         InputProps={confirmPasswordVisibility}
+        errorMsg={t(errors.confirmPassword)}
         fullWidth
         label={t('common.labels.confirmPassword')}
         onBlur={handleBlur('confirmPassword')}
@@ -137,7 +149,7 @@ const SignupForm = ({
       </Box>
 
       <AppButton
-        disabled={!isAgreementChecked}
+        disabled={!isAgreementChecked || hasErrors}
         loading={authLoading}
         sx={styles.signupButton}
         type='submit'
