@@ -1,6 +1,6 @@
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '~tests/test-utils'
 import GeneralInfoStep from '~/containers/tutor-home-page/general-info-step/GeneralInfoStep'
-import { screen } from '@testing-library/react'
 
 describe('GeneralInfoStep test', () => {
   const buttons = (
@@ -10,14 +10,16 @@ describe('GeneralInfoStep test', () => {
     </>
   )
 
-  it('GeneralInfoStep container renders', () => {
+  beforeEach(() => {
     renderWithProviders(<GeneralInfoStep btnsBox={buttons} />)
+  })
+
+  it('GeneralInfoStep container renders', () => {
     const title = screen.getByText('GeneralInfo step')
     expect(title).toBeInTheDocument()
   })
 
   it('Check if the buttons passed in props is in the document', () => {
-    renderWithProviders(<GeneralInfoStep btnsBox={buttons} />)
     const button1 = screen.getByText('Button 1')
     const button2 = screen.getByText('Button 2')
     expect(button1).toBeInTheDocument()
