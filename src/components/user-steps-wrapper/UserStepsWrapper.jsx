@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import StepWrapper from '~/components/step-wrapper/StepWrapper'
 import { markFirstLoginComplete } from '~/redux/reducer'
 import PopupDialog from '~/components/popup-dialog/PopupDialog'
@@ -19,14 +19,12 @@ import { student } from '~/constants'
 import useConfirm from '~/hooks/use-confirm'
 import { useModalContext } from '~/context/modal-context'
 
-const ModalContext = createContext({})
 const UserStepsWrapper = ({ userRole }) => {
   const [isUserFetched, setIsUserFetched] = useState(false)
   const dispatch = useDispatch()
   const [modal] = useState(null)
-  const [paperProps] = useState({})
   const [timer, setTimer] = useState(null)
-  const { openModal, closeModal } = useModalContext()
+  const { closeModal } = useModalContext()
   const { setNeedConfirmation } = useConfirm()
   useEffect(() => {
     setNeedConfirmation(true)
@@ -55,18 +53,15 @@ const UserStepsWrapper = ({ userRole }) => {
 
   return (
     <StepProvider initialValues={initialValues} stepLabels={stepLabels}>
-      <ModalContext.Provider value={{ openModal, closeModal }}>
-        <StepWrapper steps={stepLabels}>{childrenArr}</StepWrapper>
-        {modal && (
-          <PopupDialog
-            closeModal={closeModal}
-            closeModalAfterDelay={closeModalAfterDelay}
-            content={modal}
-            paperProps={paperProps}
-            timerId={timer}
-          />
-        )}
-      </ModalContext.Provider>
+      <StepWrapper steps={stepLabels}>{childrenArr}</StepWrapper>
+      {modal && (
+        <PopupDialog
+          closeModal={closeModal}
+          closeModalAfterDelay={closeModalAfterDelay}
+          content={modal}
+          timerId={timer}
+        />
+      )}
     </StepProvider>
   )
 }
