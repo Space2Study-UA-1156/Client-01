@@ -2,8 +2,19 @@ import { screen, render, fireEvent } from '@testing-library/react'
 import { vi } from 'vitest'
 import Tab from '~/components/Tab/Tab'
 
-let label = 'label'
-let onClick = vi.fn()
+const label = 'label'
+const onClick = vi.fn()
+
+vi.mock('@mui/material/Button', () => ({
+  __esModule: true,
+  default: ({ onClick, children, 'aria-selected': ariaSelected }) => {
+    return (
+      <button aria-selected={ariaSelected} onClick={onClick}>
+        {children}
+      </button>
+    )
+  }
+}))
 
 describe('Tab component', () => {
   it('shoud render label', () => {
