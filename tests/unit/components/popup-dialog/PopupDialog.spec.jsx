@@ -65,7 +65,7 @@ describe('PopupDialog', () => {
       />
     )
     const popupContent = screen.getByTestId('popupContent')
-    fireEvent.mouseOver(popupContent) // To cancel the timeout
+    fireEvent.mouseOver(popupContent)
     fireEvent.mouseLeave(popupContent)
     expect(closeModalAfterDelayMock).toHaveBeenCalled()
   })
