@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import FindOffers from '~/pages/find-offers/FindOffers'
 import { vi } from 'vitest'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithProviders } from '~tests/test-utils'
 
 vi.mock('~/components/page-wrapper/PageWrapper', () => ({
   __esModule: true,
