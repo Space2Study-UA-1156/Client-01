@@ -15,6 +15,22 @@ describe('AppPopover component test', () => {
     fireEvent.click(showMoreElem)
     expect(screen.queryByTestId('app-popover')).toBeInTheDocument()
   })
+  it('should imitate Escape key press and close popover', () => {
+    render(
+      <AppPopover
+        showMoreElem={<button data-testid='show-more' />}
+      ></AppPopover>
+    )
+    fireEvent.click(screen.getByTestId('show-more'))
+    expect(screen.queryByTestId('app-popover')).toBeInTheDocument()
+    fireEvent.keyDown(screen.queryByTestId('app-popover'), {
+      key: 'Escape',
+      code: 'Escape',
+      keyCode: 27,
+      charCode: 27
+    })
+    expect(screen.queryByTestId('app-popover')).not.toBeInTheDocument()
+  })
   it('showMoreElem should not be visible after click', () => {
     render(
       <AppPopover
