@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { expect, it } from 'vitest'
 import AppPopover from '~/components/app-popover/AppPopover'
 
 describe('AppPopover component test', () => {
