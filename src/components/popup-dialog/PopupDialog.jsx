@@ -46,9 +46,10 @@ const PopupDialog = ({
         onMouseOver={handleMouseOver}
         sx={styles.box}
       >
-        <IconButton onClick={handleClose} sx={styles.icon}>
+        <IconButton aria-label='Close' onClick={handleClose} sx={styles.icon}>
           <CloseIcon />
         </IconButton>
+
         <Box sx={styles.contentWraper}>{content}</Box>
       </Box>
     </Dialog>
