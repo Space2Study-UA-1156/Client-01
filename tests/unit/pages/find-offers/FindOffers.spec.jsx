@@ -1,24 +1,16 @@
-import { render, screen } from '@testing-library/react'
-import { vi } from 'vitest'
+import { screen } from '@testing-library/react'
 import FindOffers from '~/pages/find-offers/FindOffers'
-import { ModalProvider } from '~/context/modal-context'
+import { vi } from 'vitest'
+import { renderWithProviders } from '../../../test-utils'
 
-const mockCloseModal = vi.fn()
-
-vi.mock('~/context/modal-context', () => ({
-  ModalProvider: ({ children }) => <div>{children}</div>,
-  useModalContext: () => ({
-    closeModal: mockCloseModal
-  })
+vi.mock('~/components/page-wrapper/PageWrapper', () => ({
+  __esModule: true,
+  default: vi.fn(({ children }) => <div>{children}</div>)
 }))
 
 describe('FindOffers component', () => {
   it('renders the Find Offers page', async () => {
-    render(
-      <ModalProvider>
-        <FindOffers />
-      </ModalProvider>
-    )
+    renderWithProviders(<FindOffers />)
     expect(await screen.findByText('Find offers')).toBeInTheDocument()
   })
 })
