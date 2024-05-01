@@ -33,6 +33,17 @@ vi.mock('~/hooks/use-confirm', () => {
   }
 })
 
+vi.mock('~/hooks/useBreakpoints', () => ({
+  __esModule: true,
+  default: () => ({
+    isDesktop: true,
+    isLaptopAndAbove: true,
+    isLaptop: false,
+    isTablet: false,
+    isMobile: false
+  })
+}))
+
 describe('PopupDialog', () => {
   let mockCloseModal
   let mockCloseModalAfterDelay
