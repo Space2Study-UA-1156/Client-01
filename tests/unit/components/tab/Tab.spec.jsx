@@ -17,7 +17,7 @@ vi.mock('@mui/material/Button', () => ({
 }))
 
 describe('Tab component', () => {
-  it('shoud render label', () => {
+  it('should render label', () => {
     render(<Tab>{label}</Tab>)
 
     const tabLabel = screen.getByText(label)
