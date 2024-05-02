@@ -1,21 +1,17 @@
-import { forwardRef } from 'react'
-import { render } from '@testing-library/react'
+import { renderWithProviders } from '~tests/test-utils'
+import { screen } from '@testing-library/react'
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
 
 describe('PageWrapper', () => {
   it('should render its children', () => {
-    const TestComponent = forwardRef((props, ref) => {
-      return (
-        <PageWrapper ref={ref} {...props}>
-          <div>Test Children</div>
-        </PageWrapper>
-      )
-    })
+    renderWithProviders(
+      <PageWrapper>
+        <div>Test Children</div>
+      </PageWrapper>
+    )
 
-    TestComponent.displayName = 'TestComponent'
+    const testChild = screen.getByText('Test Children')
 
-    const { getByText } = render(<TestComponent />)
-
-    expect(getByText('Test Children')).toBeInTheDocument()
+    expect(testChild).toBeInTheDocument()
   })
 })
