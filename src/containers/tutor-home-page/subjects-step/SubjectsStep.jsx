@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { categoryService } from '~/services/category-service'
@@ -12,6 +13,19 @@ import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.
 
 const SubjectsStep = ({ btnsBox }) => {
   const { t } = useTranslation()
+  const [categoryId, setCategoryId] = useState(null)
+  const [subject, setSubject] = useState(null)
+
+  const isCategorySelected = Boolean(categoryId)
+
+  const handleChangeCategory = (e, categoryValue) => {
+    setCategoryId(categoryValue?._id ?? null)
+    setSubject(null)
+  }
+
+  const handleChangeSubject = (e, subjectValue) => {
+    setSubject(subjectValue)
+  }
 
   return (
     <Box sx={styles.container}>
@@ -26,19 +40,27 @@ const SubjectsStep = ({ btnsBox }) => {
           <AsyncAutocomplete
             fetchOnFocus
             labelField='name'
+            onChange={handleChangeCategory}
             service={categoryService.getCategoriesNames}
             textFieldProps={{
               label: t('becomeTutor.categories.mainSubjectsLabel')
             }}
+            value={categoryId}
+            valueField='_id'
           />
 
           <AsyncAutocomplete
+            disabled={!isCategorySelected}
+            fetchCondition={isCategorySelected}
             fetchOnFocus
             labelField='name'
-            service={subjectService.getSubjectsNames}
+            onChange={handleChangeSubject}
+            service={() => subjectService.getSubjectsNames(categoryId)}
             textFieldProps={{
               label: t('becomeTutor.categories.subjectLabel')
             }}
+            value={subject?._id}
+            valueField='_id'
           />
         </Box>
 
