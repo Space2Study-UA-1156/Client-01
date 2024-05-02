@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useBreakpoints from '~/hooks/use-breakpoints'
 
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
@@ -13,6 +14,7 @@ import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.
 
 const SubjectsStep = ({ btnsBox }) => {
   const { t } = useTranslation()
+  const { isMobile, isLaptopAndAbove } = useBreakpoints()
   const [categoryId, setCategoryId] = useState(null)
   const [subject, setSubject] = useState(null)
 
@@ -27,15 +29,23 @@ const SubjectsStep = ({ btnsBox }) => {
     setSubject(subjectValue)
   }
 
+  const imageBox = (
+    <Box sx={styles.imageBox}>
+      <Box component='img' src={studyCategory} />
+    </Box>
+  )
+
   return (
     <Box sx={styles.container}>
-      <Box>
-        <Box component='img' src={studyCategory} />
-      </Box>
+      {isLaptopAndAbove && imageBox}
 
       <Box sx={styles.rightBox}>
         <Box sx={styles.contentBox}>
-          <Typography>{t('becomeTutor.categories.title')}</Typography>
+          <Typography variant='body1'>
+            {t('becomeTutor.categories.title')}
+          </Typography>
+
+          {isMobile && imageBox}
 
           <AsyncAutocomplete
             fetchOnFocus
