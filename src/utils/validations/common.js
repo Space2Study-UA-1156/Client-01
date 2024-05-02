@@ -1,6 +1,6 @@
 const validations = {
   nameField: (value) => {
-    if (value.length > 30) {
+    if (value.length < 2 || value.length > 15) {
       return 'common.errorMessages.nameLength'
     }
     if (!RegExp(/^[a-zа-яєії ]+$/i).test(value)) {
