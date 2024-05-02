@@ -15,13 +15,13 @@ import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.
 const SubjectsStep = ({ btnsBox }) => {
   const { t } = useTranslation()
   const { isMobile, isLaptopAndAbove } = useBreakpoints()
-  const [categoryId, setCategoryId] = useState(null)
+  const [category, setCategory] = useState(null)
   const [subject, setSubject] = useState(null)
 
-  const isCategorySelected = Boolean(categoryId)
+  const isCategorySelected = Boolean(category)
 
   const handleChangeCategory = (e, categoryValue) => {
-    setCategoryId(categoryValue?._id ?? null)
+    setCategory(categoryValue)
     setSubject(null)
   }
 
@@ -55,7 +55,7 @@ const SubjectsStep = ({ btnsBox }) => {
             textFieldProps={{
               label: t('becomeTutor.categories.mainSubjectsLabel')
             }}
-            value={categoryId}
+            value={category?._id}
             valueField='_id'
           />
 
@@ -65,7 +65,7 @@ const SubjectsStep = ({ btnsBox }) => {
             fetchOnFocus
             labelField='name'
             onChange={handleChangeSubject}
-            service={() => subjectService.getSubjectsNames(categoryId)}
+            service={() => subjectService.getSubjectsNames(category?._id)}
             textFieldProps={{
               label: t('becomeTutor.categories.subjectLabel')
             }}
