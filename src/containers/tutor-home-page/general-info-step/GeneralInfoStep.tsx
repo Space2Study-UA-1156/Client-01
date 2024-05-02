@@ -47,7 +47,7 @@ const GeneralInfoStep: React.FC<ButtonBoxProps> = ({btnsBox}) => {
                     <form onSubmit={handleFormSubmit}>
                         <div className={classes.row}>
                             <Typography gutterBottom variant='body1'>
-                                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+                                Amet minim mollit non deserunt sit aliqua dolor do
                                 amet sint.
                             </Typography>
                         </div>
