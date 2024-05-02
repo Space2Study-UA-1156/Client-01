@@ -47,6 +47,4 @@ const useStyles = makeStyles(() => ({
     width: '380px'
   }
 }))
-
-
 export default useStyles

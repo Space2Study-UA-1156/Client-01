@@ -103,5 +103,4 @@ const GeneralInfoStep: React.FC<ButtonBoxProps> = ({btnsBox}) => {
         </Container>
     )
 }
-
 export default GeneralInfoStep
