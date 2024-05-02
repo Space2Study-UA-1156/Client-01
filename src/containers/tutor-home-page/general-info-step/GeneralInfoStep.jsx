@@ -1,40 +1,31 @@
-import Box from '@mui/material/Box';
-import './GeneralInfoStep.styles';
-import generalInfoStepImage from '~/assets/img/tutor-home-page/become-tutor/general-info.svg';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from 'react'
+import Box from '@mui/material/Box'
+import './GeneralInfoStep.styles'
+import generalInfoStepImage from '~/assets/img/tutor-home-page/become-tutor/general-info.svg'
+import { useTranslation } from 'react-i18next'
 import {
   Grid,
   Paper,
   Container,
   FormControl,
   InputLabel,
-  Select
-} from '@mui/material';
-import useStyles from './GeneralInfoStep.styles';
-import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import AppTextField from '~/components/app-text-field/AppTextField';
+  Select,
+  Typography,
+  MenuItem
+} from '@mui/material'
+import useStyles from './GeneralInfoStep.styles'
+import AppTextField from '~/components/app-text-field/AppTextField'
 
-interface StepButtonProps {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-}
-interface ButtonBoxProps {
-  btnsBox: StepButtonProps[];
-}
-
-const GeneralInfoStep: React.FC<ButtonBoxProps> = ({ btnsBox }) => {
-  const [message, setMessage] = useState('');
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value.slice(0, 100));
-  };
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-  const { t } = useTranslation();
-  const classes = useStyles();
+const GeneralInfoStep = ({ btnsBox }) => {
+  const [message, setMessage] = useState('')
+  const handleInputChange = (event) => {
+    setMessage(event.target.value.slice(0, 100))
+  }
+  const handleFormSubmit = (event) => {
+    event.preventDefault()
+  }
+  const { t } = useTranslation()
+  const classes = useStyles()
   return (
     <Container className={classes.root}>
       <Grid className={classes.imageItem} item md={6} xs={12}>
@@ -55,7 +46,7 @@ const GeneralInfoStep: React.FC<ButtonBoxProps> = ({ btnsBox }) => {
             <div className={classes.row}>
               <AppTextField
                 errorMsg={undefined}
-                label={t('common.labels.firstName') as unknown as string}
+                label={t('common.labels.firstName')}
                 multiline={undefined}
                 name='firstName'
                 required
@@ -63,7 +54,7 @@ const GeneralInfoStep: React.FC<ButtonBoxProps> = ({ btnsBox }) => {
               />
               <AppTextField
                 errorMsg={undefined}
-                label={t('common.labels.lastName') as unknown as string}
+                label={t('common.labels.lastName')}
                 multiline={undefined}
                 name='lastName'
                 required
@@ -72,10 +63,10 @@ const GeneralInfoStep: React.FC<ButtonBoxProps> = ({ btnsBox }) => {
             </div>
             <div className={classes.row}>
               <FormControl className={classes.fullWidthInput}>
-                <InputLabel>{t('common.labels.country') as unknown as string}</InputLabel>
+                <InputLabel>{t('common.labels.country')}</InputLabel>
                 <Select
                   className={classes.halfWidthInput}
-                  label={t('labels.country') as unknown as string}
+                  label={t('labels.country')}
                 >
                   <MenuItem value='Ukraine'>Ukraine</MenuItem>
                   <MenuItem value='Deutschland'>Deutschland</MenuItem>
@@ -83,10 +74,10 @@ const GeneralInfoStep: React.FC<ButtonBoxProps> = ({ btnsBox }) => {
                 </Select>
               </FormControl>
               <FormControl className={classes.fullWidthInput}>
-                <InputLabel>{t('common.labels.city') as unknown as string}</InputLabel>
+                <InputLabel>{t('common.labels.city')}</InputLabel>
                 <Select
                   className={classes.halfWidthInput}
-                  label={t('labels.city') as unknown as string}
+                  label={t('labels.city')}
                 >
                   <MenuItem value='Kyiv'>Kyiv</MenuItem>
                   <MenuItem value='Berlin'>Berlin</MenuItem>
@@ -110,6 +101,7 @@ const GeneralInfoStep: React.FC<ButtonBoxProps> = ({ btnsBox }) => {
         {btnsBox}
       </Grid>
     </Container>
-  );
-};
-export default GeneralInfoStep;
+  )
+}
+
+export default GeneralInfoStep
