@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, beforeEach } from 'vitest'
 import AppContentSwitcher from '~/components/app-content-switcher/AppContentSwitcher'
 
 describe('AppContentSwitcher tests', () => {
@@ -31,19 +30,22 @@ describe('AppContentSwitcher tests', () => {
   })
 
   it('Should call the function "onChange" when it was clicked on the switch', () => {
-    const onChangeMock = () => {}
-    render(
+    const onChangeMock = vi.fn()
+
+    const { getByTestId } = render(
       <AppContentSwitcher
         active={false}
         onChange={onChangeMock}
-        styles={{}}
-        switchOptions={{}}
+        switchOptions={switchOptions}
         typographyVariant='body1'
       />
     )
 
-    const switchElement = screen.getByTestId('switch')
+    const switchElement = getByTestId('switch')
     fireEvent.click(switchElement)
+    assert(() => {
+      expect(onChangeMock).toHaveBeenCalled()
+    })
   })
 
   it('Should render tooltips if the tooltips props are passed', () => {
