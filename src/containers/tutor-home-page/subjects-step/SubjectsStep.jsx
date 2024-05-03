@@ -11,19 +11,17 @@ import AppButton from '~/components/app-button/AppButton'
 import AppChipList from '~/components/app-chips-list/AppChipList'
 import studyCategory from '~/assets/img/tutor-home-page/become-tutor/study-category.svg'
 import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.styles'
+import { useStepContext } from '~/context/step-context'
 
-const SubjectsStep = ({
-  btnsBox,
-  addSelectedSubject,
-  deleteSelectedSubject,
-  selectedSubjects
-}) => {
+const SubjectsStep = ({ btnsBox, stepLabels }) => {
   const { t } = useTranslation()
   const { isMobile, isLaptopAndAbove } = useBreakpoints()
   const [category, setCategory] = useState(null)
   const [subject, setSubject] = useState(null)
-
+  const { stepData, handleStepData } = useStepContext()
+  const [, subjectLabel] = stepLabels
   const isCategorySelected = Boolean(category)
+  const isSubjectSelected = !subject
 
   const handleChangeCategory = (e, categoryValue) => {
     setCategory(categoryValue)
@@ -36,13 +34,20 @@ const SubjectsStep = ({
 
   const handleAddSubject = () => {
     if (!subject) return
-    if (selectedSubjects.find((item) => item.name === subject.name)) {
+    if (stepData.subjects.find((item) => item.name === subject.name)) {
       setSubject(null)
       return
     }
 
-    addSelectedSubject(subject)
+    handleStepData(subjectLabel, [...stepData.subjects, subject])
     setSubject(null)
+  }
+
+  const handleDeleteSubject = (subjectName) => {
+    handleStepData(
+      subjectLabel,
+      stepData.subjects.filter((subject) => subject.name !== subjectName)
+    )
   }
 
   const imageBox = (
@@ -90,7 +95,7 @@ const SubjectsStep = ({
           />
 
           <AppButton
-            disabled={!subject}
+            disabled={isSubjectSelected}
             onClick={handleAddSubject}
             variant={'tonal'}
           >
@@ -99,8 +104,8 @@ const SubjectsStep = ({
 
           <AppChipList
             defaultQuantity={2}
-            handleChipDelete={deleteSelectedSubject}
-            items={selectedSubjects.map((subject) => subject.name)}
+            handleChipDelete={handleDeleteSubject}
+            items={stepData.subjects.map((subject) => subject.name)}
           />
         </Box>
 

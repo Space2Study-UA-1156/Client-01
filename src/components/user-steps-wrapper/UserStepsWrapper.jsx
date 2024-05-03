@@ -21,28 +21,18 @@ import { useModalContext } from '~/context/modal-context'
 
 const UserStepsWrapper = ({ userRole }) => {
   const [isUserFetched, setIsUserFetched] = useState(false)
-  const [selectedSubjects, setSelectedSubjects] = useState([])
   const dispatch = useDispatch()
   const [modal] = useState(null)
   const [timer, setTimer] = useState(null)
   const { closeModal } = useModalContext()
   const { setNeedConfirmation } = useConfirm()
 
-  const addSelectedSubject = (newSubject) => {
-    setSelectedSubjects([...selectedSubjects, newSubject])
-  }
-
-  const deleteSelectedSubject = (subjectName) => {
-    setSelectedSubjects(
-      selectedSubjects.filter((subject) => subject.name !== subjectName)
-    )
-  }
-
   useEffect(() => {
     setNeedConfirmation(true)
     dispatch(markFirstLoginComplete())
   }, [dispatch, setNeedConfirmation])
 
+  const stepLabels = userRole === student ? studentStepLabels : tutorStepLabels
   const closeModalAfterDelay = useCallback(
     (delay) => {
       const timerId = setTimeout(closeModal, delay ?? 5000)
@@ -56,17 +46,10 @@ const UserStepsWrapper = ({ userRole }) => {
       key='1'
       setIsUserFetched={setIsUserFetched}
     />,
-    <SubjectsStep
-      addSelectedSubject={addSelectedSubject}
-      deleteSelectedSubject={deleteSelectedSubject}
-      key='2'
-      selectedSubjects={selectedSubjects}
-    />,
+    <SubjectsStep key='2' stepLabels={stepLabels} />,
     <LanguageStep key='3' />,
     <AddPhotoStep key='4' />
   ]
-
-  const stepLabels = userRole === student ? studentStepLabels : tutorStepLabels
 
   return (
     <StepProvider initialValues={initialValues} stepLabels={stepLabels}>
