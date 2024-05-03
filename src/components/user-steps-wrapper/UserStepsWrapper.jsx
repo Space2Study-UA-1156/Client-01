@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import StepWrapper from '~/components/step-wrapper/StepWrapper'
 import { markFirstLoginComplete } from '~/redux/reducer'
-
+import PopupDialog from '~/components/popup-dialog/PopupDialog'
 import { StepProvider } from '~/context/step-context'
 
 import AddPhotoStep from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep'
@@ -16,15 +16,28 @@ import {
   tutorStepLabels
 } from '~/components/user-steps-wrapper/constants'
 import { student } from '~/constants'
+import useConfirm from '~/hooks/use-confirm'
+import { useModalContext } from '~/context/modal-context'
 
 const UserStepsWrapper = ({ userRole }) => {
   const [isUserFetched, setIsUserFetched] = useState(false)
   const dispatch = useDispatch()
-
+  const [modal] = useState(null)
+  const [timer, setTimer] = useState(null)
+  const { closeModal } = useModalContext()
+  const { setNeedConfirmation } = useConfirm()
   useEffect(() => {
+    setNeedConfirmation(true)
     dispatch(markFirstLoginComplete())
-  }, [dispatch])
+  }, [dispatch, setNeedConfirmation])
 
+  const closeModalAfterDelay = useCallback(
+    (delay) => {
+      const timerId = setTimeout(closeModal, delay ?? 5000)
+      setTimer(timerId)
+    },
+    [closeModal]
+  )
   const childrenArr = [
     <GeneralInfoStep
       isUserFetched={isUserFetched}
@@ -41,6 +54,14 @@ const UserStepsWrapper = ({ userRole }) => {
   return (
     <StepProvider initialValues={initialValues} stepLabels={stepLabels}>
       <StepWrapper steps={stepLabels}>{childrenArr}</StepWrapper>
+      {modal && (
+        <PopupDialog
+          closeModal={closeModal}
+          closeModalAfterDelay={closeModalAfterDelay}
+          content={modal}
+          timerId={timer}
+        />
+      )}
     </StepProvider>
   )
 }
