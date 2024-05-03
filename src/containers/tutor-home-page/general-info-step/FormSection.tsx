@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Paper, Typography } from '@mui/material';
-import { useFormSectionStyles } from './FormSection.styles';
+import { Typography } from '@mui/material';
+
 import TextFieldGroup from './TextFieldGroup';
-import SelectGroup from './SelectGroup';
+
 
 interface FormSectionProps {
     btnsBox: React.ReactNode;
 }
 
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
-    const classes = useFormSectionStyles();
+
     const [message, setMessage] = useState('');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +17,7 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
     };
 
     return (
-        <form onSubmit={(event) => event.preventDefault()} className={classes.formContainer}>
+        <form onSubmit={(event) => event.preventDefault()}>
             <Typography gutterBottom variant='body1'>
                 Amet minim mollit non deserunt sit aliqua dolor do amet sint.
             </Typography>

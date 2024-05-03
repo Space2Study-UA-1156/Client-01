@@ -1,9 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import AppTextField from '~/components/app-text-field/AppTextField';
-import SelectGroup from "~/containers/tutor-home-page/general-info-step/SelectGroup";
-import {useTextFieldGroupStyles} from "~/containers/tutor-home-page/general-info-step/TextFieldGroup.styles";
-
+import SelectGroup from "./SelectGroup";
 
 interface TextFieldGroupProps {
     messageLength: number;
@@ -12,28 +10,24 @@ interface TextFieldGroupProps {
 }
 
 const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ messageLength, onMessageChange, message }) => {
-    const classes = useTextFieldGroupStyles();
     const { t } = useTranslation();
 
     return (
         <>
-            <div className={classes.inputRow}>
+            <div >
                 <AppTextField
-                    className={classes.halfWidthInput}
-                    label={t('common.labels.firstName')}
+                    label={t('common.labels.firstName') as unknown as string}
                     name='firstName'
                     required
                     variant='outlined' errorMsg={undefined} multiline={undefined}                />
                 <AppTextField
-                    className={classes.halfWidthInput}
-                    label={t('common.labels.lastName')}
+                    label={t('common.labels.lastName') as unknown as string}
                     name='lastName'
                     required
                     variant='outlined' errorMsg={undefined} multiline={undefined}                />
             </div>
             <SelectGroup />
             <AppTextField
-                className={classes.fullWidthInput}
                 helperText={`${messageLength}/100`}
                 label='Describe in short your professional status'
                 multiline

@@ -1,18 +1,17 @@
 import React from 'react';
 import { Container } from '@mui/material';
-import { useGeneralInfoStepStyles } from './GeneralInfoStep.styles';
 import ImageSection from './ImageSection';
 import FormSection from './FormSection';
 
 const GeneralInfoStep: React.FC<{ btnsBox: React.ReactNode }> = ({ btnsBox }) => {
-    const classes = useGeneralInfoStepStyles();
+
 
     return (
-        <Container className={classes.root}>
-            <div className={classes.imageSection}>
+        <Container>
+            <div >
                 <ImageSection />
             </div>
-            <div className={classes.formSection}>
+            <div>
                 <FormSection btnsBox={btnsBox} />
                 {btnsBox}
             </div>
