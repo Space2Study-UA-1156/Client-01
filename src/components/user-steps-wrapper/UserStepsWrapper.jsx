@@ -21,11 +21,23 @@ import { useModalContext } from '~/context/modal-context'
 
 const UserStepsWrapper = ({ userRole }) => {
   const [isUserFetched, setIsUserFetched] = useState(false)
+  const [selectedSubjects, setSelectedSubjects] = useState([])
   const dispatch = useDispatch()
   const [modal] = useState(null)
   const [timer, setTimer] = useState(null)
   const { closeModal } = useModalContext()
   const { setNeedConfirmation } = useConfirm()
+
+  const addSelectedSubject = (newSubject) => {
+    setSelectedSubjects([...selectedSubjects, newSubject])
+  }
+
+  const deleteSelectedSubject = (subjectName) => {
+    setSelectedSubjects(
+      selectedSubjects.filter((subject) => subject.name !== subjectName)
+    )
+  }
+
   useEffect(() => {
     setNeedConfirmation(true)
     dispatch(markFirstLoginComplete())
@@ -44,7 +56,12 @@ const UserStepsWrapper = ({ userRole }) => {
       key='1'
       setIsUserFetched={setIsUserFetched}
     />,
-    <SubjectsStep key='2' />,
+    <SubjectsStep
+      addSelectedSubject={addSelectedSubject}
+      deleteSelectedSubject={deleteSelectedSubject}
+      key='2'
+      selectedSubjects={selectedSubjects}
+    />,
     <LanguageStep key='3' />,
     <AddPhotoStep key='4' />
   ]

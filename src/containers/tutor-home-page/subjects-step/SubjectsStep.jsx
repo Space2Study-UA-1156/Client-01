@@ -1,18 +1,23 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import useBreakpoints from '~/hooks/use-breakpoints'
-
-import { categoryService } from '~/services/category-service'
-import { subjectService } from '~/services/subject-service'
-
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 
+import useBreakpoints from '~/hooks/use-breakpoints'
+import { categoryService } from '~/services/category-service'
+import { subjectService } from '~/services/subject-service'
+import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
+import AppButton from '~/components/app-button/AppButton'
+import AppChipList from '~/components/app-chips-list/AppChipList'
 import studyCategory from '~/assets/img/tutor-home-page/become-tutor/study-category.svg'
 import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.styles'
 
-const SubjectsStep = ({ btnsBox }) => {
+const SubjectsStep = ({
+  btnsBox,
+  addSelectedSubject,
+  deleteSelectedSubject,
+  selectedSubjects
+}) => {
   const { t } = useTranslation()
   const { isMobile, isLaptopAndAbove } = useBreakpoints()
   const [category, setCategory] = useState(null)
@@ -27,6 +32,17 @@ const SubjectsStep = ({ btnsBox }) => {
 
   const handleChangeSubject = (e, subjectValue) => {
     setSubject(subjectValue)
+  }
+
+  const handleAddSubject = () => {
+    if (!subject) return
+    if (selectedSubjects.find((item) => item.name === subject.name)) {
+      setSubject(null)
+      return
+    }
+
+    addSelectedSubject(subject)
+    setSubject(null)
   }
 
   const imageBox = (
@@ -71,6 +87,20 @@ const SubjectsStep = ({ btnsBox }) => {
             }}
             value={subject?._id}
             valueField='_id'
+          />
+
+          <AppButton
+            disabled={!subject}
+            onClick={handleAddSubject}
+            variant={'tonal'}
+          >
+            {t('becomeTutor.categories.btnText')}
+          </AppButton>
+
+          <AppChipList
+            defaultQuantity={2}
+            handleChipDelete={deleteSelectedSubject}
+            items={selectedSubjects.map((subject) => subject.name)}
           />
         </Box>
 
