@@ -13,8 +13,7 @@ const FormSection: React.FC = () => {
   return (
     <form onSubmit={(event) => event.preventDefault()}>
       <Typography gutterBottom variant='body1'>
-        Amet minim mollit non deserunt sit aliqua dolor do amet sint.Lorem ipsum
-        dolor sit amet, consectetur adipiscing elit.
+        Amet minim mollit non deserunt sit aliqua dolor do amet sint
       </Typography>
       <TextFieldGroup
         message={message}
