@@ -18,7 +18,7 @@ import {
 import { student } from '~/constants'
 import useConfirm from '~/hooks/use-confirm'
 import { useModalContext } from '~/context/modal-context'
-import GeneralInfoStep from "~/containers/tutor-home-page/general-info-step/GeneralInfoStep";
+import GeneralInfoStep from '~/containers/tutor-home-page/general-info-step/GeneralInfoStep'
 
 const UserStepsWrapper = ({ userRole }) => {
   const [isUserFetched, setIsUserFetched] = useState(false)
