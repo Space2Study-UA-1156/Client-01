@@ -2,19 +2,24 @@ import { screen, render, fireEvent } from '@testing-library/react'
 import { vi } from 'vitest'
 import Tab from '~/components/Tab/Tab'
 
-const label = 'label'
-const onClick = vi.fn()
+vi.mock('~/components/tab/Tab.styles', () => ({
+  styles: {
+    defaultTab: {},
+    activeTab: 'active'
+  }
+}))
 
 vi.mock('@mui/material/Button', () => ({
   __esModule: true,
-  default: ({ onClick, children, 'aria-selected': ariaSelected }) => {
-    return (
-      <button aria-selected={ariaSelected} onClick={onClick}>
-        {children}
-      </button>
-    )
-  }
+  default: ({ onClick, children, sx }) => (
+    <button className={sx[1]} onClick={onClick}>
+      {children}
+    </button>
+  )
 }))
+
+const label = 'label'
+const onClick = vi.fn()
 
 describe('Tab component', () => {
   it('should render label', () => {
@@ -30,7 +35,7 @@ describe('Tab component', () => {
 
     const tabButton = screen.getByRole('button')
 
-    expect(tabButton).toHaveAttribute('aria-selected')
+    expect(tabButton).toHaveClass('active')
   })
 
   it('should not apply activeTab if activeTab prop is false', () => {
@@ -38,7 +43,7 @@ describe('Tab component', () => {
 
     const tabButton = screen.getByRole('button')
 
-    expect(tabButton).not.toHaveAttribute('aria-selected')
+    expect(tabButton).not.toHaveClass('active')
   })
 
   it('should call onClick handler when the tab is clicked', () => {
