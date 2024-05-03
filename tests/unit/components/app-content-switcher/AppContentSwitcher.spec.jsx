@@ -2,14 +2,10 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import AppContentSwitcher from '~/components/app-content-switcher/AppContentSwitcher'
 
 describe('AppContentSwitcher tests', () => {
-  let switchOptions
-
-  beforeEach(() => {
-    switchOptions = {
+  const switchOptions = {
       left: { text: 'Left Text', tooltip: 'Left Tooltip' },
       right: { text: 'Right Text', tooltip: 'Right Tooltip' }
     }
-  })
 
   it('Should render correctly with props', () => {
     render(
