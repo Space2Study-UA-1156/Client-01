@@ -10,15 +10,18 @@ interface FormSectionProps {
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
   const [message, setMessage] = useState('')
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const { toggleNextButton } = useStepContext()
+  const { toggleNextButton, isOverEighteen, handleOverEighteenChange } =
+    useStepContext()
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value.slice(0, 100))
+    const message = event.target.value.slice(0, 100)
+    setMessage(message)
   }
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked
     setIsConfirmed(isChecked)
     toggleNextButton(!isChecked)
+    handleOverEighteenChange(isChecked)
   }
 
   return (
@@ -41,20 +44,15 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
         />
         <FormControlLabel
           control={
-            <Checkbox checked={isConfirmed} onChange={handleCheckboxChange} />
+            <Checkbox
+              checked={isOverEighteen}
+              onChange={handleCheckboxChange}
+            />
           }
           label='I confirm that I am over 18 years old'
         />
       </Box>
-      <Box
-        sx={{
-          marginTop: '20px',
-          display: 'flex',
-          justifyContent: 'space-between'
-        }}
-      >
-        {btnsBox}
-      </Box>
+      {btnsBox}
     </Box>
   )
 }

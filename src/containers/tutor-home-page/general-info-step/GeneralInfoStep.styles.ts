@@ -5,18 +5,24 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    padding: theme.spacing(3),
-    minHeight: '100vh'
+    alignItems: 'center'
   },
   contentContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    gap: '100px',
+    gap: '115px',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
+  },
+  btnContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '20px',
+    gap: '200px',
+    width: '100%'
   },
   formSection: {
     display: 'flex',
