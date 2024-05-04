@@ -1,7 +1,6 @@
 import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
 

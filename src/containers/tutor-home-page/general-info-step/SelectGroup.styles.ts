@@ -1,5 +1,4 @@
 import { makeStyles } from '@mui/styles'
-
 export const useSelectGroupStyles = makeStyles({
   formControl: {
     margin: '8px',

@@ -1,5 +1,4 @@
 import { Theme, makeStyles } from '@mui/material/styles'
-
 export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
