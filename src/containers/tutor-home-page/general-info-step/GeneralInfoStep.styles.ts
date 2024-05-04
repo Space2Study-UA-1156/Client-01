@@ -1,4 +1,6 @@
-import { Theme, makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
+
 export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
@@ -7,13 +9,19 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3),
     minHeight: '100vh'
   },
-  imageSection: {
-    width: '100%'
+  contentContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column'
+    }
   },
   formSection: {
-    width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%'
   }
 }))

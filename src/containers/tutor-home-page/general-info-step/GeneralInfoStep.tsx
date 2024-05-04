@@ -2,20 +2,21 @@ import React, { ReactNode } from 'react'
 import { Container } from '@mui/material'
 import ImageSection from './ImageSection'
 import FormSection from './FormSection'
+import { useGeneralInfoStepStyles } from './GeneralInfoStep.styles'
+
 interface GeneralInfoStepProps {
   btnsBox: ReactNode
 }
 
 const GeneralInfoStep: React.FC<GeneralInfoStepProps> = ({ btnsBox }) => {
+  const classes = useGeneralInfoStepStyles()
+
   return (
-    <Container>
-      <div>
+    <Container className={classes.root}>
+      <div className={classes.contentContainer}>
         <ImageSection />
+        <FormSection btnsBox={btnsBox} />
       </div>
-      <div>
-        <FormSection btnsBox />
-      </div>
-      {btnsBox}
     </Container>
   )
 }
