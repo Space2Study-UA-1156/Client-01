@@ -11,8 +11,8 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
   },
   contentContainer: {
     display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: '100px',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'

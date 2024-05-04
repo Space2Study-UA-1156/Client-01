@@ -46,7 +46,15 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
           label='I confirm that I am over 18 years old'
         />
       </Box>
-      <Box sx={{ marginTop: '20px' }}>{btnsBox}</Box>
+      <Box
+        sx={{
+          marginTop: '20px',
+          display: 'flex',
+          justifyContent: 'space-between'
+        }}
+      >
+        {btnsBox}
+      </Box>
     </Box>
   )
 }
