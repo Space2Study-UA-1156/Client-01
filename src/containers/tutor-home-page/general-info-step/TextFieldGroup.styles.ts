@@ -1,4 +1,5 @@
-import { Theme, makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
 export const useTextFieldGroupStyles = makeStyles((theme: Theme) => ({
   inputRow: {
     display: 'flex',
@@ -7,8 +8,7 @@ export const useTextFieldGroupStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between'
   },
   halfWidthInput: {
-    width: 'calc(50% - 8px)',
-    margin: theme.spacing(1)
+    width: 'calc(50% - 8px)'
   },
   fullWidthInput: {
     width: '100%',
