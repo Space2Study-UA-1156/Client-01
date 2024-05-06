@@ -16,7 +16,7 @@ vi.mock('react-redux', async () => {
 describe('HowItWorks container', () => {
   renderWithProviders(<HowItWorks />)
 
-  it.skip('should change info by clicking on switch', () => {
+  it('should change info by clicking on switch', () => {
     const checkbox = screen.getByRole('checkbox')
     checkbox.click()
 

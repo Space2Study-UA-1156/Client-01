@@ -4,12 +4,10 @@ import SelectGroup from './SelectGroup'
 import { useTextFieldGroupStyles } from './TextFieldGroup.styles'
 import translations from '~/constants/translations/en/become-tutor.json'
 import { userService } from '~/services/user-service'
-
-interface TextFieldGroupProps {
-  message: string
-  messageLength: number
-  onMessageChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
+import {
+  TextFieldGroupProps,
+  User
+} from '~/containers/tutor-home-page/general-info-step/interfaces/ITextFieldGroup'
 
 const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   message,
@@ -25,7 +23,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     setLoading(true)
     userService
       .getUsers()
-      .then((response) => {
+      .then((response: { data: User[] }) => {
         const users = response.data
         if (users.length > 0) {
           const latestUser = users[users.length - 1]
@@ -45,29 +43,29 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       <div className={classes.inputRow}>
         <AppTextField
           className={classes.halfWidthInput}
-          value={firstName}
+          errorMsg={undefined}
+          label='First Name'
+          multiline={undefined}
+          name='firstName'
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFirstName(e.target.value)
           }
-          label='First Name'
-          name='firstName'
           required
+          value={firstName}
           variant='outlined'
-          errorMsg={undefined}
-          multiline={undefined}
         />
         <AppTextField
           className={classes.halfWidthInput}
-          value={lastName}
+          errorMsg={undefined}
+          label='Last Name'
+          multiline={undefined}
+          name='lastName'
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setLastName(e.target.value)
           }
-          label='Last Name'
-          name='lastName'
           required
+          value={lastName}
           variant='outlined'
-          errorMsg={undefined}
-          multiline={undefined}
         />
       </div>
       <SelectGroup />
