@@ -6,45 +6,44 @@ import { fireEvent } from '@testing-library/dom'
 import { vi } from 'vitest'
 
 vi.mock('~/containers/guest-home-page/login-dialog/LoginDialog', () => ({
-    __esModule: true,
-    default: () => <div data-testid="mock-login-dialog"></div>
+  __esModule: true,
+  default: () => <div data-testid='mock-login-dialog'></div>
 }))
 
 describe('EmailConfirmModal test', () => {
-    
-    let closeModal;
-    let openModal;
+  let closeModal
+  let openModal
 
-    beforeEach(() => {
-        closeModal = vi.fn();
-        openModal = vi.fn();
-        renderWithProviders(<EmailConfirmPopupWindow />, { 
-            modalContext: { closeModal, openModal }
-        })
+  beforeEach(() => {
+    closeModal = vi.fn()
+    openModal = vi.fn()
+    renderWithProviders(<EmailConfirmPopupWindow />, {
+      modalContext: { closeModal, openModal }
     })
-   
-    it('the popup-window should disappear if user clicks close button', async () => {      
-        fireEvent.click(screen.getByLabelText('Close'))
-    
-        assert(() => {
-            expect(closeModal).toHaveBeenCalled()
-        })
-    })
+  })
 
-    it('the popup-window should not disappear if user clicks outside the window', async () => {
-        fireEvent.click(document.body)
-        
-        assert(() => {
-            expect(closeModal).not.toHaveBeenCalled()
-        })
-    })
+  it('the popup-window should disappear if user clicks close button', async () => {
+    fireEvent.click(screen.getByLabelText('Close'))
 
-    it('should open mock LoginDialog component when AppButton is clicked and render it', async () => {      
-        fireEvent.click(screen.getByTestId('go-to-login-button'))
-        
-        assert(() => {
-            expect(openModal).toHaveBeenCalledWith({ component: <LoginDialog /> })
-        })
-        expect(screen.getByTestId('mock-login-dialog')).toBeInTheDocument()
+    assert(() => {
+      expect(closeModal).toHaveBeenCalled()
     })
+  })
+
+  it('the popup-window should not disappear if user clicks outside the window', async () => {
+    fireEvent.click(document.body)
+
+    assert(() => {
+      expect(closeModal).not.toHaveBeenCalled()
+    })
+  })
+
+  it('should open mock LoginDialog component when AppButton is clicked and render it', async () => {
+    fireEvent.click(screen.getByTestId('go-to-login-button'))
+
+    assert(() => {
+      expect(openModal).toHaveBeenCalledWith({ component: <LoginDialog /> })
+    })
+    expect(screen.getByTestId('mock-login-dialog')).toBeInTheDocument()
+  })
 })
