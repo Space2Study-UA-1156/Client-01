@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import SelectGroup from './SelectGroup'
 import { useTextFieldGroupStyles } from './TextFieldGroup.styles'
 import translations from '~/constants/translations/en/become-tutor.json'
+import { userService } from '~/services/user-service'
+
 interface TextFieldGroupProps {
   message: string
   messageLength: number
@@ -15,26 +17,57 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   onMessageChange
 }) => {
   const classes = useTextFieldGroupStyles()
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    userService
+      .getUsers()
+      .then((response) => {
+        const users = response.data
+        if (users.length > 0) {
+          const latestUser = users[users.length - 1]
+          setFirstName(latestUser.firstName)
+          setLastName(latestUser.lastName)
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error)
+        setLoading(false)
+      })
+  }, [])
+
   return (
     <>
       <div className={classes.inputRow}>
         <AppTextField
           className={classes.halfWidthInput}
-          errorMsg={undefined}
-          label={undefined}
-          multiline={undefined}
+          value={firstName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFirstName(e.target.value)
+          }
+          label='First Name'
           name='firstName'
           required
           variant='outlined'
+          errorMsg={undefined}
+          multiline={undefined}
         />
         <AppTextField
           className={classes.halfWidthInput}
-          errorMsg={undefined}
-          label={undefined}
-          multiline={undefined}
+          value={lastName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setLastName(e.target.value)
+          }
+          label='Last Name'
           name='lastName'
           required
           variant='outlined'
+          errorMsg={undefined}
+          multiline={undefined}
         />
       </div>
       <SelectGroup />
@@ -49,6 +82,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
         value={message}
         variant='outlined'
       />
+      {loading && <p>Loading user information...</p>}
     </>
   )
 }

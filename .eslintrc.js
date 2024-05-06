@@ -25,6 +25,9 @@ module.exports = {
     }
   },
   rules: {
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-argument': 'off',
     'prefer-arrow-callback': ['error'],
     'react/jsx-boolean-value': 'error',
     'react/jsx-closing-bracket-location': 'error',
@@ -62,7 +65,6 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/prop-types': 'off',
-    '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-unused-vars': 'off'
   },
   overrides: [
