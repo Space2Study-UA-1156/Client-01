@@ -1,6 +1,15 @@
-import { screen } from '@testing-library/react'
+import { screen, render } from '@testing-library/react'
+import { vi } from 'vitest'
+import { StepProvider } from '~/context/step-context'
+import {
+  initialValues,
+  tutorStepLabels
+} from '~/components/user-steps-wrapper/constants'
 import AddPhotoStep from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep'
-import { renderWithProviders } from '~tests/test-utils'
+
+vi.mock('~/components/file-uploader/FileUploader', () => ({
+  default: ({ buttonText }) => <button>{buttonText}</button>
+}))
 
 describe('AddPhotoStep component test', () => {
   const btnsBox = (
@@ -11,12 +20,16 @@ describe('AddPhotoStep component test', () => {
   )
 
   beforeEach(() => {
-    renderWithProviders(<AddPhotoStep btnsBox={btnsBox} />)
+    render(
+      <StepProvider initialValues={initialValues} stepLabels={tutorStepLabels}>
+        <AddPhotoStep btnsBox={btnsBox} />
+      </StepProvider>
+    )
   })
 
   it('should render container', () => {
-    const AddPhotoStepContainer = screen.getByText('AddPhoto step')
-    expect(AddPhotoStepContainer).toBeInTheDocument()
+    const uploadButton = screen.getByText('becomeTutor.photo.button')
+    expect(uploadButton).toBeInTheDocument()
   })
   it('buttons passed in props should be in the document', () => {
     expect(screen.getByTestId('btn1')).toBeInTheDocument()
