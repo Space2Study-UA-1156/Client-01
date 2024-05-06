@@ -25,25 +25,30 @@ const AddPhotoStep = ({ btnsBox }) => {
     handleStepData('photo', files)
   }
 
-  const dragAndDrop = (
+  const filePreview = filePreviewSrc ? (
+    <Box sx={style.filePreviewContainer}>
+      <Box
+        alt={t('becomeTutor.photo.imageAlt')}
+        component='img'
+        src={filePreviewSrc}
+        sx={style.filePreview}
+      />
+    </Box>
+  ) : (
     <DragAndDrop
       emitter={handleAddPhoto}
       style={style.dragAndDrop}
       validationData={validationData}
     >
-      {filePreviewSrc ? (
-        <Box component='img' src={filePreviewSrc} sx={style.filePreview} />
-      ) : (
-        <Typography variant='body2'>
-          {t('becomeTutor.photo.placeholder')}
-        </Typography>
-      )}
+      <Typography variant='body2'>
+        {t('becomeTutor.photo.placeholder')}
+      </Typography>
     </DragAndDrop>
   )
 
   return (
     <Box sx={style.root}>
-      {isLaptopAndAbove && dragAndDrop}
+      {isLaptopAndAbove && filePreview}
 
       <Box sx={style.rightBox}>
         <Box sx={style.contentBox}>
@@ -59,7 +64,7 @@ const AddPhotoStep = ({ btnsBox }) => {
             />
           </Box>
 
-          {(isMobile || isTablet) && dragAndDrop}
+          {(isMobile || isTablet) && filePreview}
         </Box>
 
         {btnsBox}

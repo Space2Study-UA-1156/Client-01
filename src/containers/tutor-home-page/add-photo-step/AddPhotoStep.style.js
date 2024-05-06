@@ -22,6 +22,13 @@ export const style = {
     flex: '0 1 432px',
     flexShrink: { md: 0 }
   },
+  filePreviewContainer: {
+    height: { xs: '270px', md: 'fit-content' },
+    borderRadius: '20px',
+    maxHeight: '440px',
+    boxSizing: 'border-box',
+    aspectRatio: { md: 1 }
+  },
   filePreview: {
     height: '100%',
     width: '100%',
@@ -39,7 +46,7 @@ export const style = {
       border: '2px dashed rgb(2, 2, 2, 0.5)',
       height: { xs: '270px', md: 'auto' },
       maxHeight: '440px',
-      aspectRatio: { md: '1 / 1' },
+      aspectRatio: { md: 1 },
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center'
