@@ -1,44 +1,50 @@
-import { screen } from '@testing-library/react'
+import { screen, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '~tests/test-utils'
 import { vi } from 'vitest'
 import { student, tutor } from '~/constants'
-
 import CreateRequestOffer from '~/containers/create-request-offer/CreateRequestOffer'
 
 vi.mock('~/components/app-button/AppButton', () => ({
-  __esModule: true,
-  default: ({ children }) => <button>{children}</button>
+  default: ({ children, onClick }) => {
+    return <button onClick={onClick}>{children}</button>
+  }
 }))
 
 vi.mock('~/components/app-drawer/AppDrawer', () => ({
-  __esModule: true,
   default: () => {
     return <div>AppDrawer</div>
   }
 }))
 
 vi.mock('~/components/title-with-description/TitleWithDescription', () => ({
-  __esModule: true,
   default: ({ title }) => <h2>{title}</h2>
 }))
 
-const mockStudentState = {
-  appMain: { loading: true, userRole: student }
-}
+const mockedOpenDrawer = vi.fn()
 
-const mockTutorState = {
-  appMain: { loading: true, userRole: tutor }
-}
+vi.mock('~/hooks/use-drawer', () => ({
+  useDrawer: () => ({
+    openDrawer: mockedOpenDrawer
+  })
+}))
 
 describe('CreateRequestOffer container ', () => {
+  const mockStudentState = {
+    appMain: { userRole: student }
+  }
+
+  const mockTutorState = {
+    appMain: { userRole: tutor }
+  }
+
   it('should display correct title for a student', () => {
     renderWithProviders(<CreateRequestOffer />, {
       preloadedState: mockStudentState
     })
 
-    const heading = screen.getByText(
-      'findOffers.offerRequestBlock.button.student'
-    )
+    const heading = screen.getByRole('heading', {
+      name: 'findOffers.offerRequestBlock.title.student'
+    })
 
     expect(heading).toBeInTheDocument()
   })
@@ -48,9 +54,9 @@ describe('CreateRequestOffer container ', () => {
       preloadedState: mockStudentState
     })
 
-    const button = screen.getByText(
-      'findOffers.offerRequestBlock.button.student'
-    )
+    const button = screen.getByRole('button', {
+      name: 'findOffers.offerRequestBlock.button.student'
+    })
 
     expect(button).toBeInTheDocument()
   })
@@ -60,9 +66,9 @@ describe('CreateRequestOffer container ', () => {
       preloadedState: mockTutorState
     })
 
-    const heading = screen.getByText(
-      'findOffers.offerRequestBlock.button.tutor'
-    )
+    const heading = screen.getByRole('heading', {
+      name: 'findOffers.offerRequestBlock.title.tutor'
+    })
 
     expect(heading).toBeInTheDocument()
   })
@@ -72,8 +78,19 @@ describe('CreateRequestOffer container ', () => {
       preloadedState: mockTutorState
     })
 
-    const button = screen.getByText('findOffers.offerRequestBlock.button.tutor')
+    const button = screen.getByRole('button', {
+      name: 'findOffers.offerRequestBlock.button.tutor'
+    })
 
     expect(button).toBeInTheDocument()
+  })
+
+  it('should call openDrawer on button click', () => {
+    renderWithProviders(<CreateRequestOffer />)
+
+    const button = screen.getByRole('button')
+    fireEvent.click(button)
+
+    expect(mockedOpenDrawer).toHaveBeenCalled()
   })
 })
