@@ -17,7 +17,7 @@ import info from '~/assets/img/guest-home-page/info.svg'
 import { AuthService } from '~/services/auth-service'
 
 import { snackbarVariants } from '~/constants'
-import { email } from '~/utils/validations/login'
+import { email } from '~/utils/validations/auth'
 import { styles } from '~/containers/guest-home-page/forgot-password/ForgotPassword.styles'
 
 const ForgotPassword = () => {

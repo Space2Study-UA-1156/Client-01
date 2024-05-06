@@ -1,11 +1,14 @@
 {
   "offerRequestBlock": {
     "title": {
-      "tutor": "Student for private lessons",
-      "student": "Tutor for private lessons"
+      "tutor": "Students for private lessons",
+      "student": "Tutors for private lessons"
     },
     "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-    "button": "Create request"
+    "button": {
+      "tutor": "Create offer",
+      "student": "Create request"
+    }
   },
   "titleWithDescription": {
     "title": "Explore Offers",
@@ -42,12 +45,12 @@
     "rating": "Rating",
     "priceAsc": "Price low-high",
     "priceDesc": "Price high-low",
-    "name":"Name"
+    "name": "Name"
   },
-  "notFound":{
+  "notFound": {
     "description": "We couldn’t find what you were searching for."
   },
-  "otherOffers":{
-    "title":"Other offers"
+  "otherOffers": {
+    "title": "Other offers"
   }
 }

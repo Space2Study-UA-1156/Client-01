@@ -26,7 +26,7 @@ import {
   firstName,
   lastName,
   password
-} from '~/utils/validations/login'
+} from '~/utils/validations/auth'
 
 const SignupDialog = ({ type }) => {
   const { t } = useTranslation()
