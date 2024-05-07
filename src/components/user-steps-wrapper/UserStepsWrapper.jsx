@@ -26,13 +26,11 @@ const UserStepsWrapper = ({ userRole }) => {
   const [timer, setTimer] = useState(null)
   const { closeModal } = useModalContext()
   const { setNeedConfirmation } = useConfirm()
-
   useEffect(() => {
     setNeedConfirmation(true)
     dispatch(markFirstLoginComplete())
   }, [dispatch, setNeedConfirmation])
 
-  const stepLabels = userRole === student ? studentStepLabels : tutorStepLabels
   const closeModalAfterDelay = useCallback(
     (delay) => {
       const timerId = setTimeout(closeModal, delay ?? 5000)
@@ -50,6 +48,8 @@ const UserStepsWrapper = ({ userRole }) => {
     <LanguageStep key='3' />,
     <AddPhotoStep key='4' />
   ]
+
+  const stepLabels = userRole === student ? studentStepLabels : tutorStepLabels
 
   return (
     <StepProvider initialValues={initialValues} stepLabels={stepLabels}>
