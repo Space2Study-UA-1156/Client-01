@@ -16,22 +16,22 @@ const AddPhotoStep = ({ btnsBox }) => {
   const { isMobile, isTablet, isLaptopAndAbove } = useBreakpoints()
   const { handleStepData, stepData } = useStepContext()
   const [errorMessage, setErrorMessage] = useState('')
-
   const { photo } = stepData
-  const filePreviewSrc = photo[0] ? URL.createObjectURL(photo[0]) : ''
+
+  const photoSrc = photo[0] ? URL.createObjectURL(photo[0]) : ''
 
   const handleAddPhoto = ({ error, files }) => {
     setErrorMessage(error ?? '')
     handleStepData('photo', files)
   }
 
-  const filePreview = filePreviewSrc ? (
-    <Box sx={style.filePreviewContainer}>
+  const photoContainer = photo.length ? (
+    <Box sx={style.photoContainer}>
       <Box
         alt={t('becomeTutor.photo.imageAlt')}
         component='img'
-        src={filePreviewSrc}
-        sx={style.filePreview}
+        src={photoSrc}
+        sx={style.photoPreview}
       />
     </Box>
   ) : (
@@ -48,7 +48,7 @@ const AddPhotoStep = ({ btnsBox }) => {
 
   return (
     <Box sx={style.root}>
-      {isLaptopAndAbove && filePreview}
+      {isLaptopAndAbove && photoContainer}
 
       <Box sx={style.rightBox}>
         <Box sx={style.contentBox}>
@@ -64,7 +64,7 @@ const AddPhotoStep = ({ btnsBox }) => {
             />
           </Box>
 
-          {(isMobile || isTablet) && filePreview}
+          {(isMobile || isTablet) && photoContainer}
         </Box>
 
         {btnsBox}

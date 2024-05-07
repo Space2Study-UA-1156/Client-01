@@ -22,14 +22,16 @@ export const style = {
     flex: '0 1 432px',
     flexShrink: { md: 0 }
   },
-  filePreviewContainer: {
+  photoContainer: {
     height: { xs: '270px', md: 'fit-content' },
     borderRadius: '20px',
     maxHeight: '440px',
+    maxWidth: '440px',
+    width: '100%',
     boxSizing: 'border-box',
     aspectRatio: { md: 1 }
   },
-  filePreview: {
+  photoPreview: {
     height: '100%',
     width: '100%',
     borderRadius: 'inherit',
