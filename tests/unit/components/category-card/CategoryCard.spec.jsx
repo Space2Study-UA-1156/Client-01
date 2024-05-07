@@ -3,6 +3,18 @@ import { renderWithProviders } from '../../../test-utils'
 import CategoryCard from '~/components/category-card/CategoryCard'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { authRoutes } from '~/router/constants/authRoutes'
+import { vi } from 'vitest'
+
+vi.mock('~/components/img-title-description/ImgTitleDescription', () => ({
+  __esModule: true,
+  default: ({ img, title, description }) => (
+    <div>
+      <img alt={title} src={img} />
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+  )
+}))
 
 describe('InfoCard component', () => {
   const props = {
