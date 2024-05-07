@@ -17,7 +17,7 @@ import LoginDialog from '../login-dialog/LoginDialog'
 import Loader from '~/components/loader/Loader'
 import ImgTitleDescription from '~/components/img-title-description/ImgTitleDescription'
 
-import { confirmPassword, password } from '~/utils/validations/login'
+import { confirmPassword, password } from '~/utils/validations/auth'
 import { snackbarVariants } from '~/constants'
 import { styles } from './ResetPassword.styles'
 import imgSuccess from '~/assets/img/email-confirmation-modals/success-icon.svg'
