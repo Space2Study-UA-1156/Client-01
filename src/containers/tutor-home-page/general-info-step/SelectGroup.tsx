@@ -1,60 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useSelectGroupStyles } from './SelectGroup.styles'
-import { LocationService } from '~/services/location-service'
-import {
-  City,
-  Country
-} from '~/containers/tutor-home-page/general-info-step/interfaces/ISelectGroup'
+import Box from '@mui/material/Box'
 
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
   const classes = useSelectGroupStyles()
-  const [selectedCountry, setSelectedCountry] = useState<string>('')
-  const [countries, setCountries] = useState<Country[]>([])
-  const [cities, setCities] = useState<City[]>([])
-  const [selectedCity, setSelectedCity] = useState<string>('')
 
-  useEffect(() => {
-    LocationService.getCountries()
-      .then((response) => {
-        const countryData = (response.data as Country[]).map(
-          (country: Country) => ({ name: country.name })
-        )
-        setCountries(countryData)
-        if (countryData.length > 0) {
-          setSelectedCountry(countryData[0].name)
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching countries:', error)
-      })
-  }, [])
+  const [selectedCountry, setSelectedCountry] = useState<string>('USA')
+  const [countries] = useState([
+    { name: 'USA' },
+    { name: 'Canada' },
+    { name: 'United Kingdom' }
+  ])
 
-  useEffect(() => {
-    if (selectedCountry) {
-      LocationService.getCities(selectedCountry)
-        .then((response) => {
-          const citiesData: City[] = (response.data as string[]).map(
-            (name: string) => ({
-              name
-            })
-          )
-
-          setCities(citiesData)
-          if (citiesData.length > 0) {
-            setSelectedCity(citiesData[0].name)
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching cities:', error)
-        })
-    }
-  }, [selectedCountry])
+  const [selectedCity, setSelectedCity] = useState<string>('New York')
+  const [cities] = useState([
+    { name: 'New York' },
+    { name: 'Toronto' },
+    { name: 'London' }
+  ])
 
   return (
-    <div
+    <Box
       style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}
     >
       <FormControl className={classes.formControl}>
@@ -86,7 +55,7 @@ const SelectGroup: React.FC = () => {
           ))}
         </Select>
       </FormControl>
-    </div>
+    </Box>
   )
 }
 

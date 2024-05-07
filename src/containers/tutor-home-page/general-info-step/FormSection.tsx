@@ -9,18 +9,12 @@ import {
 
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
   const [message, setMessage] = useState<string>('')
-  const { toggleNextButton, isOverEighteen, handleOverEighteenChange } =
+  const { isOverEighteen, handleOverEighteenChange } =
     useStepContext() as StepContextType
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const message = event.target.value.slice(0, 100)
     setMessage(message)
-  }
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked
-    toggleNextButton(!isChecked)
-    handleOverEighteenChange(isChecked)
   }
 
   return (
@@ -45,7 +39,7 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
           control={
             <Checkbox
               checked={isOverEighteen}
-              onChange={handleCheckboxChange}
+              onChange={(e) => handleOverEighteenChange(e.target.checked)}
             />
           }
           label='I confirm that I am over 18 years old'

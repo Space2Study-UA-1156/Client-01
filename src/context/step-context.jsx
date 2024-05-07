@@ -13,15 +13,12 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
   const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
   const [isNextDisabled, setIsNextDisabled] = useState(true)
   const [isOverEighteen, setIsOverEighteen] = useState(false)
-  const stepData = {
-    [generalLabel]: generalData,
-    [subjectLabel]: subject,
-    [languageLabel]: language,
-    [photoLabel]: photo
-  }
+
   const handleOverEighteenChange = useCallback((value) => {
     setIsOverEighteen(value)
+    setIsNextDisabled(!value)
   }, [])
+
   const handleStepData = useCallback(
     (stepLabel, newData, newErrors = {}) => {
       switch (stepLabel) {
@@ -47,17 +44,18 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     [generalLabel, subjectLabel, languageLabel, photoLabel]
   )
 
-  const toggleNextButton = useCallback((disabled) => {
-    setIsNextDisabled(disabled)
-  }, [])
-
   return (
     <StepContext.Provider
       value={{
-        stepData,
+        stepData: {
+          [generalLabel]: generalData,
+          [subjectLabel]: subject,
+          [languageLabel]: language,
+          [photoLabel]: photo
+        },
         handleStepData,
         isNextDisabled,
-        toggleNextButton,
+        toggleNextButton: setIsNextDisabled,
         isOverEighteen,
         handleOverEighteenChange
       }}
