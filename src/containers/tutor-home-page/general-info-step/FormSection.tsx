@@ -9,6 +9,7 @@ import {
 
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
   const [message, setMessage] = useState('')
+  // eslint-disable-next-line
   const [isConfirmed, setIsConfirmed] = useState(false)
   const { toggleNextButton, isOverEighteen, handleOverEighteenChange } =
     useStepContext() as StepContextType
@@ -51,7 +52,6 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
           }
           label='I confirm that I am over 18 years old'
         />
-        {isConfirmed}
       </Box>
       {btnsBox}
     </Box>
