@@ -1,6 +1,6 @@
 import { screen, render, fireEvent } from '@testing-library/react'
 import { vi } from 'vitest'
-import Tab from '~/components/Tab/Tab'
+import Tab from '~/components/tab/Tab'
 
 vi.mock('~/components/tab/Tab.styles', () => ({
   styles: {

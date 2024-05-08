@@ -48,6 +48,7 @@ export const styles = {
   btnWrapper: {
     display: 'flex',
     justifyContent: 'space-between',
+    width: '100%',
     mt: '10px',
     maxHeight: '40px'
   },
