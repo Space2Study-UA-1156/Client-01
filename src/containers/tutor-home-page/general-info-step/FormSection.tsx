@@ -19,7 +19,6 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked
-
     setIsConfirmed(isChecked)
     toggleNextButton(!isChecked)
     handleOverEighteenChange(isChecked)
@@ -52,6 +51,7 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
           }
           label='I confirm that I am over 18 years old'
         />
+        {isConfirmed}
       </Box>
       {btnsBox}
     </Box>
