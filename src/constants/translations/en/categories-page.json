@@ -3,6 +3,7 @@
   "description": "Explore categories you're passionate about.",
   "showAllOffers": "Show all offers",
   "searchLabel": "What would you like to learn?",
+  "requestText": "Can't find what you're looking for? Request a new category or subject!",
   "viewMore": "View more",
   "offers": "offers",
   "newSubject": {
