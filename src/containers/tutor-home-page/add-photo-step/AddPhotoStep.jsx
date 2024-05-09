@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { validationData } from '~/containers/tutor-home-page/add-photo-step/constants'
-import { useStepContext } from '~/context/step-context'
-import useBreakpoints from '~/hooks/use-breakpoints'
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import DragAndDrop from '~/components/drag-and-drop/DragAndDrop'
 import FileUploader from '~/components/file-uploader/FileUploader'
+import { validationData } from '~/containers/tutor-home-page/add-photo-step/constants'
+import { useStepContext } from '~/context/step-context'
+import useBreakpoints from '~/hooks/use-breakpoints'
 
 import { style } from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep.style'
 
