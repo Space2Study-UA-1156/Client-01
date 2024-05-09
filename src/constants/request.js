@@ -39,5 +39,8 @@ export const URLs = {
     get: '/cooperations',
     create: '/cooperations',
     update: '/cooperations'
+  },
+  languages: {
+    get: '/languages'
   }
 }
