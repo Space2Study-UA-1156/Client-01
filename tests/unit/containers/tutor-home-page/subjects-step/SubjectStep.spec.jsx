@@ -204,9 +204,9 @@ describe('SubjectStep component', () => {
       'becomeTutor.categories.mainSubjectsLabel'
     )
     mockHandleStepData.mockClear()
+
     fireEvent.change(categoriesInput, { target: { value: 'test' } })
     fireEvent.change(subjectsInput, { target: { value: 'test' } })
-
     fireEvent.click(addButton)
 
     expect(subjectService.getSubjectsNames).toHaveBeenCalledWith(id)
