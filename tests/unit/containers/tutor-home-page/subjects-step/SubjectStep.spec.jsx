@@ -5,6 +5,7 @@ import { vi } from 'vitest'
 import SubjectsStep from '~/containers/tutor-home-page/subjects-step/SubjectsStep'
 import { interests } from '~/components/user-steps-wrapper/constants'
 import { student } from '~/constants'
+import { useStepContext } from '~/context/step-context'
 
 const newSubject = { name: 'New Subject' }
 const mockSubjects = [{ name: 'Subject1' }, { name: 'Subject2' }]
@@ -136,6 +137,23 @@ describe('SubjectStep component', () => {
       ...mockSubjects,
       newSubject
     ])
+  })
+
+  it('should not add the similar subject twice', () => {
+    useStepContext.mockReturnValue({
+      stepData: { [interests]: [...mockSubjects, newSubject] },
+      handleStepData: mockHandleStepData
+    })
+    const addButton = screen.getByTestId('add-category-btn')
+    const subjectsInput = screen.getByTestId(
+      'becomeTutor.categories.subjectLabel'
+    )
+    mockHandleStepData.mockClear()
+
+    fireEvent.change(subjectsInput, { target: { value: 'test' } })
+    fireEvent.click(addButton)
+
+    expect(mockHandleStepData).not.toHaveBeenCalled()
   })
 
   it('should clear the subject input if the category input changed', () => {
