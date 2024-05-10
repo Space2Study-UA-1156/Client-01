@@ -1,11 +1,13 @@
+import { alpha } from '@mui/material/styles'
 import { ellipsisTextStyle } from '~/utils/helper-functions'
 
 export const styles = {
   appCard: {
     padding: '24px 20px',
-    width: '100%',
     flexDirection: 'column',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    position: 'relative',
+    maxWidth: '360px'
   },
   row: {
     display: 'flex',
@@ -14,7 +16,7 @@ export const styles = {
     marginBottom: { xs: '14px', md: '16px' }
   },
   rightBox: {
-    paddingRight: '15px'
+    paddingRight: '25px'
   },
   avatar: {
     width: { xs: '72px', md: '100px' },
@@ -27,7 +29,7 @@ export const styles = {
     marginBottom: { xs: '4px', md: '10px' },
     display: 'inline-block'
   },
-  icon: {
+  langIcon: {
     width: '20px',
     height: '20px'
   },
@@ -48,13 +50,30 @@ export const styles = {
   divider: {
     marginBottom: { xs: '10px', md: '16px' }
   },
-  offerInfo: {
+  details: {
     display: 'flex',
     flexDirection: 'column',
     gap: '4px',
     marginBottom: { xs: '18px', md: '24px' }
   },
+  detailsRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px'
+  },
   label: {
+    typography: 'overline',
+    display: 'block',
+    color: 'primary.500',
+    minWidth: '58px'
+  },
+  subjectChip: (color) => ({
+    backgroundColor: alpha(color, 0.6)
+  }),
+  levelChip: (color) => ({
+    backgroundColor: alpha(color, 0.2)
+  }),
+  chip: {
     typography: 'overline'
   },
   overview: {
@@ -66,29 +85,43 @@ export const styles = {
   },
   price: {
     title: {
-      typography: 'h6'
+      typography: { xs: 'body1', md: 'h6' }
     },
     description: {
-      display: 'block',
       typography: 'overline',
+      display: 'block',
       color: 'primary.500'
     }
   },
   review: {
+    wrapper: {
+      textAlign: 'right'
+    },
     title: {
-      typography: 'h6',
+      display: 'inline-flex',
       alignItems: 'center',
-      display: 'flex'
+      typography: { xs: 'body1', md: 'h6' }
     },
     description: {
-      display: 'block',
       typography: 'overline',
+      display: 'block',
       color: 'primary.500'
     }
+  },
+  starIcon: {
+    color: 'basic.yellow',
+    width: { xs: '16px', md: '20px' },
+    height: { xs: '16px', md: '20px' }
   },
   buttons: {
     display: 'flex',
     flexDirection: 'column',
     gap: { xs: '10px', md: '16px' }
+  },
+  saveBtn: {
+    position: 'absolute',
+    right: '12px',
+    top: '16px',
+    color: 'primary.900'
   }
 }
