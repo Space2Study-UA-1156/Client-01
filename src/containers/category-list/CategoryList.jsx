@@ -7,10 +7,8 @@ import CategoryCard from '~/components/category-card/CategoryCard'
 import Loader from '~/components/loader/Loader'
 import { styles } from '~/containers/category-list/CategoryList.styles'
 import useAxios from '~/hooks/use-axios'
+import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
-
-// TODO: update path of category images in db and import images
-import categoryImg from '~/assets/img/student-home-page/service_icon.png'
 
 const itemsPerPage = 24
 
@@ -76,13 +74,14 @@ const CategoryList = () => {
   return (
     <Box component='section' sx={styles.root}>
       <Box sx={styles.grid}>
-        {categories.map(({ _id, name, totalOffers }) => (
+        {categories.map(({ _id, name, appearance, totalOffers }) => (
           <CategoryCard
-            id={_id}
-            img={categoryImg}
+            color={appearance?.color}
+            icon={appearance?.icon}
             key={_id}
             title={name}
-            totalOffers={totalOffers.student + totalOffers.tutor}
+            to={`${authRoutes.subjects.path}/categoryName=${name}`}
+            totalOffers={totalOffers.tutor}
           />
         ))}
       </Box>
