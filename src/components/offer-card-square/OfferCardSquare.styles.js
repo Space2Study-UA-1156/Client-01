@@ -68,13 +68,16 @@ export const styles = {
     minWidth: '58px'
   },
   subjectChip: (color) => ({
-    backgroundColor: alpha(color, 0.6)
+    backgroundColor: alpha(color, 0.6),
+    fontWeight: '500'
   }),
   levelChip: (color) => ({
-    backgroundColor: alpha(color, 0.2)
+    backgroundColor: alpha(color, 0.2),
+    fontWeight: '400'
   }),
   chip: {
-    typography: 'overline'
+    typography: 'overline',
+    fontWeight: 'inherit'
   },
   overview: {
     marginBottom: '16px',

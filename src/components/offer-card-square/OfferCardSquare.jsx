@@ -64,14 +64,12 @@ const OfferCardSquare = ({ offer }) => {
     {
       label: t('common.labels.subject'),
       chip: subject.name,
-      sx: styles.subjectChip(category.appearance.color),
-      labelSx: styles.chip
+      sx: styles.subjectChip(category.appearance.color)
     },
     {
       label: t('common.labels.level'),
       chip: levelChip,
-      sx: styles.levelChip(category.appearance.color),
-      labelSx: styles.chip
+      sx: styles.levelChip(category.appearance.color)
     }
   ].map((elem) => (
     <Box key={elem.label} sx={styles.detailsRow}>
@@ -79,7 +77,7 @@ const OfferCardSquare = ({ offer }) => {
         <Typography sx={styles.label}>{elem.label}</Typography>
       )}
 
-      <AppChip labelSx={elem.labelSx} sx={elem.sx}>
+      <AppChip labelSx={styles.chip} sx={elem.sx}>
         {elem.chip}
       </AppChip>
     </Box>
