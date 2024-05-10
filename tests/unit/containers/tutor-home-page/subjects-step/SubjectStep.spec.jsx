@@ -182,11 +182,4 @@ describe('SubjectStep component', () => {
 
     expect(mockHandleStepData).not.toHaveBeenCalled()
   })
-  //
-  // it('should render props buttons', () => {
-  //   renderComponentWithUserRole(student)
-  //
-  //   expect(screen.getByTestId('btn1')).toBeInTheDocument()
-  //   expect(screen.getByTestId('btn2')).toBeInTheDocument()
-  // })
 })
