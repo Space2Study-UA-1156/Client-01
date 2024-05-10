@@ -7,12 +7,13 @@ import SubjectsStep from '~/containers/tutor-home-page/subjects-step/SubjectsSte
 import { interests, subjects } from '~/components/user-steps-wrapper/constants'
 import { student, tutor } from '~/constants'
 import { useStepContext } from '~/context/step-context'
+import { subjectService } from '~/services/subject-service'
 
-const newSubject = { name: 'New Subject' }
+const id = 'id'
+const newSubject = { name: 'New Subject', _id: id }
 const mockSubjects = [{ name: 'Subject1' }, { name: 'Subject2' }]
 const mockHandleStepData = vi.fn()
 const useSelectorMock = vi.spyOn(reactRedux, 'useSelector')
-
 const btnsBox = (
   <>
     <button data-testid='btn1' />
@@ -28,6 +29,12 @@ const renderComponentWithUserRole = (role, items = [...mockSubjects]) => {
   })
   renderWithProviders(<SubjectsStep btnsBox={btnsBox} />)
 }
+
+vi.mock('~/services/category-service')
+
+vi.mock('~/services/subject-service', () => ({
+  subjectService: { getSubjectsNames: vi.fn() }
+}))
 
 vi.mock('~/context/step-context', async (importOriginal) => {
   const module = await importOriginal()
@@ -46,10 +53,13 @@ vi.mock('~/hooks/use-breakpoints', () => ({
 }))
 
 vi.mock('~/components/async-autocomlete/AsyncAutocomplete', () => ({
-  default: ({ onChange, textFieldProps }) => (
+  default: ({ onChange, textFieldProps, service }) => (
     <input
       data-testid={textFieldProps.label}
-      onChange={() => onChange(null, newSubject)}
+      onChange={() => {
+        onChange(null, newSubject)
+        service()
+      }}
     />
   )
 }))
@@ -181,5 +191,24 @@ describe('SubjectStep component', () => {
     fireEvent.click(addButton)
 
     expect(mockHandleStepData).not.toHaveBeenCalled()
+  })
+
+  it('should call subjectService.getSubjectsNames with correct id', () => {
+    subjectService.getSubjectsNames.mockClear()
+    renderComponentWithUserRole(student)
+    const addButton = screen.getByTestId('add-category-btn')
+    const subjectsInput = screen.getByTestId(
+      'becomeTutor.categories.subjectLabel'
+    )
+    const categoriesInput = screen.getByTestId(
+      'becomeTutor.categories.mainSubjectsLabel'
+    )
+    mockHandleStepData.mockClear()
+    fireEvent.change(categoriesInput, { target: { value: 'test' } })
+    fireEvent.change(subjectsInput, { target: { value: 'test' } })
+
+    fireEvent.click(addButton)
+
+    expect(subjectService.getSubjectsNames).toHaveBeenCalledWith(id)
   })
 })
