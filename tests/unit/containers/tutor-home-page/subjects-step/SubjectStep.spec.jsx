@@ -1,43 +1,49 @@
-import { renderWithProviders } from '~tests/test-utils'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi } from 'vitest'
+import * as reactRedux from 'react-redux'
 
+import { renderWithProviders } from '~tests/test-utils'
 import SubjectsStep from '~/containers/tutor-home-page/subjects-step/SubjectsStep'
-import { interests } from '~/components/user-steps-wrapper/constants'
-import { student } from '~/constants'
+import { interests, subjects } from '~/components/user-steps-wrapper/constants'
+import { student, tutor } from '~/constants'
 import { useStepContext } from '~/context/step-context'
 
 const newSubject = { name: 'New Subject' }
 const mockSubjects = [{ name: 'Subject1' }, { name: 'Subject2' }]
 const mockHandleStepData = vi.fn()
+const useSelectorMock = vi.spyOn(reactRedux, 'useSelector')
 
-vi.mock('~/hooks/use-breakpoints', () => ({
-  default: () => ({
-    isLaptopAndAbove: true,
-    isMobile: false
+const btnsBox = (
+  <>
+    <button data-testid='btn1' />
+    <button data-testid='btn2' />
+  </>
+)
+const renderComponentWithUserRole = (role, items = [...mockSubjects]) => {
+  const subjectLabel = role === student ? interests : subjects
+  useSelectorMock.mockReturnValue({ userRole: role })
+  useStepContext.mockReturnValue({
+    stepData: { [subjectLabel]: items },
+    handleStepData: mockHandleStepData
   })
-}))
-
-vi.mock('react-redux', async (importOriginal) => {
-  const module = await importOriginal()
-
-  return {
-    ...module,
-    useSelector: () => ({ userRole: student })
-  }
-})
+  renderWithProviders(<SubjectsStep btnsBox={btnsBox} />)
+}
 
 vi.mock('~/context/step-context', async (importOriginal) => {
   const module = await importOriginal()
 
   return {
     ...module,
-    useStepContext: vi.fn(() => ({
-      stepData: { [interests]: [...mockSubjects] },
-      handleStepData: mockHandleStepData
-    }))
+    useStepContext: vi.fn()
   }
 })
+
+vi.mock('~/hooks/use-breakpoints', () => ({
+  default: () => ({
+    isLaptopAndAbove: true,
+    isMobile: true
+  })
+}))
 
 vi.mock('~/components/async-autocomlete/AsyncAutocomplete', () => ({
   default: ({ onChange, textFieldProps }) => (
@@ -69,29 +75,22 @@ vi.mock('~/components/app-chips-list/AppChipList', () => ({
 }))
 
 describe('SubjectStep component', () => {
-  const btnsBox = (
-    <>
-      <button data-testid='btn1' />
-      <button data-testid='btn2' />
-    </>
-  )
-
-  beforeEach(() => {
-    renderWithProviders(<SubjectsStep btnsBox={btnsBox} />)
-  })
-
   it('renders correctly', () => {
+    renderComponentWithUserRole(student)
     const element = screen.getByText('becomeTutor.categories.title')
 
     expect(element).toBeInTheDocument()
   })
 
   it('should render props buttons', () => {
+    renderComponentWithUserRole(student)
+
     expect(screen.getByTestId('btn1')).toBeInTheDocument()
     expect(screen.getByTestId('btn2')).toBeInTheDocument()
   })
 
   it('should render all autocompletes', () => {
+    renderComponentWithUserRole(student)
     const categoriesInput = screen.getByTestId(
       'becomeTutor.categories.mainSubjectsLabel'
     )
@@ -104,15 +103,27 @@ describe('SubjectStep component', () => {
   })
 
   it('should render Add button', () => {
+    renderComponentWithUserRole(student)
+
     expect(screen.getByTestId('add-category-btn')).toBeInTheDocument()
   })
 
-  it('should render all subjects', () => {
+  it('should render all subjects for the student role', () => {
+    renderComponentWithUserRole(student)
+
+    expect(screen.getByText('Subject1')).toBeInTheDocument()
+    expect(screen.getByText('Subject2')).toBeInTheDocument()
+  })
+
+  it('should render all subjects for the tutor role', () => {
+    renderComponentWithUserRole(tutor)
+
     expect(screen.getByText('Subject1')).toBeInTheDocument()
     expect(screen.getByText('Subject2')).toBeInTheDocument()
   })
 
   it('should delete subject', () => {
+    renderComponentWithUserRole(student)
     const firstSubject = mockSubjects[0].name
     const subject = screen.getByText(firstSubject)
 
@@ -124,6 +135,7 @@ describe('SubjectStep component', () => {
   })
 
   it('should add subject', () => {
+    renderComponentWithUserRole(student)
     const addButton = screen.getByTestId('add-category-btn')
     const subjectsInput = screen.getByTestId(
       'becomeTutor.categories.subjectLabel'
@@ -140,10 +152,7 @@ describe('SubjectStep component', () => {
   })
 
   it('should not add the similar subject twice', () => {
-    useStepContext.mockReturnValue({
-      stepData: { [interests]: [...mockSubjects, newSubject] },
-      handleStepData: mockHandleStepData
-    })
+    renderComponentWithUserRole(student, [...mockSubjects, newSubject])
     const addButton = screen.getByTestId('add-category-btn')
     const subjectsInput = screen.getByTestId(
       'becomeTutor.categories.subjectLabel'
@@ -157,6 +166,7 @@ describe('SubjectStep component', () => {
   })
 
   it('should clear the subject input if the category input changed', () => {
+    renderComponentWithUserRole(student)
     const addButton = screen.getByTestId('add-category-btn')
     const subjectsInput = screen.getByTestId(
       'becomeTutor.categories.subjectLabel'
@@ -172,4 +182,11 @@ describe('SubjectStep component', () => {
 
     expect(mockHandleStepData).not.toHaveBeenCalled()
   })
+  //
+  // it('should render props buttons', () => {
+  //   renderComponentWithUserRole(student)
+  //
+  //   expect(screen.getByTestId('btn1')).toBeInTheDocument()
+  //   expect(screen.getByTestId('btn2')).toBeInTheDocument()
+  // })
 })
