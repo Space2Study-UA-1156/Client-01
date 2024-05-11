@@ -19,7 +19,6 @@ const CategoriesTitleInput = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [categoryName, setCategoryName] = useState('')
-  const [inputFocused, setInputFocused] = useState(false)
 
   const { response, error, loading, fetchData } = useAxios({
     service: categoryService.getCategories,
@@ -28,16 +27,23 @@ const CategoriesTitleInput = () => {
   })
 
   const showAllOffers = () => {
-    navigate(authRoutes.findOffers.route)
+    navigate(authRoutes.findOffers.path)
+  }
+
+  const handleChangeInput = (e) => {
+    setCategoryName(e.target.value)
   }
 
   const handleSearch = () => {
-    fetchData({ name: categoryName, exactMatch: true })
+    if (categoryName.trim() !== '') {
+      fetchData({ name: categoryName, exactMatch: true })
+      setCategoryName('')
+    }
   }
 
   return (
     <Box>
-      <Box sx={styles.box}>
+      <Box sx={styles.root}>
         <Box sx={styles.title}>
           <TitleWithDescription
             description={t('categoriesPage.description')}
@@ -53,7 +59,7 @@ const CategoriesTitleInput = () => {
             onClick={showAllOffers}
             size='large'
             sx={styles.buttonShowAllOffers}
-            variant='tonal'
+            variant='text'
           >
             {t('categoriesPage.showAllOffers')}
           </AppButton>
@@ -68,15 +74,14 @@ const CategoriesTitleInput = () => {
                   data_testid='button-search'
                   onClick={handleSearch}
                   size='large'
+                  sx={styles.buttonSearch}
                   variant='containedLight'
                 >
                   {t('common.search')}
                 </AppButton>
               </InputAdornment>
             }
-            onBlur={() => setInputFocused(false)}
-            onChange={(e) => setCategoryName(e.target.value)}
-            onFocus={() => setInputFocused(true)}
+            onChange={handleChangeInput}
             placeholder={t('categoriesPage.searchLabel')}
             size='lg'
             startAdornment={
@@ -98,7 +103,7 @@ const CategoriesTitleInput = () => {
       </Box>
 
       <Box>
-        {!loading && !inputFocused && response && response.items.length === 0 && (
+        {!loading && response && response.items.length === 0 && (
           <Box>
             {/* TODO: Add block <CategoriesResultsNotFound /> when it will be on develop branch  */}
             <Box>CategoriesResultsNotFound</Box>
@@ -107,7 +112,7 @@ const CategoriesTitleInput = () => {
 
         {error && <p>Error: {error.message}</p>}
 
-        {response && !inputFocused && response.items.length > 0 && (
+        {response && response.items.length > 0 && (
           <Box sx={styles.cardsContainer}>
             {response.items.map((item) => {
               return (
