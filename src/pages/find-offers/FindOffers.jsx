@@ -6,7 +6,7 @@ import AppViewSwitcher from '~/components/app-view-switcher/AppViewSwitcher'
 
 const FindOffers = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [view, setView] = useState(searchParams.get('view') || 'list')
+  const [view, setView] = useState(() => searchParams.get('view') || 'list')
 
   useEffect(() => {
     setSearchParams({ view })
