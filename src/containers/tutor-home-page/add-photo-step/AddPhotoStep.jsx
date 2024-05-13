@@ -25,24 +25,24 @@ const AddPhotoStep = ({ btnsBox }) => {
     handleStepData('photo', files)
   }
 
-  const photoContainer = photo.length ? (
-    <Box sx={style.photoContainer}>
-      <Box
-        alt={t('becomeTutor.photo.imageAlt')}
-        component='img'
-        src={photoSrc}
-        sx={style.photoPreview}
-      />
-    </Box>
-  ) : (
+  const photoContainer = (
     <DragAndDrop
       emitter={handleAddPhoto}
       style={style.dragAndDrop}
       validationData={validationData}
     >
-      <Typography variant='body2'>
-        {t('becomeTutor.photo.placeholder')}
-      </Typography>
+      {photo.length ? (
+        <Box
+          alt={t('becomeTutor.photo.imageAlt')}
+          component='img'
+          src={photoSrc}
+          sx={style.photoPreview}
+        />
+      ) : (
+        <Typography variant='body2'>
+          {t('becomeTutor.photo.placeholder')}
+        </Typography>
+      )}
     </DragAndDrop>
   )
 
