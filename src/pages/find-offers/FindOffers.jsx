@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack'
 import { useSearchParams } from 'react-router-dom'
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
 import AppViewSwitcher from '~/components/app-view-switcher/AppViewSwitcher'
+import PopularCategories from '~/containers/popular-categories/PopularCategories'
 
 const FindOffers = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -18,6 +19,7 @@ const FindOffers = () => {
       <Stack>
         <AppViewSwitcher setView={setView} view={view} />
       </Stack>
+      <PopularCategories />
     </PageWrapper>
   )
 }
