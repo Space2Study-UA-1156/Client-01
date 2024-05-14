@@ -28,7 +28,7 @@ const AddPhotoStep = ({ btnsBox }) => {
 
     if (!files.length) {
       setErrorMessage('')
-      handleStepData('photo', [])
+      handleStepData('photo', files)
       return
     }
 
