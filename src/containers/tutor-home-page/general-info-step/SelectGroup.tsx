@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent
+} from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useSelectGroupStyles } from './SelectGroup.styles'
 import { LocationService } from '~/services/location-service'
-interface Country {
-  name: string
-}
 
-interface City {
-  name: string
-}
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
   const classes = useSelectGroupStyles()
-  const [countries, setCountries] = useState([])
-  const [cities, setCities] = useState([])
+  const [countries, setCountries] = useState<string[]>([])
+  const [cities, setCities] = useState<string[]>([])
   const [selectedCountry, setSelectedCountry] = useState('')
+  const [selectedCity, setSelectedCity] = useState('')
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
         const response = await LocationService.getCountries()
-        setCountries(response.data as Country[])
+        setCountries(response.data as string[])
       } catch (error) {
         console.error('Error fetching countries:', error)
       }
@@ -35,7 +36,7 @@ const SelectGroup: React.FC = () => {
       const fetchCities = async () => {
         try {
           const response = await LocationService.getCities(selectedCountry)
-          setCities(response.data as City[])
+          setCities(response.data as string[])
         } catch (error) {
           console.error('Error fetching cities:', error)
         }
@@ -45,10 +46,12 @@ const SelectGroup: React.FC = () => {
     }
   }, [selectedCountry])
 
-  const handleCountryChange = (event: {
-    target: { value: React.SetStateAction<string> }
-  }) => {
+  const handleCountryChange = (event: SelectChangeEvent) => {
     setSelectedCountry(event.target.value)
+  }
+
+  const handleCityChange = (event: SelectChangeEvent) => {
+    setSelectedCity(event.target.value)
   }
 
   return (
@@ -57,7 +60,11 @@ const SelectGroup: React.FC = () => {
     >
       <FormControl className={classes.formControl}>
         <InputLabel>{t('common.labels.country')}</InputLabel>
-        <Select label={t('labels.country')} onChange={handleCountryChange}>
+        <Select
+          label={t('labels.country')}
+          onChange={handleCountryChange}
+          value={selectedCountry}
+        >
           {countries.map((country) => (
             <MenuItem key={country} value={country}>
               {country}
@@ -67,7 +74,11 @@ const SelectGroup: React.FC = () => {
       </FormControl>
       <FormControl className={classes.formControl}>
         <InputLabel>{t('common.labels.city')}</InputLabel>
-        <Select label={t('labels.city')}>
+        <Select
+          label={t('labels.city')}
+          onChange={handleCityChange}
+          value={selectedCity}
+        >
           {cities.map((city) => (
             <MenuItem key={city} value={city}>
               {city}
