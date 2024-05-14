@@ -67,7 +67,7 @@ describe('categoryIconService test', () => {
     })
   })
 
-  it('should return LanguageIcon', () => {
+  it('should return LanguageIcon for invalid icon name', () => {
     const icon = getCategoryIcon('InvalidIcon')
     expect(icon).toEqual('LanguageIcon')
   })

@@ -9,6 +9,7 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import ScienceIcon from '@mui/icons-material/Science'
 import StarIcon from '@mui/icons-material/Star'
 import TagIcon from '@mui/icons-material/Tag'
+import { SvgIconComponent } from '@mui/icons-material'
 
 const CATEGORY_ICONS = {
   LanguageIcon: LanguageIcon,
@@ -26,15 +27,6 @@ const CATEGORY_ICONS = {
 
 type IconKey = keyof typeof CATEGORY_ICONS
 
-function isObjKey<T extends object>(key: PropertyKey, obj: T): key is keyof T {
-  return key in obj
-}
-
-export const getCategoryIcon = (
-  category: IconKey & string
-): typeof CATEGORY_ICONS[IconKey] => {
-  if (isObjKey(category, CATEGORY_ICONS)) {
-    return CATEGORY_ICONS[category]
-  }
-  return CATEGORY_ICONS['LanguageIcon']
+export const getCategoryIcon = (iconName: IconKey): SvgIconComponent => {
+  return CATEGORY_ICONS[iconName] || CATEGORY_ICONS['LanguageIcon']
 }
