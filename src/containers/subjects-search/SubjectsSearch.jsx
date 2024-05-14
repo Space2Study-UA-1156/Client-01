@@ -1,7 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, InputAdornment, Typography } from '@mui/material'
+import { Box, InputAdornment, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -12,18 +12,16 @@ import { styles } from '~/containers/subjects-search/SubjectsSearch.styles'
 import useBreakpoints from '~/hooks/use-breakpoints'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
-import { subjectService } from '~/services/subject-service'
 
 const SubjectsSearch = () => {
   const { t } = useTranslation()
   const { isMobile } = useBreakpoints()
   const [searchParams, setSearchParams] = useSearchParams()
   const [subjectName, setSubjectName] = useState(
-    searchParams.get('subjectName')
+    searchParams.get('subjectName') || ''
   )
 
   const categoryName = searchParams.get('categoryName')
-  const categoryId = searchParams.get('categoryId')
 
   const handleCategoryChange = (_e, categoryValue) => {
     if (!categoryValue) {
@@ -41,21 +39,19 @@ const SubjectsSearch = () => {
     })
   }
 
-  const handleSubjectChange = (_e, subjectValue) => {
-    if (!subjectValue) {
-      setSearchParams((params) => {
-        params.delete('subjectName')
-        return params
-      })
-      setSubjectName(null)
-      return
-    }
-    setSubjectName(subjectValue?.name)
+  const handleSubjectChange = (e) => {
+    setSubjectName(e.target.value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!subjectName) return
+    if (!subjectName) {
+      setSearchParams((params) => {
+        params.delete('subjectName')
+        return params
+      })
+      return
+    }
 
     setSearchParams((params) => {
       params.set('subjectName', subjectName)
@@ -127,23 +123,18 @@ const SubjectsSearch = () => {
       <Box component='form' onSubmit={handleSubmit} sx={styles.searchContainer}>
         <Box sx={styles.inputContainer}>
           {!isMobile && categoryInput}
-          <AsyncAutocomplete
-            labelField='name'
-            onChange={handleSubjectChange}
-            service={() => subjectService.getSubjectsNames(categoryId)}
-            sx={styles.subjectInput}
-            textFieldProps={{
-              placeholder: t('subjectsPage.subjects.subjectLabel'),
-              InputProps: {
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon sx={{ color: 'primary.700' }} />
-                  </InputAdornment>
-                )
-              }
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchIcon sx={{ color: 'primary.700' }} />
+                </InputAdornment>
+              )
             }}
+            onChange={handleSubjectChange}
+            placeholder={t('subjectsPage.subjects.subjectLabel')}
+            sx={styles.subjectInput}
             value={subjectName}
-            valueField='name'
           />
         </Box>
         {!isMobile && (

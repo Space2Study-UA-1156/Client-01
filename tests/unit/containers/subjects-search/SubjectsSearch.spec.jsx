@@ -6,9 +6,10 @@ import useBreakpoints from '~/hooks/use-breakpoints'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { renderWithProviders } from '../../../test-utils'
 
-const mockCategory = { name: 'Category1' }
+const mockCategory = { _id: '1', name: 'Category1' }
 const mockReturnInputValue = vi.fn()
-const mockSetSearchParams = vi.fn()
+const mockSet = vi.fn()
+const mockDelete = vi.fn()
 
 vi.mock('~/components/title-with-description/TitleWithDescription', () => ({
   __esModule: true,
@@ -21,6 +22,7 @@ vi.mock('~/components/title-with-description/TitleWithDescription', () => ({
 }))
 
 vi.mock('~/components/async-autocomlete/AsyncAutocomplete', () => ({
+  __esModule: true,
   default: ({ onChange, textFieldProps }) => (
     <input
       data-testid={textFieldProps.placeholder}
@@ -29,11 +31,26 @@ vi.mock('~/components/async-autocomlete/AsyncAutocomplete', () => ({
   )
 }))
 
+vi.mock('@mui/material', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    TextField: ({ onChange, placeholder, value }) => (
+      <input data-testid={placeholder} onChange={onChange} value={value} />
+    )
+  }
+})
+
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
-    useSearchParams: () => [{ get: vi.fn() }, mockSetSearchParams]
+    useSearchParams: () => [
+      { get: vi.fn() },
+      (mockFn) => {
+        mockFn({ set: mockSet, delete: mockDelete })
+      }
+    ]
   }
 })
 
@@ -122,7 +139,7 @@ describe('SubjectsSearch container test', () => {
     })
   })
 
-  it('should set subject, category  and submit form', () => {
+  it('should set search params', () => {
     useBreakpoints.mockImplementation(() => ({ isMobile: false }))
     mockReturnInputValue.mockImplementation(() => mockCategory)
     renderWithProviders(<SubjectsSearch />)
@@ -137,10 +154,10 @@ describe('SubjectsSearch container test', () => {
     fireEvent.change(categoryInput, { target: { value: 'test' } })
     fireEvent.change(subjectInput, { target: { value: 'test' } })
     fireEvent.click(searchButton)
-    expect(mockSetSearchParams).toHaveBeenCalledTimes(2)
+    expect(mockSet).toHaveBeenCalledTimes(3)
   })
 
-  it('should clear subject and category inputs', () => {
+  it('should clear all search params', () => {
     useBreakpoints.mockImplementation(() => ({ isMobile: false }))
     mockReturnInputValue.mockImplementation(() => null)
     renderWithProviders(<SubjectsSearch />)
@@ -151,8 +168,10 @@ describe('SubjectsSearch container test', () => {
     const subjectInput = screen.getByTestId(
       'subjectsPage.subjects.subjectLabel'
     )
+    const searchButton = screen.getByText('common.search')
     fireEvent.change(categoryInput, { target: { value: 'test' } })
-    fireEvent.change(subjectInput, { target: { value: 'test' } })
-    expect(mockSetSearchParams).toHaveBeenCalledTimes(2)
+    fireEvent.change(subjectInput, { target: { value: '' } })
+    fireEvent.click(searchButton)
+    expect(mockDelete).toHaveBeenCalledTimes(3)
   })
 })
