@@ -9,7 +9,7 @@ import { styles } from '~/containers/category-list/CategoryList.styles'
 import useAxios from '~/hooks/use-axios'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
-import CategoriesResultsNotFound from '../categories-results-not-found/CategoriesResultsNotFound'
+import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
 
 const itemsPerPage = 24
 
