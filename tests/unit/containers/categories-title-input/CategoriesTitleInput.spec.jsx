@@ -1,7 +1,7 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, render } from '@testing-library/react'
 import CategoriesTitleInput from '~/containers/categories-title-input/CategoriesTitleInput'
 import { renderWithProviders } from '~tests/test-utils'
-import { useNavigate } from 'react-router-dom'
+import { Routes, Route, MemoryRouter } from 'react-router-dom'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { vi } from 'vitest'
 import useBreakpoints from '~/hooks/use-breakpoints'
@@ -9,6 +9,7 @@ import useBreakpoints from '~/hooks/use-breakpoints'
 const mockCategory = { name: 'Category1' }
 const mockReturnInputValue = vi.fn()
 const mockSet = vi.fn()
+const mockNavigate = vi.fn()
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -42,7 +43,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal()
   return {
     ...actual,
-    useNavigate: vi.fn(),
+    useNavigate: () => mockNavigate,
     useSearchParams: () => [
       { get: vi.fn() },
       (mockFn) => {
@@ -99,21 +100,9 @@ vi.mock('@mui/material/Typography', () => {
   }
 })
 
-const navigate = vi.fn()
-useNavigate.mockReturnValue(navigate)
-
 describe('CategoriesTitleInput container', () => {
   beforeEach(() => {
     vi.resetAllMocks()
-  })
-
-  it('should redirect to "find offers" page when "Show all offers" button is clicked', () => {
-    useBreakpoints.mockReturnValue({ isMobile: false })
-    renderWithProviders(<CategoriesTitleInput />)
-    fireEvent.click(screen.getByTestId('button-show-all'))
-    assert(() => {
-      expect(navigate).toHaveBeenCalledWith(authRoutes.findOffers.route)
-    })
   })
 
   it('should update categoryName state when input value changes', () => {
@@ -185,5 +174,24 @@ describe('CategoriesTitleInput container', () => {
     expect(categoryInput).toBeInTheDocument()
     expect(searchButton).toBeInTheDocument()
     expect(footerElements).toHaveLength(0)
+  })
+
+  it('should redirect to "find offers" page when "Show all offers" button is clicked', () => {
+    useBreakpoints.mockImplementation(() => ({ isMobile: false }))
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route element={<CategoriesTitleInput />} path='/' />
+          <Route
+            element={<p data-testid='test-page'>Test Page</p>}
+            path='/find-offers'
+          />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    fireEvent.click(screen.getByTestId('button-show-all'))
+
+    expect(mockNavigate).toHaveBeenCalledWith(authRoutes.findOffers.path)
   })
 })

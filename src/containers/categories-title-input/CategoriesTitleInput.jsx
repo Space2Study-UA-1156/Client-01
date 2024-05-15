@@ -35,7 +35,6 @@ const CategoriesTitleInput = () => {
         newParams.set('categoryName', categoryName)
         return newParams
       })
-
       setCategoryName('')
     }
   }

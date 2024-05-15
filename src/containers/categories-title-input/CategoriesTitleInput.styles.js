@@ -85,6 +85,7 @@ export const styles = {
     fontSize: '14px',
     fontWeight: 400
   },
+
   requestLink: {
     typography: 'body2',
     fontWeight: 500,
