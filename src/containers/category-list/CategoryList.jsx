@@ -9,6 +9,7 @@ import { styles } from '~/containers/category-list/CategoryList.styles'
 import useAxios from '~/hooks/use-axios'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
+import CategoriesResultsNotFound from '../categories-results-not-found/CategoriesResultsNotFound'
 
 const itemsPerPage = 24
 
@@ -65,8 +66,8 @@ const CategoryList = () => {
 
   if (!loading && !categories.length) {
     return (
-      <Box component='section' sx={styles.root}>
-        <Box>Sorry, no results found</Box>
+      <Box component='section' sx={{ ...styles.root, pt: '100px' }}>
+        <CategoriesResultsNotFound />
       </Box>
     )
   }
