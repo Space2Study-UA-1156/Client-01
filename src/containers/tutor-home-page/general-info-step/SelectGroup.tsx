@@ -43,6 +43,9 @@ const SelectGroup: React.FC = () => {
       }
 
       void fetchCities()
+    } else {
+      setCities([])
+      setSelectedCity('')
     }
   }, [selectedCountry])
 
@@ -75,6 +78,7 @@ const SelectGroup: React.FC = () => {
       <FormControl className={classes.formControl}>
         <InputLabel>{t('common.labels.city')}</InputLabel>
         <Select
+          disabled={!selectedCountry}
           label={t('labels.city')}
           onChange={handleCityChange}
           value={selectedCity}
