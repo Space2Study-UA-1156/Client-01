@@ -26,7 +26,8 @@ export const styles = {
 
   buttonShowAllContainer: {
     alignSelf: 'flex-end',
-    marginRight: '25px'
+    marginRight: '25px',
+    marginBottom: '15px'
   },
 
   buttonShowAllOffers: {
@@ -36,43 +37,59 @@ export const styles = {
   },
 
   inputContainer: {
-    margin: '20px',
-    paddingTop: '20px',
-    paddingBottom: '20px',
+    padding: { xs: '5px', sm: '16px', md: '20px' },
     width: '100%',
     backgroundColor: 'basic.white',
     boxShadow: mainShadow,
-    borderRadius: '70px'
-  },
-
-  inputField: {
-    width: '100%',
-    padding: '20px 20px',
-    input: {
-      '&::placeholder': {
-        color: 'primary.300',
-        fontSize: '16px',
-        opacity: 1
-      }
-    }
-  },
-
-  buttonSearch: {
-    marginRight: { xs: '10px', sm: '20px', md: '25px' }
-  },
-
-  cardsContainer: {
+    borderRadius: '70px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '24px',
-    mb: '30px',
-    maxWidth: '100%',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
+    boxSizing: 'border-box',
+    marginBottom: '20px'
   },
 
-  card: {
-    maxWidth: '100%'
+  inputField: {
+    flexGrow: 1,
+    padding: { xs: '5px', sm: '10px', md: '10px' },
+    input: {
+      '&::placeholder': {
+        color: 'primary.300',
+        fontSize: { xs: '14px', sm: '16px', md: '16px' },
+        fontWeight: 400,
+        opacity: 1
+      }
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'transparent'
+      },
+      '&:hover fieldset': {
+        borderColor: 'transparent'
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'transparent'
+      }
+    },
+    boxSizing: 'border-box'
+  },
+
+  buttonSearch: {
+    marginRight: { xs: '5px', sm: '20px', md: '25px' },
+    width: { xs: '10px', sm: '105px', md: '105px' }
+  },
+
+  footer: {
+    variant: 'body2',
+    color: 'primary.500',
+    fontSize: '14px',
+    fontWeight: 400
+  },
+  requestLink: {
+    typography: 'body2',
+    fontWeight: 500,
+    textDecoration: 'underline',
+    color: 'primary.700',
+    fontSize: '14px'
   }
 }

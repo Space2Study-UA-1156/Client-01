@@ -1,43 +1,48 @@
 import { useState } from 'react'
-import { Box, Input, InputAdornment } from '@mui/material'
+import { Box, InputAdornment, Typography } from '@mui/material'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import AppButton from '~/components/app-button/AppButton'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import SearchIcon from '@mui/icons-material/Search'
-// TODO: Add this import when block <CategoriesResultsNotFound /> will be on develop branch
-//import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { styles } from '~/containers/categories-title-input/CategoriesTitleInput.styles'
-import { categoryService } from '~/services/category-service'
-import useAxios from '~/hooks/use-axios'
-import CategoryCard from '~/components/category-card/CategoryCard'
-import categoryImg from '~/assets/img/student-home-page/service_icon.png'
+import { useSearchParams } from 'react-router-dom'
+import AppTextField from '~/components/app-text-field/AppTextField'
+import useBreakpoints from '~/hooks/use-breakpoints'
 
 const CategoriesTitleInput = () => {
   const { t } = useTranslation()
+  const { isMobile = false } = useBreakpoints()
   const navigate = useNavigate()
+  const [, setSearchParams] = useSearchParams()
   const [categoryName, setCategoryName] = useState('')
-
-  const { response, error, loading, fetchData } = useAxios({
-    service: categoryService.getCategories,
-    defaultResponse: null,
-    fetchOnMount: false
-  })
 
   const showAllOffers = () => {
     navigate(authRoutes.findOffers.path)
   }
 
   const handleChangeInput = (e) => {
-    setCategoryName(e.target.value)
+    const value = e.target.value
+    setCategoryName(value)
   }
 
   const handleSearch = () => {
     if (categoryName.trim() !== '') {
-      fetchData({ name: categoryName, exactMatch: true })
+      setSearchParams((params) => {
+        const newParams = new URLSearchParams(params)
+        newParams.set('categoryName', categoryName)
+        return newParams
+      })
+
       setCategoryName('')
+    }
+  }
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
     }
   }
 
@@ -66,68 +71,86 @@ const CategoriesTitleInput = () => {
         </Box>
 
         <Box sx={styles.inputContainer}>
-          <Input
-            disabled={false}
-            endAdornment={
-              <InputAdornment position='end'>
-                <AppButton
-                  data_testid='button-search'
-                  onClick={handleSearch}
-                  size='large'
-                  sx={styles.buttonSearch}
-                  variant='containedLight'
-                >
-                  {t('common.search')}
-                </AppButton>
-              </InputAdornment>
-            }
-            onChange={handleChangeInput}
-            placeholder={t('categoriesPage.searchLabel')}
-            size='lg'
-            startAdornment={
-              <InputAdornment position='start'>
-                <SearchIcon />
-              </InputAdornment>
-            }
-            sx={styles.inputField}
-            type='text'
-            value={categoryName}
-            variant='outlined'
-          />
+          {!isMobile && (
+            <AppTextField
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <AppButton
+                      data_testid='button-search'
+                      onClick={handleSearch}
+                      size='large'
+                      sx={styles.buttonSearch}
+                      variant='containedLight'
+                    >
+                      {t('common.search')}
+                    </AppButton>
+                  </InputAdornment>
+                )
+              }}
+              helperText={null}
+              multiline={false}
+              onChange={handleChangeInput}
+              onKeyDown={handleKeyPress}
+              placeholder={t('categoriesPage.searchLabel')}
+              sx={styles.inputField}
+              value={categoryName}
+            />
+          )}
+          {isMobile && (
+            <AppTextField
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <AppButton
+                      data_testid='button-search'
+                      onClick={handleSearch}
+                      size='large'
+                      sx={styles.buttonSearch}
+                      variant='containedLight'
+                    >
+                      <SearchIcon />
+                    </AppButton>
+                  </InputAdornment>
+                )
+              }}
+              helperText={null}
+              multiline={false}
+              onChange={handleChangeInput}
+              onKeyDown={handleKeyPress}
+              placeholder={t('categoriesPage.searchLabel')}
+              sx={styles.inputField}
+              value={categoryName}
+            />
+          )}
         </Box>
 
-        <Box sx={{ color: 'primary.500' }}>
-          {/* TODO: Add links  */}
-          <TitleWithDescription description={t('categoriesPage.requestText')} />
-        </Box>
-      </Box>
-
-      <Box>
-        {!loading && response && response.items.length === 0 && (
+        {!isMobile && (
           <Box>
-            {/* TODO: Add block <CategoriesResultsNotFound /> when it will be on develop branch  */}
-            <Box>CategoriesResultsNotFound</Box>
-          </Box>
-        )}
-
-        {error && <p>Error: {error.message}</p>}
-
-        {response && response.items.length > 0 && (
-          <Box sx={styles.cardsContainer}>
-            {response.items.map((item) => {
-              return (
-                <CategoryCard
-                  id={item._id}
-                  img={categoryImg}
-                  key={item._id}
-                  sx={styles.card}
-                  title={item.name}
-                  totalOffers={
-                    item.totalOffers.student + item.totalOffers.tutor
-                  }
-                />
-              )
-            })}
+            <Typography data-testid='footer' sx={styles.footer}>
+              {t('categoriesPage.request')}{' '}
+              <Typography
+                component='span'
+                data-testid='footer'
+                sx={styles.requestLink}
+              >
+                {t('categoriesPage.category')}
+              </Typography>{' '}
+              {t('categoriesPage.or')}{' '}
+              <Typography
+                component='span'
+                data-testid='footer'
+                sx={styles.requestLink}
+              >
+                {t('categoriesPage.subject')}
+              </Typography>
+              !
+            </Typography>
           </Box>
         )}
       </Box>
