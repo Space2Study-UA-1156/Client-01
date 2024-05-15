@@ -22,7 +22,7 @@ const SelectGroup: React.FC = () => {
     const fetchCountries = async () => {
       try {
         const response = await LocationService.getCountries()
-        setCountries(response.data as string[])
+        setCountries(response.data)
       } catch (error) {
         console.error('Error fetching countries:', error)
       }
@@ -36,12 +36,11 @@ const SelectGroup: React.FC = () => {
       const fetchCities = async () => {
         try {
           const response = await LocationService.getCities(selectedCountry)
-          setCities(response.data as string[])
+          setCities(response.data)
         } catch (error) {
           console.error('Error fetching cities:', error)
         }
       }
-
       void fetchCities()
     } else {
       setCities([])
