@@ -6,6 +6,7 @@
   "requestText": "Can't find what you're looking for? Request a new category or subject!",
   "viewMore": "View more",
   "offers": "offers",
+  "totalOffers": "{{totalOffers}} Offers",
   "newSubject": {
     "successMessage": "Request send successfully",
     "title": "Request a new study",

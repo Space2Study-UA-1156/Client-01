@@ -2,33 +2,39 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
 import CategoryCard from '~/components/category-card/CategoryCard'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { authRoutes } from '~/router/constants/authRoutes'
 import { vi } from 'vitest'
 
-vi.mock('~/components/img-title-description/ImgTitleDescription', () => ({
+vi.mock('~/components/title-with-description/TitleWithDescription', () => ({
   __esModule: true,
-  default: ({ img, title, description }) => (
+  default: ({ title, description }) => (
     <div>
-      <img alt={title} src={img} />
       <h2>{title}</h2>
       <p>{description}</p>
     </div>
   )
 }))
 
+vi.mock('~/services/category-icon-service', () => ({
+  getCategoryIcon: () => {
+    return () => <div data-testid='icon' />
+  }
+}))
+
 describe('InfoCard component', () => {
   const props = {
     id: 1,
-    img: 'learnImg.png',
+    icon: 'learnImg',
     title: 'Languages',
-    totalOffers: '234'
+    totalOffers: '234',
+    color: '#79B260',
+    to: '/subjects'
   }
 
   it('should contain image', () => {
     renderWithProviders(<CategoryCard {...props} />)
 
-    const img = screen.getByRole('img')
-    expect(img).toBeInTheDocument()
+    const icon = screen.getByTestId('icon')
+    expect(icon).toBeInTheDocument()
   })
 
   it('should have correct title', () => {
@@ -41,7 +47,7 @@ describe('InfoCard component', () => {
   it('should have correct description', () => {
     renderWithProviders(<CategoryCard {...props} />)
 
-    const text = screen.getByText(`${props.totalOffers} categoriesPage.offers`)
+    const text = screen.getByText('categoriesPage.totalOffers')
     expect(text).toBeInTheDocument()
   })
 
@@ -50,17 +56,14 @@ describe('InfoCard component', () => {
       <MemoryRouter initialEntries={['/']}>
         <Routes>
           <Route element={<CategoryCard {...props} />} path='/' />
-          <Route
-            element={<p>subjects page</p>}
-            path={`${authRoutes.subjects.path}/:id`}
-          />
+          <Route element={<p>subjects page</p>} path={props.to} />
         </Routes>
       </MemoryRouter>
     )
 
     expect(screen.queryByText(/subjects/i)).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('img'))
+    fireEvent.click(screen.getByTestId('icon'))
 
     await waitFor(() => {
       expect(screen.getByText(/subjects/i)).toBeInTheDocument()

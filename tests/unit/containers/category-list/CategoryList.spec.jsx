@@ -35,8 +35,11 @@ const mockFirstResponse = {
     {
       _id: 1,
       name: 'Languages',
-      img: 'learnImg.png',
       title: 'Languages',
+      appearance: {
+        color: '#79B260',
+        icon: 'learnImg.png'
+      },
       totalOffers: {
         student: 234,
         tutor: 234
@@ -50,8 +53,11 @@ const mockSecondResponse = {
     {
       _id: 2,
       name: 'Languages',
-      img: 'learnImg.png',
       title: 'Languages',
+      appearance: {
+        color: '#79B260',
+        icon: 'learnImg.png'
+      },
       totalOffers: {
         student: 234,
         tutor: 234
