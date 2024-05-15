@@ -1,16 +1,25 @@
-import React from 'react'
+import { useState } from 'react'
 import { Box, MenuItem } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import Select from '@mui/material/Select'
 import { styles } from '~/components/sort-menu/SortMenu.styles.js'
 import AppButton from '~/components/app-button/AppButton'
+import { useSearchParams } from 'react-router-dom'
 
-const SortMenu = ({ handleChange }) => {
+const SortMenu = () => {
   const { t } = useTranslation()
-  const [sort, setSort] = React.useState('newest')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [sort, setSort] = useState(searchParams.get('sort') || 'newest')
+  console.log('SearchParams 1:', searchParams)
+  console.log('Value:', sort)
 
-  const defaultHandleChange = (event) => {
-    setSort(event.target.value)
+  const handleChange = (event) => {
+    const newValue = event.target.value
+    setSort(newValue)
+    console.log('Value:', sort)
+    setSearchParams({ ...searchParams, sort: newValue })
+    console.log('Value:', sort)
+    console.log('SearchParams 2:', searchParams)
   }
 
   return (
@@ -20,7 +29,7 @@ const SortMenu = ({ handleChange }) => {
         <Select
           id='demo-simple-select'
           labelId='demo-simple-select-label'
-          onChange={handleChange || defaultHandleChange}
+          onChange={handleChange}
           value={sort}
         >
           <MenuItem value='newest'>

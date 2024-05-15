@@ -4,7 +4,16 @@ import SortMenu from '~/components/sort-menu/SortMenu'
 import { expect, vi } from 'vitest'
 import { renderWithProviders } from '~tests/test-utils'
 
-const defaultHandleChange = vi.fn(() => ['newest', defaultHandleChange])
+const mockSetSearchParams = vi.fn()
+
+vi.mock('react-router-dom', async (importOriginal) => {
+  const module = await importOriginal()
+
+  return {
+    ...module,
+    useSearchParams: () => [{ get: vi.fn() }, mockSetSearchParams]
+  }
+})
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -25,26 +34,14 @@ vi.mock('react-i18next', () => ({
   })
 }))
 
-vi.mock('~/components/app-button/AppButton', () => ({
-  __esModule: true,
-  default: ({ data_testid, children }) => (
-    <button data-testid={data_testid}>{children}</button>
-  )
-}))
-
 vi.mock('@mui/material/Select', () => {
   const Select = ({ children, onChange, value, ...props }) => {
-    const [selectedValue, setSelectedValue] = React.useState(value)
-    const handleChange = (event) => {
-      setSelectedValue(event.target.value)
-      onChange && onChange(event)
-    }
     return (
-      <div role='combobox' {...props} data-value={selectedValue}>
+      <div role='combobox' {...props} data-value={value}>
         {React.Children.map(children, (child) =>
           React.cloneElement(child, {
             onClick: () =>
-              handleChange({ target: { value: child.props.value } })
+              onChange && onChange({ target: { value: child.props.value } })
           })
         )}
       </div>
@@ -65,6 +62,13 @@ vi.mock('@mui/material/MenuItem', () => ({
   )
 }))
 
+vi.mock('~/components/app-button/AppButton', () => ({
+  __esModule: true,
+  default: ({ data_testid, children }) => (
+    <button data-testid={data_testid}>{children}</button>
+  )
+}))
+
 describe('SortMenu', () => {
   it('dropdown appears with 4 sorting options when sort button is clicked', () => {
     renderWithProviders(<SortMenu />)
@@ -82,28 +86,7 @@ describe('SortMenu', () => {
     )
   })
 
-  it('handleChange is called with correct value', () => {
-    const handleChange = vi.fn()
-    renderWithProviders(<SortMenu handleChange={handleChange} />)
-
-    const selectElement = screen.getByRole('combobox')
-
-    fireEvent.mouseDown(selectElement)
-
-    const ratingOption = screen.getByTestId('button-rating')
-    fireEvent.click(ratingOption)
-
-    expect(handleChange).toHaveBeenCalledWith(
-      expect.objectContaining({ target: { value: 'rating' } })
-    )
-  })
-
-  it('default value is set to Newest', () => {
-    renderWithProviders(<SortMenu />)
-    expect(screen.getByTestId('button-newest')).toBeInTheDocument()
-  })
-
-  it('calls defaultHandleChange when no handleChange is provided', () => {
+  it('selecting an option updates searchParams and displays the selected value', () => {
     renderWithProviders(<SortMenu />)
 
     const selectElement = screen.getByRole('combobox')
@@ -112,6 +95,10 @@ describe('SortMenu', () => {
     const ratingOption = screen.getByTestId('button-rating')
     fireEvent.click(ratingOption)
 
-    expect(selectElement).toHaveAttribute('data-value', 'rating')
+    assert(() => {
+      expect(mockSetSearchParams).toHaveBeenCalledWith({ sort: 'rating' })
+    })
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('data-value', 'rating')
   })
 })
