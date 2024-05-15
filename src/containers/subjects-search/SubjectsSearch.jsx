@@ -18,7 +18,7 @@ const SubjectsSearch = () => {
   const { isMobile } = useBreakpoints()
   const [searchParams, setSearchParams] = useSearchParams()
   const [subjectName, setSubjectName] = useState(
-    searchParams.get('subjectName') || ''
+    ()=>(searchParams.get('subjectName') || '')
   )
 
   const categoryName = searchParams.get('categoryName')
