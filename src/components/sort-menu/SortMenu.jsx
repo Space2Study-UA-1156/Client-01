@@ -35,7 +35,6 @@ const SortMenu = () => {
           <MenuItem value='newest'>
             <AppButton
               data_testid='button-newest'
-              //size='large'
               sx={styles.buttonSort}
               variant='text'
             >
