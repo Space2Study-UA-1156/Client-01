@@ -10,16 +10,11 @@ const SortMenu = () => {
   const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const [sort, setSort] = useState(searchParams.get('sort') || 'newest')
-  console.log('SearchParams 1:', searchParams)
-  console.log('Value:', sort)
 
   const handleChange = (event) => {
     const newValue = event.target.value
     setSort(newValue)
-    console.log('Value:', sort)
     setSearchParams({ ...searchParams, sort: newValue })
-    console.log('Value:', sort)
-    console.log('SearchParams 2:', searchParams)
   }
 
   return (
