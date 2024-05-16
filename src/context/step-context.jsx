@@ -55,6 +55,7 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     <StepContext.Provider
       value={{
         stepData,
+        stepLabels,
         handleStepData,
         isNextDisabled,
         toggleNextButton,
