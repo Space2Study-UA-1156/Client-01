@@ -8,16 +8,13 @@ import {
 } from '~/containers/tutor-home-page/general-info-step/interfaces/IFormSection'
 
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
-  const [message, setMessage] = useState('')
-  const {
-    isOverEighteen,
-    handleOverEighteenChange,
-    isNextDisabled,
-    isFormValid,
-    stepData
-  } = useStepContext() as StepContextType
+  const { isOverEighteen, handleOverEighteenChange, isNextDisabled, stepData } =
+    useStepContext() as StepContextType
 
-  const [isConfirmed, setIsConfirmed] = useState(isOverEighteen)
+  const [message, setMessage] = useState<string>(
+    (stepData.general?.data.message as string) || ''
+  )
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(isOverEighteen)
 
   useEffect(() => {
     setIsConfirmed(isOverEighteen)
@@ -28,8 +25,8 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
   }, [isConfirmed, handleOverEighteenChange])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const message = event.target.value.slice(0, 100)
-    setMessage(message)
+    const newMessage = event.target.value.slice(0, 100)
+    setMessage(newMessage)
   }
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
