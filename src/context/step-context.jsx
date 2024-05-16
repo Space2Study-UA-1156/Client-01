@@ -5,7 +5,11 @@ const StepContext = createContext()
 const StepProvider = ({ children, initialValues, stepLabels }) => {
   const [generalData, setGeneralData] = useState({
     data: initialValues,
-    errors: {}
+    errors: {
+      firstName: '',
+      lastName: '',
+      message: ''
+    }
   })
   const [subject, setSubject] = useState([])
   const [language, setLanguage] = useState(null)
@@ -13,15 +17,19 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
   const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
   const [isNextDisabled, setIsNextDisabled] = useState(true)
   const [isOverEighteen, setIsOverEighteen] = useState(false)
+  const [isFormValid, setIsFormValid] = useState(false)
+
   const stepData = {
     [generalLabel]: generalData,
     [subjectLabel]: subject,
     [languageLabel]: language,
     [photoLabel]: photo
   }
+
   const handleOverEighteenChange = useCallback((value) => {
     setIsOverEighteen(value)
   }, [])
+
   const handleStepData = useCallback(
     (stepLabel, newData, newErrors = {}) => {
       switch (stepLabel) {
@@ -51,6 +59,14 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     setIsNextDisabled(disabled)
   }, [])
 
+  const setFormValidation = useCallback(
+    (isValid) => {
+      setIsFormValid(isValid)
+      setIsNextDisabled(!isValid || !isOverEighteen)
+    },
+    [isOverEighteen]
+  )
+
   return (
     <StepContext.Provider
       value={{
@@ -59,7 +75,9 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
         isNextDisabled,
         toggleNextButton,
         isOverEighteen,
-        handleOverEighteenChange
+        handleOverEighteenChange,
+        setFormValidation,
+        isFormValid
       }}
     >
       {children}

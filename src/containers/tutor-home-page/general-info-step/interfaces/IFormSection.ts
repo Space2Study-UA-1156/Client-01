@@ -31,4 +31,5 @@ export interface StepContextType {
   toggleNextButton: (disabled: boolean) => void
   isOverEighteen: boolean
   handleOverEighteenChange: (value: boolean) => void
+  isFormValid: boolean
 }
