@@ -5,10 +5,9 @@ import AppButton from '~/components/app-button/AppButton'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import SearchIcon from '@mui/icons-material/Search'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { styles } from '~/containers/categories-title-input/CategoriesTitleInput.styles'
-import { useSearchParams } from 'react-router-dom'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import useBreakpoints from '~/hooks/use-breakpoints'
 
@@ -138,7 +137,7 @@ const CategoriesTitleInput = () => {
                 data-testid='footer'
                 sx={styles.requestLink}
               >
-                {t('categoriesPage.category')}
+                {t('categoriesPage.categoryLink')}
               </Typography>{' '}
               {t('categoriesPage.or')}{' '}
               <Typography
@@ -146,7 +145,7 @@ const CategoriesTitleInput = () => {
                 data-testid='footer'
                 sx={styles.requestLink}
               >
-                {t('categoriesPage.subject')}
+                {t('categoriesPage.subjectLink')}
               </Typography>
               !
             </Typography>
