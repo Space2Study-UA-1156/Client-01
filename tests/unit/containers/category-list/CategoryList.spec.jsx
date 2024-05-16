@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react'
 import { expect, vi } from 'vitest'
 import CategoryList from '~/containers/category-list/CategoryList'
 import useAxios from '~/hooks/use-axios'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithProviders } from '~tests/test-utils'
 
 vi.mock('~/components/category-card/CategoryCard', () => ({
   __esModule: true,
@@ -137,6 +137,22 @@ describe('CategoryList container', () => {
     const btn = screen.getByText('categoriesPage.viewMore')
     expect(btn).toBeInTheDocument()
     fireEvent.click(btn)
+    expect(btn).not.toBeInTheDocument()
+  })
+
+  it('"View more" button should disappear if there is "limit" property', () => {
+    const mockFetchData = vi
+      .fn()
+      .mockImplementationOnce(() => mockFirstResponse)
+    useAxios.mockImplementation(({ onResponse }) => ({
+      loading: false,
+      fetchData: () => {
+        onResponse(mockFetchData())
+      }
+    }))
+    renderWithProviders(<CategoryList limit={8} />)
+
+    const btn = screen.queryByText('categoriesPage.viewMore')
     expect(btn).not.toBeInTheDocument()
   })
 })
