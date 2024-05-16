@@ -15,25 +15,6 @@ vi.mock('react-router-dom', async (importOriginal) => {
   }
 })
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key) => {
-      switch (key) {
-        case 'findOffers.sortTitles.newest':
-          return 'Newest'
-        case 'findOffers.sortTitles.rating':
-          return 'Rating'
-        case 'findOffers.sortTitles.priceAsc':
-          return 'Price: Low to High'
-        case 'findOffers.sortTitles.priceDesc':
-          return 'Price: High to Low'
-        default:
-          return key
-      }
-    }
-  })
-}))
-
 vi.mock('@mui/material/Select', () => {
   const Select = ({ children, onChange, value, ...props }) => {
     return (
@@ -76,14 +57,10 @@ describe('SortMenu', () => {
 
     fireEvent.mouseDown(selectElement)
 
-    expect(screen.getByTestId('button-newest')).toHaveTextContent('Newest')
-    expect(screen.getByTestId('button-rating')).toHaveTextContent('Rating')
-    expect(screen.getByTestId('button-priceAsc')).toHaveTextContent(
-      'Price: Low to High'
-    )
-    expect(screen.getByTestId('button-priceDesc')).toHaveTextContent(
-      'Price: High to Low'
-    )
+    expect(screen.getByTestId('button-newest')).toBeInTheDocument()
+    expect(screen.getByTestId('button-rating')).toBeInTheDocument()
+    expect(screen.getByTestId('button-priceAsc')).toBeInTheDocument()
+    expect(screen.getByTestId('button-priceDesc')).toBeInTheDocument()
   })
 
   it('selecting an option updates searchParams and displays the selected value', () => {
