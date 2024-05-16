@@ -15,6 +15,14 @@ vi.mock('~/components/category-card/CategoryCard', () => ({
   )
 }))
 
+vi.mock(
+  '~/containers/categories-results-not-found/CategoriesResultsNotFound',
+  () => ({
+    __esModule: true,
+    default: () => <div data-testid='not-found' />
+  })
+)
+
 vi.mock('~/components/loader/Loader', () => ({
   __esModule: true,
   default: () => <div data-testid='loader'></div>
@@ -76,7 +84,7 @@ describe('CategoryList container', () => {
     useAxios.mockImplementation(() => fakeData)
     renderWithProviders(<CategoryList />)
 
-    expect(screen.getByText('Sorry, no results found')).toBeInTheDocument()
+    expect(screen.getByTestId('not-found')).toBeInTheDocument()
   })
 
   it('should render Loader', () => {
