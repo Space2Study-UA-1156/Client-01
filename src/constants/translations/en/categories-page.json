@@ -5,6 +5,7 @@
   "searchLabel": "What would you like to learn?",
   "viewMore": "View more",
   "offers": "offers",
+  "totalOffers": "{{totalOffers}} Offers",
   "newSubject": {
     "successMessage": "Request send successfully",
     "title": "Request a new study",

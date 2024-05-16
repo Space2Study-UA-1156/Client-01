@@ -15,6 +15,14 @@ vi.mock('~/components/category-card/CategoryCard', () => ({
   )
 }))
 
+vi.mock(
+  '~/containers/categories-results-not-found/CategoriesResultsNotFound',
+  () => ({
+    __esModule: true,
+    default: () => <div data-testid='not-found' />
+  })
+)
+
 vi.mock('~/components/loader/Loader', () => ({
   __esModule: true,
   default: () => <div data-testid='loader'></div>
@@ -35,8 +43,11 @@ const mockFirstResponse = {
     {
       _id: 1,
       name: 'Languages',
-      img: 'learnImg.png',
       title: 'Languages',
+      appearance: {
+        color: '#79B260',
+        icon: 'learnImg.png'
+      },
       totalOffers: {
         student: 234,
         tutor: 234
@@ -50,8 +61,11 @@ const mockSecondResponse = {
     {
       _id: 2,
       name: 'Languages',
-      img: 'learnImg.png',
       title: 'Languages',
+      appearance: {
+        color: '#79B260',
+        icon: 'learnImg.png'
+      },
       totalOffers: {
         student: 234,
         tutor: 234
@@ -70,7 +84,7 @@ describe('CategoryList container', () => {
     useAxios.mockImplementation(() => fakeData)
     renderWithProviders(<CategoryList />)
 
-    expect(screen.getByText('Sorry, no results found')).toBeInTheDocument()
+    expect(screen.getByTestId('not-found')).toBeInTheDocument()
   })
 
   it('should render Loader', () => {
