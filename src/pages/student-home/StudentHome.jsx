@@ -6,6 +6,7 @@ import UserStepsWrapper from '~/components/user-steps-wrapper/UserStepsWrapper'
 import { useSelector } from 'react-redux'
 import Faq from '~/containers/student-home-page/faq/Faq'
 import { useModalContext } from '~/context/modal-context'
+import StudentPopularCategories from '~/containers/student-home-page/student-popular-categories/StudentPopularCategories'
 
 const StudentHome = () => {
   const { openModal } = useModalContext()
@@ -33,6 +34,7 @@ const StudentHome = () => {
     >
       <Container data-testid='studentHome' sx={{ pt: 6 }}>
         {/*implement here*/}
+        <StudentPopularCategories />
         <Faq />
       </Container>
     </Box>

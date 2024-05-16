@@ -11,9 +11,8 @@ import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
 import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
 
-const itemsPerPage = 24
-
-const CategoryList = () => {
+const CategoryList = ({ limit, gridStyles }) => {
+  const itemsPerPage = limit || 24
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const [categories, setCategories] = useState([])
@@ -74,7 +73,7 @@ const CategoryList = () => {
 
   return (
     <Box component='section' sx={styles.root}>
-      <Box sx={styles.grid}>
+      <Box sx={gridStyles || styles.grid}>
         {categories.map(({ _id, name, appearance, totalOffers }) => (
           <CategoryCard
             color={appearance?.color}
@@ -86,7 +85,7 @@ const CategoryList = () => {
           />
         ))}
       </Box>
-      {isMore && (
+      {isMore && !limit && (
         <AppButton
           loading={loading}
           onClick={handleViewMoreClick}
