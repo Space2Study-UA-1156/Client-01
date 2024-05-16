@@ -24,7 +24,6 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
     toggleNextButton(!isChecked)
     handleOverEighteenChange(isChecked)
   }
-
   return (
     <Box
       sx={{
