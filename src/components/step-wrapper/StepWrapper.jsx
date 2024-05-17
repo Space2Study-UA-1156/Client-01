@@ -13,17 +13,22 @@ import useSteps from '~/hooks/use-steps'
 import { useStepContext } from '~/context/step-context'
 
 const StepWrapper = ({ children, steps }) => {
-  const { activeStep, isLastStep, loading, stepOperation } = useSteps({
-    steps
-  })
-  const { next, back, setActiveStep, handleSubmit } = stepOperation
+  const { activeStep, erroredSteps, isLastStep, loading, stepOperation } =
+    useSteps({
+      steps
+    })
+  const { next, back, handleStepChange, handleSubmit } = stepOperation
   const { t } = useTranslation()
   const { isNextDisabled } = useStepContext()
   const stepLabels = steps.map((step, index) => (
     <Box
       key={step}
-      onClick={() => setActiveStep(index)}
-      sx={[styles.defaultTab, index === activeStep && styles.activeTab]}
+      onClick={() => handleStepChange(index)}
+      sx={[
+        styles.defaultTab,
+        index === activeStep && styles.activeTab,
+        erroredSteps.has(index) && styles.errorTab
+      ]}
       typography='caption'
     >
       {t(`step.stepLabels.${step}`)}

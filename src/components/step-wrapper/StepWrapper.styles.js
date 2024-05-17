@@ -33,6 +33,10 @@ export const styles = {
     borderRadius: { xs: '5px', sm: '0' },
     ...fadeAnimation
   },
+  errorTab: {
+    color: 'error.500',
+    borderColor: { sm: 'error.500' }
+  },
   steps: {
     display: 'flex',
     justifyContent: { xs: 'center', md: 'end', sm: 'center' },
