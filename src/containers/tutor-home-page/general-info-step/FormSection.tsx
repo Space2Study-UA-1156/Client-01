@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Typography, Checkbox, FormControlLabel, Box } from '@mui/material'
 import TextFieldGroup from './TextFieldGroup'
 import { useStepContext } from '~/context/step-context'
@@ -8,20 +8,30 @@ import {
 } from '~/containers/tutor-home-page/general-info-step/interfaces/IFormSection'
 
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
-  const [message, setMessage] = useState('')
-  // eslint-disable-next-line
-  const [isConfirmed, setIsConfirmed] = useState(false)
-  const { toggleNextButton, isOverEighteen, handleOverEighteenChange } =
+  const { isOverEighteen, handleOverEighteenChange, isNextDisabled, stepData } =
     useStepContext() as StepContextType
+
+  const [message, setMessage] = useState<string>(
+    (stepData.general?.data.message as string) || ''
+  )
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(isOverEighteen)
+
+  useEffect(() => {
+    setIsConfirmed(isOverEighteen)
+  }, [isOverEighteen])
+
+  useEffect(() => {
+    handleOverEighteenChange(isConfirmed)
+  }, [isConfirmed, handleOverEighteenChange])
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const message = event.target.value.slice(0, 100)
-    setMessage(message)
+    const newMessage = event.target.value.slice(0, 100)
+    setMessage(newMessage)
   }
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked
     setIsConfirmed(isChecked)
-    toggleNextButton(!isChecked)
     handleOverEighteenChange(isChecked)
   }
 
@@ -45,15 +55,12 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
         />
         <FormControlLabel
           control={
-            <Checkbox
-              checked={isOverEighteen}
-              onChange={handleCheckboxChange}
-            />
+            <Checkbox checked={isConfirmed} onChange={handleCheckboxChange} />
           }
           label='I confirm that I am over 18 years old'
         />
       </Box>
-      {btnsBox}
+      {React.cloneElement(btnsBox, { disabled: isNextDisabled })}
     </Box>
   )
 }
