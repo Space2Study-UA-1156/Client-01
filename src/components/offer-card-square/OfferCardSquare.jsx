@@ -13,10 +13,10 @@ import AppCard from '~/components/app-card/AppCard'
 import AppButton from '~/components/app-button/AppButton'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import AppChip from '~/components/app-chip/AppChip'
+
 import useBreakpoints from '~/hooks/use-breakpoints'
 import { createUrlPath } from '~/utils/helper-functions'
 import { authRoutes } from '~/router/constants/authRoutes'
-
 import { styles } from '~/components/offer-card-square/OfferCardSquare.styles'
 
 const OfferCardSquare = ({ offer }) => {
@@ -91,7 +91,12 @@ const OfferCardSquare = ({ offer }) => {
         </Link>
 
         <Box sx={styles.rightBox}>
-          <Typography component={Link} sx={styles.name} to={profilePath}>
+          <Typography
+            component={Link}
+            data-testid='authorFullName'
+            sx={styles.name}
+            to={profilePath}
+          >
             {authorFullName}
           </Typography>
 
