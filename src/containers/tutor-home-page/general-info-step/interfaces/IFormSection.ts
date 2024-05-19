@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 
 export interface FormSectionProps {
-  btnsBox: React.ReactNode
+  btnsBox: ReactElement
 }
-
 export interface StepContext {
   toggleNextButton: (value: boolean) => void
   isOverEighteen: boolean
