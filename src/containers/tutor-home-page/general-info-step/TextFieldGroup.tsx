@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FocusEvent, ChangeEvent } from 'react'
+import React, { useState, useEffect, FocusEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import SelectGroup from './SelectGroup'
@@ -7,19 +7,12 @@ import translations from '~/constants/translations/en/common.json'
 import { firstName, lastName } from '~/utils/validations/auth'
 import translation from '~/constants/translations/en/become-tutor.json'
 import { useStepContext } from '~/context/step-context'
-import { StepContextType } from '~/containers/tutor-home-page/general-info-step/interfaces/IFormSection'
 
-interface TextFieldGroupProps {
-  message: string
-  messageLength: number
-  onMessageChange: (event: ChangeEvent<HTMLInputElement>) => void
-}
-
-interface FormData {
-  firstName: string
-  lastName: string
-  message: string
-}
+import {
+  TextFieldGroupProps,
+  FormData,
+  StepContextType
+} from '~/containers/tutor-home-page/general-info-step/interfaces/ITextFieldGroup'
 
 const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   message,
@@ -31,14 +24,15 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   const { setFormValidation, handleStepData, stepData } =
     useStepContext() as StepContextType
 
-  const initialValidationErrors = (stepData['General Info']
-    ?.errors as FormData) || {
+  const initialValidationErrors: FormData = (stepData['General Info']
+    ?.errors as unknown as FormData) || {
     firstName: '',
     lastName: '',
     message: ''
   }
 
-  const initialFormData = (stepData['General Info']?.data as FormData) || {
+  const initialFormData: FormData = (stepData['General Info']
+    ?.data as unknown as FormData) || {
     firstName: '',
     lastName: '',
     message: ''
@@ -53,7 +47,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     const hasErrors = Object.values(validationErrors).some(
       (error) => error !== ''
     )
-    setFormValidation(!hasErrors) // eslint-disable-line
+    setFormValidation(!hasErrors)
   }, [validationErrors, setFormValidation])
 
   useEffect(() => {
@@ -91,10 +85,8 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
           label={translations.labels.firstName}
           multiline={false}
           name='firstName'
-          onBlur={(e: FocusEvent<HTMLInputElement, Element>) =>
-            handleBlur(e, firstName)
-          }
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          onBlur={(e) => handleBlur(e, firstName)}
+          onChange={(e) => {
             const { value } = e.target
             setFormData((prevData) => ({
               ...prevData,
@@ -111,10 +103,8 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
           label={translations.labels.lastName}
           multiline={false}
           name='lastName'
-          onBlur={(e: FocusEvent<HTMLInputElement, Element>) =>
-            handleBlur(e, lastName)
-          }
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          onBlur={(e) => handleBlur(e, lastName)}
+          onChange={(e) => {
             const { value } = e.target
             setFormData((prevData) => ({
               ...prevData,
@@ -135,7 +125,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
         multiline
         name='message'
         onBlur={handleBlur}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+        onChange={(e) => {
           const { value } = e.target
           setFormData((prevData) => ({
             ...prevData,
