@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement } from 'react'
 
 export interface FormSectionProps {
   btnsBox: ReactElement
