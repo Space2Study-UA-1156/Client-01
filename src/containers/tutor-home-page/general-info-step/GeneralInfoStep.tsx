@@ -14,10 +14,14 @@ const GeneralInfoStep: React.FC<GeneralInfoStepProps> = ({ btnsBox }) => {
 
   return (
     <Container className={classes.root}>
-      <div className={classes.contentContainer}>
-        <ImageSection />
+      <div className={classes.contentContainer} data-testid='content-container'>
+        <ImageSection data-testid='image-section' />
         <FormSection
-          btnsBox={<Box className={classes.btnContainer}>{btnsBox}</Box>}
+          btnsBox={
+            <Box className={classes.btnContainer} data-testid='btn-container'>
+              {btnsBox}
+            </Box>
+          }
         />
       </div>
     </Container>

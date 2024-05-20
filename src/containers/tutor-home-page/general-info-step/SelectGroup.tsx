@@ -61,9 +61,10 @@ const SelectGroup: React.FC = () => {
       style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}
     >
       <FormControl className={classes.formControl}>
-        <InputLabel>{t('common.labels.country')}</InputLabel>
+        <InputLabel id='country-label'>{t('common.labels.country')}</InputLabel>
         <Select
-          label={t('labels.country')}
+          label={t('common.labels.country')}
+          labelId='country-label'
           onChange={handleCountryChange}
           value={selectedCountry}
         >
@@ -75,10 +76,11 @@ const SelectGroup: React.FC = () => {
         </Select>
       </FormControl>
       <FormControl className={classes.formControl}>
-        <InputLabel>{t('common.labels.city')}</InputLabel>
+        <InputLabel id='city-label'>{t('common.labels.city')}</InputLabel>
         <Select
           disabled={!selectedCountry}
-          label={t('labels.city')}
+          label={t('common.labels.city')}
+          labelId='city-label'
           onChange={handleCityChange}
           value={selectedCity}
         >
