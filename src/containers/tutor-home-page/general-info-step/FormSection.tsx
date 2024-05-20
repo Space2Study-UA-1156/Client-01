@@ -37,6 +37,7 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
 
   return (
     <Box
+      data-testid='form-section'
       sx={{
         display: 'flex',
         flexDirection: 'column',

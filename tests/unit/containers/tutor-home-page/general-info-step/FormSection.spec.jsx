@@ -53,6 +53,8 @@ describe('FormSection Component', () => {
 
   it('renders without crashing', () => {
     renderWithTheme(<FormSection btnsBox={mockBtnsBox} />)
+    const formSection = screen.getByTestId('form-section')
+    expect(formSection).toBeInTheDocument()
   })
 
   it('checkbox is unchecked by default', () => {
