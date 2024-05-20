@@ -64,7 +64,6 @@ describe('Student NavBar test', () => {
   })
   it('should render account icon', () => {
     const icon = screen.getByTestId('AccountIcon')
-    screen.debug()
 
     expect(icon).toBeInTheDocument()
   })
