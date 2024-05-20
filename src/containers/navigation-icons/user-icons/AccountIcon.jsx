@@ -38,7 +38,7 @@ const AccountIcon = ({ buttonProps }) => {
     <NavigationIcon
       buttonProps={buttonProps}
       icon={
-        <Avatar alt={fullName} src={response?.photo}>
+        <Avatar alt={fullName} data-testid='AccountIcon' src={response?.photo}>
           {!loading && firstLetters}
         </Avatar>
       }

@@ -24,7 +24,7 @@ describe('test with user role', () => {
   })
 
   it('should open account menu', async () => {
-    const accountMenuIcon = screen.getByTestId('AccountCircleOutlinedIcon')
+    const accountMenuIcon = screen.getByTestId('AccountIcon')
     fireEvent.click(accountMenuIcon)
     const accountMenuLogout = await screen.findByText('header.logout')
 
