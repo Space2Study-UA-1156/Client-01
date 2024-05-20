@@ -26,7 +26,8 @@ const SubjectsStep = ({ btnsBox }) => {
   const subjectLabel = userRole === student ? interests : subjects
   const selectedSubjects = stepData[subjectLabel]
   const isCategorySelected = Boolean(category)
-  const isSubjectSelected = !subject
+  const disableAddSubjectButton =
+    !subject || selectedSubjects.find((item) => item.name === subject.name)
 
   const handleChangeCategory = (e, categoryValue) => {
     setCategory(categoryValue)
@@ -38,12 +39,6 @@ const SubjectsStep = ({ btnsBox }) => {
   }
 
   const handleAddSubject = () => {
-    if (!subject) return
-    if (selectedSubjects.find((item) => item.name === subject.name)) {
-      setSubject(null)
-      return
-    }
-
     handleStepData(subjectLabel, [...selectedSubjects, subject])
     setSubject(null)
   }
@@ -100,7 +95,7 @@ const SubjectsStep = ({ btnsBox }) => {
           />
 
           <AppButton
-            disabled={isSubjectSelected}
+            disabled={disableAddSubjectButton}
             onClick={handleAddSubject}
             variant={'tonal'}
           >

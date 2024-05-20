@@ -65,8 +65,12 @@ vi.mock('~/components/async-autocomlete/AsyncAutocomplete', () => ({
 }))
 
 vi.mock('~/components/app-button/AppButton', () => ({
-  default: ({ onClick }) => (
-    <button data-testid='add-category-btn' onClick={onClick} />
+  default: ({ disabled, onClick }) => (
+    <button
+      data-testid='add-category-btn'
+      disabled={disabled}
+      onClick={onClick}
+    />
   )
 }))
 
