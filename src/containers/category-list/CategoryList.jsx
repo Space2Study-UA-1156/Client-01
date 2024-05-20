@@ -77,7 +77,7 @@ const CategoryList = ({ limit, gridStyles }) => {
         {categories.map(({ _id, name, appearance, totalOffers }) => (
           <CategoryCard
             color={appearance?.color}
-            icon={appearance?.icon}
+            icon={appearance?.path}
             key={_id}
             title={name}
             to={`${authRoutes.subjects.path}/categoryName=${name}`}
