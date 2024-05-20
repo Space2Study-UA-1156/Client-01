@@ -54,7 +54,7 @@ const mockFirstResponse = {
       }
     }
   ],
-  count: 24
+  count: 100
 }
 const mockSecondResponse = {
   items: [
@@ -72,7 +72,7 @@ const mockSecondResponse = {
       }
     }
   ],
-  count: 24
+  count: 100
 }
 
 describe('CategoryList container', () => {
