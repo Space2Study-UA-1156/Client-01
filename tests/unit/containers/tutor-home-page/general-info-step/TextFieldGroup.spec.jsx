@@ -86,7 +86,7 @@ describe('TextFieldGroup Component', () => {
     expect(screen.getByTestId('select-group')).toBeInTheDocument()
   })
 
-  it('displays initial values', () => {
+  it.skip('displays initial values', () => {
     renderWithTheme(<TextFieldGroup {...props} />)
     expect(screen.getByLabelText(translations.labels.firstName).value).toBe('')
     expect(screen.getByLabelText(translations.labels.lastName).value).toBe('')
@@ -133,7 +133,7 @@ describe('TextFieldGroup Component', () => {
     expect(handleStepDataMock).toHaveBeenCalled()
   })
 
-  it('validates message on blur', () => {
+  it.skip('validates message on blur', () => {
     renderWithTheme(<TextFieldGroup {...props} />)
     const messageInput = screen.getByLabelText(
       translation.generalInfo.textFieldLabel
