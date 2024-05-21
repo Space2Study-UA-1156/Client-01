@@ -7,7 +7,10 @@ import translations from '~/constants/translations/en/common.json'
 import { firstName, lastName } from '~/utils/validations/auth'
 import translation from '~/constants/translations/en/become-tutor.json'
 import { useStepContext } from '~/context/step-context'
-
+import {
+  getFromLocalStorage,
+  setToLocalStorage
+} from '~/services/local-storage-service'
 import {
   TextFieldGroupProps,
   FormData,
@@ -32,7 +35,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   }
 
   const initialFormData: FormData = JSON.parse(
-    localStorage.getItem('formData') || '{}'
+    getFromLocalStorage('formData') || '{}'
   ) ||
     (stepData['General Info']?.data as unknown as FormData) || {
       firstName: '',
@@ -54,7 +57,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
 
   useEffect(() => {
     handleStepData('General Info', formData, validationErrors)
-    localStorage.setItem('formData', JSON.stringify(formData))
+    setToLocalStorage('formData', JSON.stringify(formData))
   }, [formData, validationErrors, handleStepData])
 
   const handleBlur = (

@@ -9,6 +9,10 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useSelectGroupStyles } from './SelectGroup.styles'
 import { LocationService } from '~/services/location-service'
+import {
+  getFromLocalStorage,
+  setToLocalStorage
+} from '~/services/local-storage-service'
 
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
@@ -16,12 +20,11 @@ const SelectGroup: React.FC = () => {
   const [countries, setCountries] = useState<string[]>([])
   const [cities, setCities] = useState<string[]>([])
   const [selectedCountry, setSelectedCountry] = useState(
-    localStorage.getItem('selectedCountry') || ''
+    getFromLocalStorage('selectedCountry') || ''
   )
   const [selectedCity, setSelectedCity] = useState(
-    localStorage.getItem('selectedCity') || ''
+    getFromLocalStorage('selectedCity') || ''
   )
-
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -66,16 +69,16 @@ const SelectGroup: React.FC = () => {
   }, [selectedCountry, selectedCity])
 
   useEffect(() => {
-    localStorage.setItem('selectedCountry', selectedCountry)
+    setToLocalStorage('selectedCountry', selectedCountry)
   }, [selectedCountry])
 
   useEffect(() => {
-    localStorage.setItem('selectedCity', selectedCity)
+    setToLocalStorage('selectedCity', selectedCity)
   }, [selectedCity])
 
   const handleCountryChange = (event: SelectChangeEvent) => {
     setSelectedCountry(event.target.value)
-    setSelectedCity('') // Reset city when country changes
+    setSelectedCity('')
   }
 
   const handleCityChange = (event: SelectChangeEvent) => {
