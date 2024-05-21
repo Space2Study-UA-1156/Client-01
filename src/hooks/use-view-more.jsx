@@ -9,6 +9,7 @@ const useViewMore = ({
 }) => {
   const [data, setData] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
+
   const page = Number(searchParams.get(searchParamKey)) || 1
   const isPageInSearchParams = searchParams.has(searchParamKey)
 
@@ -18,6 +19,12 @@ const useViewMore = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!isPageInSearchParams) {
+      setData([])
+    }
+  }, [isPageInSearchParams])
 
   const onResponse = useCallback((response) => {
     setData((prev) => [...prev, ...response.items])
@@ -35,7 +42,7 @@ const useViewMore = ({
     fetchOnMount: !isPageInSearchParams
   })
 
-  const isViewMoreVisable = response?.count > cardsPerPage * page
+  const isViewMoreVisable = response.count > cardsPerPage * page
 
   const handleViewMore = () => {
     const nextPage = page + 1
