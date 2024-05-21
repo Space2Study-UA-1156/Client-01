@@ -21,10 +21,10 @@ const useViewMore = ({
   }, [])
 
   useEffect(() => {
-    if (!isPageInSearchParams) {
+    if (!searchParams.size) {
       setData([])
     }
-  }, [isPageInSearchParams])
+  }, [searchParams.size])
 
   const onResponse = useCallback((response) => {
     setData((prev) => [...prev, ...response.items])
