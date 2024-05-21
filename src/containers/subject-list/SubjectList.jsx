@@ -16,7 +16,7 @@ import { authRoutes } from '~/router/constants/authRoutes'
 
 const CATEGORY_ID_SEARCH_PARAMS_KEY = 'categoryId'
 
-const SubjectList = ({ cardsPerPage = 3 }) => {
+const SubjectList = ({ cardsPerPage = 24 }) => {
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const categoryId = searchParams.get(CATEGORY_ID_SEARCH_PARAMS_KEY)
