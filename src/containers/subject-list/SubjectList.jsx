@@ -16,7 +16,7 @@ import { authRoutes } from '~/router/constants/authRoutes'
 
 const CATEGORY_ID_SEARCH_PARAMS_KEY = 'categoryId'
 
-const SubjectList = () => {
+const SubjectList = ({ cardsPerPage = 3 }) => {
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const categoryId = searchParams.get(CATEGORY_ID_SEARCH_PARAMS_KEY)
@@ -29,7 +29,7 @@ const SubjectList = () => {
   const { data, handleViewMore, isViewMoreVisable, error, loading } =
     useViewMore({
       service: serviceFunction,
-      cardsPerPage: 1
+      cardsPerPage
     })
 
   const subjects = data.map((subject) => (
@@ -43,7 +43,7 @@ const SubjectList = () => {
     />
   ))
 
-  if (error) {
+  if (error || (!data.length && !loading)) {
     return (
       <Box sx={styles.notFoundContainer}>
         <CategoriesResultsNotFound />
