@@ -15,6 +15,7 @@ import {
 } from '~/containers/tutor-home-page/general-info-step/interfaces/ITextFieldGroup'
 
 const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
+  message,
   messageLength,
   onMessageChange
 }) => {
@@ -30,14 +31,12 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     message: ''
   }
 
-  const initialFormData: FormData = JSON.parse(
-    localStorage.getItem('formData') || '{}'
-  ) ||
-    (stepData['General Info']?.data as unknown as FormData) || {
-      firstName: '',
-      lastName: '',
-      message: ''
-    }
+  const initialFormData: FormData = (stepData['General Info']
+    ?.data as unknown as FormData) || {
+    firstName: '',
+    lastName: '',
+    message: ''
+  }
 
   const [validationErrors, setValidationErrors] = useState<FormData>(
     initialValidationErrors
@@ -53,7 +52,6 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
 
   useEffect(() => {
     handleStepData('General Info', formData, validationErrors)
-    localStorage.setItem('formData', JSON.stringify(formData))
   }, [formData, validationErrors, handleStepData])
 
   const handleBlur = (
@@ -119,27 +117,25 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
         />
       </div>
       <SelectGroup />
-      {formData.message !== undefined && (
-        <AppTextField
-          className={classes.fullWidthInput}
-          errorMsg={validationErrors.message}
-          helperText={`${messageLength}/100`}
-          label={translation.generalInfo.textFieldLabel}
-          multiline
-          name='message'
-          onBlur={handleBlur}
-          onChange={(e) => {
-            const { value } = e.target
-            setFormData((prevData) => ({
-              ...prevData,
-              message: value
-            }))
-            onMessageChange(e)
-          }}
-          rows={5}
-          value={formData.message}
-        />
-      )}
+      <AppTextField
+        className={classes.fullWidthInput}
+        errorMsg={validationErrors.message}
+        helperText={`${messageLength}/100`}
+        label={translation.generalInfo.textFieldLabel}
+        multiline
+        name='message'
+        onBlur={handleBlur}
+        onChange={(e) => {
+          const { value } = e.target
+          setFormData((prevData) => ({
+            ...prevData,
+            message: value
+          }))
+          onMessageChange(e)
+        }}
+        rows={5}
+        value={message}
+      />
     </>
   )
 }
