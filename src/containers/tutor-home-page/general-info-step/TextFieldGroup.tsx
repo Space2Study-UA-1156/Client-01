@@ -31,12 +31,14 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     message: ''
   }
 
-  const initialFormData: FormData = (stepData['General Info']
-    ?.data as unknown as FormData) || {
-    firstName: '',
-    lastName: '',
-    message: ''
-  }
+  const initialFormData: FormData = JSON.parse(
+    localStorage.getItem('formData') || '{}'
+  ) ||
+    (stepData['General Info']?.data as unknown as FormData) || {
+      firstName: '',
+      lastName: '',
+      message: ''
+    }
 
   const [validationErrors, setValidationErrors] = useState<FormData>(
     initialValidationErrors
@@ -52,6 +54,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
 
   useEffect(() => {
     handleStepData('General Info', formData, validationErrors)
+    localStorage.setItem('formData', JSON.stringify(formData))
   }, [formData, validationErrors, handleStepData])
 
   const handleBlur = (

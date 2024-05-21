@@ -42,8 +42,8 @@ const SelectGroup: React.FC = () => {
   }, [selectedCountry])
 
   useEffect(() => {
-    if (selectedCountry) {
-      const fetchCities = async () => {
+    const fetchCities = async () => {
+      if (selectedCountry) {
         try {
           const response = await LocationService.getCities(selectedCountry)
           const cityData = response.data
@@ -56,12 +56,13 @@ const SelectGroup: React.FC = () => {
         } catch (error) {
           console.error('Error fetching cities:', error)
         }
+      } else {
+        setCities([])
+        setSelectedCity('')
       }
-      void fetchCities()
-    } else {
-      setCities([])
-      setSelectedCity('')
     }
+
+    void fetchCities()
   }, [selectedCountry, selectedCity])
 
   useEffect(() => {
@@ -74,7 +75,7 @@ const SelectGroup: React.FC = () => {
 
   const handleCountryChange = (event: SelectChangeEvent) => {
     setSelectedCountry(event.target.value)
-    setSelectedCity('')
+    setSelectedCity('') // Reset city when country changes
   }
 
   const handleCityChange = (event: SelectChangeEvent) => {
@@ -87,55 +88,34 @@ const SelectGroup: React.FC = () => {
     >
       <FormControl className={classes.formControl}>
         <InputLabel id='country-label'>{t('common.labels.country')}</InputLabel>
-        {countries.length > 0 ? (
-          <Select
-            label={t('common.labels.country')}
-            labelId='country-label'
-            onChange={handleCountryChange}
-            value={selectedCountry}
-          >
-            {countries.map((country) => (
-              <MenuItem key={country} value={country}>
-                {country}
-              </MenuItem>
-            ))}
-          </Select>
-        ) : (
-          <Select
-            label={t('common.labels.country')}
-            labelId='country-label'
-            value=''
-          >
-            <MenuItem value=''>{t('common.labels.noOptions')}</MenuItem>
-          </Select>
-        )}
+        <Select
+          label={t('common.labels.country')}
+          labelId='country-label'
+          onChange={handleCountryChange}
+          value={selectedCountry}
+        >
+          {countries.map((country) => (
+            <MenuItem key={country} value={country}>
+              {country}
+            </MenuItem>
+          ))}
+        </Select>
       </FormControl>
       <FormControl className={classes.formControl}>
         <InputLabel id='city-label'>{t('common.labels.city')}</InputLabel>
-        {cities.length > 0 ? (
-          <Select
-            disabled={!selectedCountry}
-            label={t('common.labels.city')}
-            labelId='city-label'
-            onChange={handleCityChange}
-            value={selectedCity}
-          >
-            {cities.map((city) => (
-              <MenuItem key={city} value={city}>
-                {city}
-              </MenuItem>
-            ))}
-          </Select>
-        ) : (
-          <Select
-            disabled={!selectedCountry}
-            label={t('common.labels.city')}
-            labelId='city-label'
-            value=''
-          >
-            <MenuItem value=''>{t('common.labels.noOptions')}</MenuItem>
-          </Select>
-        )}
+        <Select
+          disabled={!selectedCountry}
+          label={t('common.labels.city')}
+          labelId='city-label'
+          onChange={handleCityChange}
+          value={selectedCity}
+        >
+          {cities.map((city) => (
+            <MenuItem key={city} value={city}>
+              {city}
+            </MenuItem>
+          ))}
+        </Select>
       </FormControl>
     </div>
   )
