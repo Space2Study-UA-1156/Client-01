@@ -113,7 +113,7 @@ const useSteps = ({ steps }) => {
   const isLastStep = activeStep === steps.length - 1
 
   const handleSubmit = () => {
-    const [generalLabel, subjectLabel, languageLabel] = stepLabels
+    const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
 
     if (!isStepperDataValid()) return
 
@@ -126,7 +126,8 @@ const useSteps = ({ steps }) => {
       },
       professionalSummary: stepData[generalLabel].data.professionalSummary,
       mainSubjects: stepData[subjectLabel],
-      nativeLanguage: stepData[languageLabel]
+      nativeLanguage: stepData[languageLabel],
+      photo: stepData[photoLabel].at(0)
     })
   }
 
