@@ -22,10 +22,22 @@ const CategoryList = ({ limit, gridStyles }) => {
   const categoryName = searchParams.get('categoryName')
 
   const onResponse = (res) => {
+    console.log('Response received:', res)
+
     if (res?.items) {
-      setCategories([...categories, ...res.items])
-    }
-    if (res?.count <= itemsPerPage * page) {
+      if (categoryName) {
+        const filteredCategories = res.items.filter((category) =>
+          category.name.toLowerCase().includes(categoryName.toLowerCase())
+        )
+        setCategories((prevCategories) => [
+          ...prevCategories,
+          ...filteredCategories
+        ])
+      } else {
+        setCategories((prevCategories) => [...prevCategories, ...res.items])
+      }
+      setIsMore(res.count > itemsPerPage * page)
+    } else {
       setIsMore(false)
     }
   }
@@ -65,7 +77,7 @@ const CategoryList = ({ limit, gridStyles }) => {
 
   if (!loading && !categories.length) {
     return (
-      <Box component='section' sx={{ ...styles.root, pt: '100px' }}>
+      <Box component='section' sx={{ ...styles.root, pt: '25px' }}>
         <CategoriesResultsNotFound />
       </Box>
     )
