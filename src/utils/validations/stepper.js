@@ -5,4 +5,8 @@ const professionalSummary = (value) => {
   return emptyField(value, '', textField(0, 100)(value) || '')
 }
 
-export { firstName, lastName, professionalSummary }
+const language = (value) => {
+  return emptyField(value, 'common.errorMessages.emptyField', '')
+}
+
+export { firstName, lastName, professionalSummary, language }

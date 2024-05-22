@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { useSelector } from 'react-redux'
 import useAxios from '~/hooks/use-axios'
@@ -8,37 +8,19 @@ import { useModalContext } from '~/context/modal-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
 import { userService } from '~/services/user-service'
 import { useStepContext } from '~/context/step-context'
-import {
-  firstName,
-  lastName,
-  professionalSummary
-} from '~/utils/validations/stepper'
+import useValidateSteps from './use-validate-steps'
 
 const useSteps = ({ steps }) => {
   const [activeStep, setActiveStep] = useState(0)
-  const [erroredSteps, setErroredSteps] = useState(() => new Set())
-  const { stepData, stepLabels, handleStepData } = useStepContext()
+  const { stepData, handleStepData } = useStepContext()
+  const { stepsWithErrors, validateAllSteps } = useValidateSteps(
+    steps,
+    stepData,
+    handleStepData
+  )
   const { closeModal } = useModalContext()
   const { setAlert } = useSnackBarContext()
   const { userId } = useSelector((state) => state.appMain)
-
-  const setStepError = (step) => {
-    setErroredSteps((prev) => new Set(prev).add(step))
-  }
-
-  const deleteStepError = (step) => {
-    setErroredSteps((prev) => {
-      const next = new Set(prev)
-      next.delete(step)
-      return next
-    })
-  }
-
-  useEffect(() => {
-    const [generalLabel] = stepLabels
-    const { errors } = stepData[generalLabel]
-    Object.values(errors).every((error) => !error) && deleteStepError(0)
-  }, [stepData, stepLabels])
 
   const updateUser = useCallback(
     (data) => userService.updateUser(userId, data),
@@ -80,42 +62,12 @@ const useSteps = ({ steps }) => {
     setActiveStep(step)
   }
 
-  const isStepperDataValid = () => {
-    const [generalLabel] = stepLabels
-    let result = true
-
-    const { data } = stepData[generalLabel]
-
-    const firstNameError = firstName(data.firstName)
-    const lastNameError = lastName(data.lastName)
-    const professionalSummaryError = professionalSummary(
-      data.professionalSummary
-    )
-
-    if (firstNameError || lastNameError || professionalSummaryError) {
-      result = false
-      setStepError(0)
-    }
-
-    handleStepData(
-      generalLabel,
-      {},
-      {
-        firstName: firstNameError,
-        lastName: lastNameError,
-        professionalSummary: professionalSummaryError
-      }
-    )
-
-    return result
-  }
-
   const isLastStep = activeStep === steps.length - 1
 
   const handleSubmit = () => {
-    const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
+    const [generalLabel, subjectLabel, languageLabel, photoLabel] = steps
 
-    if (!isStepperDataValid()) return
+    if (!validateAllSteps()) return
 
     fetchData({
       firstName: stepData[generalLabel].data.firstName,
@@ -126,7 +78,7 @@ const useSteps = ({ steps }) => {
       },
       professionalSummary: stepData[generalLabel].data.professionalSummary,
       mainSubjects: stepData[subjectLabel],
-      nativeLanguage: stepData[languageLabel],
+      nativeLanguage: stepData[languageLabel].data.language,
       photo: stepData[photoLabel].at(0)
     })
   }
@@ -140,7 +92,7 @@ const useSteps = ({ steps }) => {
 
   return {
     activeStep,
-    erroredSteps,
+    stepsWithErrors,
     isLastStep,
     stepOperation,
     loading

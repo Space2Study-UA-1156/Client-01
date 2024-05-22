@@ -8,8 +8,9 @@ import { defaultResponses } from '~/constants'
 import useAxios from '~/hooks/use-axios'
 import useBreakpoints from '~/hooks/use-breakpoints'
 import Autocomplete from '@mui/material/Autocomplete'
-import TextField from '@mui/material/TextField'
 import { useState } from 'react'
+import AppTextField from '~/components/app-text-field/AppTextField'
+import { language } from '~/utils/validations/stepper'
 
 const LanguageStep = ({ btnsBox, stepLabel }) => {
   const { isTablet, isMobile, isLaptopAndAbove } = useBreakpoints()
@@ -17,7 +18,8 @@ const LanguageStep = ({ btnsBox, stepLabel }) => {
   const { t } = useTranslation()
   const [inputValue, setInputValue] = useState('')
 
-  const selectedLanguage = stepData[stepLabel]
+  const selectedLanguage = stepData[stepLabel].data.language
+  const languageError = stepData[stepLabel].errors.language
 
   const { response } = useAxios({
     service: languageService.getLanguages,
@@ -25,7 +27,11 @@ const LanguageStep = ({ btnsBox, stepLabel }) => {
   })
 
   const handleChange = (event, newValue) => {
-    handleStepData(stepLabel, newValue)
+    handleStepData(
+      stepLabel,
+      { language: newValue },
+      { language: language(newValue) }
+    )
   }
 
   const handleOnInputChange = (event, newInputValue) => {
@@ -54,8 +60,9 @@ const LanguageStep = ({ btnsBox, stepLabel }) => {
             onInputChange={handleOnInputChange}
             options={response}
             renderInput={(params) => (
-              <TextField
+              <AppTextField
                 {...params}
+                errorMsg={t(languageError)}
                 label={t('becomeTutor.languages.autocompleteLabel')}
               />
             )}
