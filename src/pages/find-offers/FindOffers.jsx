@@ -5,17 +5,36 @@ import Stack from '@mui/material/Stack'
 import { useSearchParams } from 'react-router-dom'
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
 import AppViewSwitcher from '~/components/app-view-switcher/AppViewSwitcher'
-import PopularCategories from '~/containers/popular-categories/PopularCategories'
 import AppContentSwitcher from '~/components/app-content-switcher/AppContentSwitcher'
+import PopularCategories from '~/containers/popular-categories/PopularCategories'
+import OfferCardsContainer from '~/containers/offer-cards-container/OfferCardsContainer'
 import { styles } from '~/pages/find-offers/FindOffers.styles'
-import { student, tutor } from '~/constants'
+import { defaultResponses, student, tutor } from '~/constants'
+import useAxios from '~/hooks/use-axios'
+import { offerService } from '~/services/offer-service'
 
 const FindOffers = () => {
   const { userRole } = useSelector((state) => state.appMain)
   const { t } = useTranslation()
+  const [offers, setOffers] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [view, setView] = useState(() => searchParams.get('view') || 'list')
   const [role, setRole] = useState(() => searchParams.get('role') || userRole)
+  const offersPerPage = 9
+
+  const onResponse = (res) => {
+    if (res?.items) {
+      setOffers((prevState) => prevState.concat(res.items))
+    }
+    // TODO: Check res.count to implement pagination in the future
+  }
+
+  const { fetchData } = useAxios({
+    service: offerService.getOffers,
+    fetchOnMount: false,
+    defaultResponse: defaultResponses.array,
+    onResponse
+  })
 
   const switchOptions = {
     left: {
@@ -34,6 +53,13 @@ const FindOffers = () => {
     setSearchParams({ view, role })
   }, [view, role, setSearchParams])
 
+  useEffect(() => {
+    fetchData({
+      limit: offersPerPage
+      // TODO: Use skip param to implement pagination
+    })
+  }, [])
+
   return (
     <PageWrapper>
       Find offers
@@ -47,6 +73,7 @@ const FindOffers = () => {
           typographyVariant={'h6'}
         />
       </Stack>
+      <OfferCardsContainer offers={offers} view={view} />
       <PopularCategories />
     </PageWrapper>
   )
