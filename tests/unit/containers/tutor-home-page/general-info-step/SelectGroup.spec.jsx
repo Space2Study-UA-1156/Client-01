@@ -1,10 +1,29 @@
-import React from 'react'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { describe, it, beforeEach, expect, vi } from 'vitest'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { LocationService } from '~/services/location-service'
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import React from 'react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { studentStepLabels } from '~/components/user-steps-wrapper/constants'
 import SelectGroup from '~/containers/tutor-home-page/general-info-step/SelectGroup'
+import { useStepContext } from '~/context/step-context'
+import { LocationService } from '~/services/location-service'
+import { renderWithProviders } from '~tests/test-utils'
+
+const mockStepData = {
+  data: {
+    firstName: '',
+    lastName: '',
+    city: '',
+    country: '',
+    professionalSummary: ''
+  },
+  errors: {
+    firstName: '',
+    lastName: '',
+    professionalSummary: ''
+  }
+}
+const mockHandleStepData = vi.fn()
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -12,12 +31,32 @@ vi.mock('react-i18next', () => ({
   })
 }))
 
+vi.mock('~/context/step-context', async (importOriginal) => {
+  const module = await importOriginal()
+
+  return {
+    ...module,
+    useStepContext: vi.fn()
+  }
+})
+
 vi.mock('~/services/location-service')
 
 const theme = createTheme()
 
 const renderWithTheme = (component) => {
-  return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>)
+  return renderWithProviders(
+    <ThemeProvider theme={theme}>{component}</ThemeProvider>
+  )
+}
+
+const renderComponentWithStepContext = (data = mockStepData) => {
+  useStepContext.mockReturnValue({
+    stepData: { [studentStepLabels[0]]: data },
+    stepLabels: studentStepLabels,
+    handleStepData: mockHandleStepData
+  })
+  renderWithTheme(<SelectGroup />)
 }
 
 describe('SelectGroup Component', () => {
@@ -29,7 +68,7 @@ describe('SelectGroup Component', () => {
     LocationService.getCountries.mockResolvedValueOnce({
       data: ['USA', 'Canada']
     })
-    renderWithTheme(<SelectGroup />)
+    renderComponentWithStepContext()
 
     expect(
       await screen.findByLabelText('common.labels.country')
@@ -41,7 +80,7 @@ describe('SelectGroup Component', () => {
     LocationService.getCountries.mockResolvedValueOnce({
       data: ['USA', 'Canada']
     })
-    renderWithTheme(<SelectGroup />)
+    renderComponentWithStepContext()
 
     const countrySelect = await screen.findByLabelText('common.labels.country')
     userEvent.click(countrySelect)
@@ -57,8 +96,22 @@ describe('SelectGroup Component', () => {
     LocationService.getCities.mockResolvedValueOnce({
       data: ['New York', 'Los Angeles']
     })
+    const mockData = {
+      data: {
+        firstName: '',
+        lastName: '',
+        city: 'testCity',
+        country: 'testCountry',
+        professionalSummary: ''
+      },
+      errors: {
+        firstName: '',
+        lastName: '',
+        professionalSummary: ''
+      }
+    }
 
-    renderWithTheme(<SelectGroup />)
+    renderComponentWithStepContext(mockData)
 
     const countrySelect = await screen.findByLabelText('common.labels.country')
     userEvent.click(countrySelect)
@@ -78,7 +131,7 @@ describe('SelectGroup Component', () => {
       data: ['USA', 'Canada']
     })
 
-    renderWithTheme(<SelectGroup />)
+    renderComponentWithStepContext()
 
     const citySelect = screen.getByLabelText('common.labels.city')
     expect(citySelect).toBeDisabled()
@@ -95,7 +148,7 @@ describe('SelectGroup Component', () => {
       data: ['Toronto', 'Vancouver']
     })
 
-    renderWithTheme(<SelectGroup />)
+    renderComponentWithStepContext()
 
     const countrySelect = await screen.findByLabelText('common.labels.country')
     userEvent.click(countrySelect)

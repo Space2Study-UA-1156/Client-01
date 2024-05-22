@@ -1,79 +1,54 @@
-import React, { useState, useEffect, FocusEvent } from 'react'
+import React, { useState, FocusEvent, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import SelectGroup from './SelectGroup'
 import { useTextFieldGroupStyles } from './TextFieldGroup.styles'
 import translations from '~/constants/translations/en/common.json'
-import { firstName, lastName } from '~/utils/validations/auth'
+import {
+  firstName,
+  lastName,
+  professionalSummary
+} from '~/utils/validations/stepper'
 import translation from '~/constants/translations/en/become-tutor.json'
 import { useStepContext } from '~/context/step-context'
-
 import {
-  TextFieldGroupProps,
   FormData,
   StepContextType
 } from '~/containers/tutor-home-page/general-info-step/interfaces/ITextFieldGroup'
 
-const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
-  message,
-  messageLength,
-  onMessageChange
-}) => {
+const TextFieldGroup: React.FC = () => {
   const classes = useTextFieldGroupStyles()
   const { t } = useTranslation()
-  const { setFormValidation, handleStepData, stepData } =
+  const { setFormValidation, handleStepData, stepData, stepLabels } =
     useStepContext() as StepContextType
 
-  const initialValidationErrors: FormData = (stepData['General Info']
-    ?.errors as unknown as FormData) || {
-    firstName: '',
-    lastName: '',
-    message: ''
-  }
+  const [generalStepLabel] = stepLabels
+  const formData = stepData[generalStepLabel]
 
-  const initialFormData: FormData = (stepData['General Info']
-    ?.data as unknown as FormData) || {
-    firstName: '',
-    lastName: '',
-    message: ''
-  }
-
-  const [validationErrors, setValidationErrors] = useState<FormData>(
-    initialValidationErrors
-  )
-  const [formData, setFormData] = useState<FormData>(initialFormData)
+  const [summary, setSummary] = useState(formData.data.professionalSummary)
 
   useEffect(() => {
-    const hasErrors = Object.values(validationErrors).some(
+    const hasErrors = Object.values(formData.errors).some(
       (error) => error !== ''
     )
     setFormValidation(!hasErrors)
-  }, [validationErrors, setFormValidation])
-
-  useEffect(() => {
-    handleStepData('General Info', formData, validationErrors)
-  }, [formData, validationErrors, handleStepData])
+  }, [formData, setFormValidation])
 
   const handleBlur = (
     e: FocusEvent<HTMLInputElement>,
-    validationFn?: (value: string) => string
+    validationFn: (value: string) => string
   ) => {
     const { value, name } = e.target as { value: string; name: keyof FormData }
-    let errorMsg = ''
-    if (validationFn) {
-      errorMsg = validationFn(value)
-    }
-    if (!value) {
-      errorMsg = t('This field cannot be empty')
-    }
-    setValidationErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: t(errorMsg)
-    }))
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }))
+    handleStepData(
+      generalStepLabel,
+      { [name]: value },
+      { [name]: validationFn(value) }
+    )
+  }
+
+  const handleSummaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.slice(0, 100)
+    setSummary(value)
   }
 
   return (
@@ -81,60 +56,41 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       <div className={classes.inputRow}>
         <AppTextField
           className={classes.halfWidthInput}
-          errorMsg={validationErrors.firstName}
+          defaultValue={formData.data.firstName}
+          errorMsg={t(formData.errors.firstName)}
           label={translations.labels.firstName}
           multiline={false}
           name='firstName'
           onBlur={(e) => handleBlur(e, firstName)}
-          onChange={(e) => {
-            const { value } = e.target
-            setFormData((prevData) => ({
-              ...prevData,
-              firstName: value
-            }))
-          }}
           required
-          value={formData.firstName}
           variant='outlined'
         />
         <AppTextField
           className={classes.halfWidthInput}
-          errorMsg={validationErrors.lastName}
+          defaultValue={formData.data.lastName}
+          errorMsg={t(formData.errors.lastName)}
           label={translations.labels.lastName}
           multiline={false}
           name='lastName'
           onBlur={(e) => handleBlur(e, lastName)}
-          onChange={(e) => {
-            const { value } = e.target
-            setFormData((prevData) => ({
-              ...prevData,
-              lastName: value
-            }))
-          }}
           required
-          value={formData.lastName}
           variant='outlined'
         />
       </div>
       <SelectGroup />
       <AppTextField
         className={classes.fullWidthInput}
-        errorMsg={validationErrors.message}
-        helperText={`${messageLength}/100`}
+        errorMsg={t(formData.errors.professionalSummary)}
+        helperText={`${String(summary).length}/100`}
         label={translation.generalInfo.textFieldLabel}
         multiline
-        name='message'
-        onBlur={handleBlur}
-        onChange={(e) => {
-          const { value } = e.target
-          setFormData((prevData) => ({
-            ...prevData,
-            message: value
-          }))
-          onMessageChange(e)
-        }}
+        name='professionalSummary'
+        onBlur={(e) =>
+          handleBlur(e, professionalSummary as (value: string) => string)
+        }
+        onChange={handleSummaryChange}
         rows={5}
-        value={message}
+        value={summary}
       />
     </>
   )

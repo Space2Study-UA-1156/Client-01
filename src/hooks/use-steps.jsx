@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { useSelector } from 'react-redux'
 import useAxios from '~/hooks/use-axios'
@@ -8,14 +8,37 @@ import { useModalContext } from '~/context/modal-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
 import { userService } from '~/services/user-service'
 import { useStepContext } from '~/context/step-context'
+import {
+  firstName,
+  lastName,
+  professionalSummary
+} from '~/utils/validations/stepper'
 
 const useSteps = ({ steps }) => {
   const [activeStep, setActiveStep] = useState(0)
   const [erroredSteps, setErroredSteps] = useState(() => new Set())
-  const { stepData, stepLabels } = useStepContext()
+  const { stepData, stepLabels, handleStepData } = useStepContext()
   const { closeModal } = useModalContext()
   const { setAlert } = useSnackBarContext()
   const { userId } = useSelector((state) => state.appMain)
+
+  const setStepError = (step) => {
+    setErroredSteps((prev) => new Set(prev).add(step))
+  }
+
+  const deleteStepError = (step) => {
+    setErroredSteps((prev) => {
+      const next = new Set(prev)
+      next.delete(step)
+      return next
+    })
+  }
+
+  useEffect(() => {
+    const [generalLabel] = stepLabels
+    const { errors } = stepData[generalLabel]
+    Object.values(errors).every((error) => !error) && deleteStepError(0)
+  }, [stepData, stepLabels])
 
   const updateUser = useCallback(
     (data) => userService.updateUser(userId, data),
@@ -45,58 +68,44 @@ const useSteps = ({ steps }) => {
     onResponseError: handleResponseError
   })
 
-  const setStepError = (step) => {
-    setErroredSteps((prev) => new Set(prev).add(step))
-  }
-
-  const deleteStepError = (step) => {
-    setErroredSteps((prev) => {
-      const next = new Set(prev)
-      next.delete(step)
-      return next
-    })
-  }
-
   const next = () => {
-    deleteStepError(activeStep)
     setActiveStep((prev) => prev + 1)
   }
 
   const back = () => {
-    deleteStepError(activeStep)
     setActiveStep((prev) => prev - 1)
   }
 
   const handleStepChange = (step) => {
-    deleteStepError(activeStep)
     setActiveStep(step)
   }
 
   const isStepperDataValid = () => {
-    // eslint-disable-next-line no-unused-vars
-    const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
+    const [generalLabel] = stepLabels
     let result = true
 
-    //=========================================================================
-    // const { firstName, lastName, city, country } = stepData[generalLabel].data
-    // if (!firstName || !lastName || !city || !country) {
-    //   isValuesValid = false
-    //   setStepError(0)
-    // }
-    //=========================================================================
+    const { data } = stepData[generalLabel]
 
-    if (stepData[subjectLabel].length === 0) {
+    const firstNameError = firstName(data.firstName)
+    const lastNameError = lastName(data.lastName)
+    const professionalSummaryError = professionalSummary(
+      data.professionalSummary
+    )
+
+    if (firstNameError || lastNameError || professionalSummaryError) {
       result = false
-      setStepError(1)
+      setStepError(0)
     }
-    if (!stepData[languageLabel] || stepData[languageLabel]?.length === 0) {
-      result = false
-      setStepError(2)
-    }
-    if (stepData[photoLabel]?.length === 0) {
-      result = false
-      setStepError(3)
-    }
+
+    handleStepData(
+      generalLabel,
+      {},
+      {
+        firstName: firstNameError,
+        lastName: lastNameError,
+        professionalSummary: professionalSummaryError
+      }
+    )
 
     return result
   }
@@ -104,19 +113,18 @@ const useSteps = ({ steps }) => {
   const isLastStep = activeStep === steps.length - 1
 
   const handleSubmit = () => {
-    // eslint-disable-next-line no-unused-vars
     const [generalLabel, subjectLabel, languageLabel] = stepLabels
 
     if (!isStepperDataValid()) return
 
     fetchData({
-      firstName: 'firstName',
-      lastName: 'lastName',
+      firstName: stepData[generalLabel].data.firstName,
+      lastName: stepData[generalLabel].data.lastName,
       address: {
-        country: 'country',
-        city: 'city'
+        country: stepData[generalLabel].data.country,
+        city: stepData[generalLabel].data.city
       },
-      professionalSummary: 'professionalSummary',
+      professionalSummary: stepData[generalLabel].data.professionalSummary,
       mainSubjects: stepData[subjectLabel],
       nativeLanguage: stepData[languageLabel]
     })

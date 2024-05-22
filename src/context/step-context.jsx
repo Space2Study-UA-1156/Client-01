@@ -8,7 +8,7 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     errors: {
       firstName: '',
       lastName: '',
-      message: ''
+      professionalSummary: ''
     }
   })
   const [subject, setSubject] = useState([])

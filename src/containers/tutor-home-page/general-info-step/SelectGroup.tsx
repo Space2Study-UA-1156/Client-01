@@ -9,14 +9,20 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useSelectGroupStyles } from './SelectGroup.styles'
 import { LocationService } from '~/services/location-service'
+import { useStepContext } from '~/context/step-context'
+import { StepContextType } from './interfaces/ITextFieldGroup'
 
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
   const classes = useSelectGroupStyles()
   const [countries, setCountries] = useState<string[]>([])
   const [cities, setCities] = useState<string[]>([])
-  const [selectedCountry, setSelectedCountry] = useState('')
-  const [selectedCity, setSelectedCity] = useState('')
+  const { stepData, handleStepData, stepLabels } =
+    useStepContext() as StepContextType
+
+  const [generalStepLabel] = stepLabels
+  const selectedCountry = stepData[generalStepLabel].data.country
+  const selectedCity = stepData[generalStepLabel].data.city
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -44,16 +50,16 @@ const SelectGroup: React.FC = () => {
       void fetchCities()
     } else {
       setCities([])
-      setSelectedCity('')
+      handleStepData(generalStepLabel, { city: '' }, {})
     }
-  }, [selectedCountry])
+  }, [generalStepLabel, handleStepData, selectedCountry])
 
   const handleCountryChange = (event: SelectChangeEvent) => {
-    setSelectedCountry(event.target.value)
+    handleStepData(generalStepLabel, { country: event.target.value }, {})
   }
 
   const handleCityChange = (event: SelectChangeEvent) => {
-    setSelectedCity(event.target.value)
+    handleStepData(generalStepLabel, { city: event.target.value }, {})
   }
 
   return (
