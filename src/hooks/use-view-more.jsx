@@ -10,7 +10,8 @@ const useViewMore = ({
   const [data, setData] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const page = Number(searchParams.get(searchParamKey)) || 1
+  const pageUrlValue = Number(searchParams.get(searchParamKey)) || 1
+  const page = pageUrlValue > 0 ? pageUrlValue : 1
   const isPageInSearchParams = searchParams.has(searchParamKey)
 
   useEffect(() => {
@@ -20,18 +21,23 @@ const useViewMore = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    if (!searchParams.size) {
-      setData([])
-    }
-  }, [searchParams.size])
-
-  const onResponse = useCallback((response) => {
-    setData((prev) => [...prev, ...response.items])
-  }, [])
+  const onResponse = useCallback(
+    (response) => {
+      if (searchParams.has(searchParamKey)) {
+        setData((prev) => [...prev, ...response.items])
+      } else {
+        setData(response.items)
+      }
+    },
+    [searchParamKey, searchParams]
+  )
 
   const serviceFn = useCallback(
-    (params) => service({ limit: cardsPerPage, ...params }),
+    (params) =>
+      service({
+        limit: cardsPerPage,
+        ...params
+      }),
     [service, cardsPerPage]
   )
 
