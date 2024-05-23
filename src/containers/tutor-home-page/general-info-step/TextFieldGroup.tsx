@@ -76,15 +76,15 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
             lastName: data.lastName,
             message: prevData.message || ''
           }))
-          setGeneralData((prevGeneralData) => ({
+          setGeneralData({
             data: {
-              ...prevGeneralData.data,
+              ...generalData.data,
               firstName: data.firstName,
               lastName: data.lastName,
-              message: prevGeneralData.data.message || ''
+              message: generalData.data.message || ''
             },
-            errors: prevGeneralData.errors
-          }))
+            errors: generalData.errors
+          })
           setIsDataFetched(true)
         }
       } catch (error) {
@@ -101,7 +101,14 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     return () => {
       isMounted = false
     }
-  }, [userId, userRole, setGeneralData, isDataFetched])
+  }, [
+    userId,
+    userRole,
+    setGeneralData,
+    isDataFetched,
+    generalData.data,
+    generalData.errors
+  ])
 
   useEffect(() => {
     const hasErrors = Object.values(validationErrors).some(
@@ -138,17 +145,17 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       ...prevData,
       [name]: value
     }))
-    setGeneralData((prevGeneralData) => ({
-      ...prevGeneralData,
+    setGeneralData({
+      ...generalData,
       data: {
-        ...prevGeneralData.data,
+        ...generalData.data,
         [name]: value
       },
       errors: {
-        ...prevGeneralData.errors,
+        ...generalData.errors,
         [name]: t(errorMsg)
       }
-    }))
+    })
   }
 
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -159,14 +166,14 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     }))
     handleStepData('General Info', { message: value }, validationErrors)
     onMessageChange(e)
-    setGeneralData((prevGeneralData) => ({
-      ...prevGeneralData,
+    setGeneralData({
+      ...generalData,
       data: {
-        ...prevGeneralData.data,
+        ...generalData.data,
         message: value
       },
-      errors: prevGeneralData.errors
-    }))
+      errors: generalData.errors
+    })
   }
 
   return (
@@ -185,14 +192,14 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               ...prevData,
               firstName: value
             }))
-            setGeneralData((prevGeneralData) => ({
-              ...prevGeneralData,
+            setGeneralData({
+              ...generalData,
               data: {
-                ...prevGeneralData.data,
+                ...generalData.data,
                 firstName: value
               },
-              errors: prevGeneralData.errors
-            }))
+              errors: generalData.errors
+            })
           }}
           required
           value={formData.firstName || ''}
@@ -211,14 +218,14 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               ...prevData,
               lastName: value
             }))
-            setGeneralData((prevGeneralData) => ({
-              ...prevGeneralData,
+            setGeneralData({
+              ...generalData,
               data: {
-                ...prevGeneralData.data,
+                ...generalData.data,
                 lastName: value
               },
-              errors: prevGeneralData.errors
-            }))
+              errors: generalData.errors
+            })
           }}
           required
           value={formData.lastName || ''}
