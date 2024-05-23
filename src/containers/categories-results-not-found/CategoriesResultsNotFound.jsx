@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { styles } from '~/containers/categories-results-not-found/CategoriesResultsNotFound.styles'
 
-const CategoriesResultsNotFound = () => {
+const CategoriesResultsNotFound = ({ name = 'category' }) => {
   const { t } = useTranslation()
 
   const requestNewCategory = () => {}
@@ -15,7 +15,7 @@ const CategoriesResultsNotFound = () => {
     <Box sx={styles.box}>
       <ImgTitleDescription
         alt='Magnifier'
-        description={t('constant.tryAgainText', { name: 'category' })}
+        description={t('constant.tryAgainText', { name })}
         img={Magnifier}
         style={styles}
         title={t('constant.resultsNotFound')}
@@ -27,7 +27,7 @@ const CategoriesResultsNotFound = () => {
         type='submit'
         variant='contained'
       >
-        {t('constant.buttonRequest', { name: 'category' })}
+        {t('constant.buttonRequest', { name })}
       </AppButton>
     </Box>
   )
