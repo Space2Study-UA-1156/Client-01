@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import useAxios from '~/hooks/use-axios'
 
 import { snackbarVariants } from '~/constants'
@@ -9,6 +9,7 @@ import { useSnackBarContext } from '~/context/snackbar-context'
 import { userService } from '~/services/user-service'
 import { useStepContext } from '~/context/step-context'
 import useValidateSteps from './use-validate-steps'
+import { markUserUpdated } from '~/redux/reducer'
 
 const useSteps = ({ steps }) => {
   const [activeStep, setActiveStep] = useState(0)
@@ -21,6 +22,7 @@ const useSteps = ({ steps }) => {
   const { closeModal } = useModalContext()
   const { setAlert } = useSnackBarContext()
   const { userId } = useSelector((state) => state.appMain)
+  const dispatch = useDispatch()
 
   const updateUser = useCallback(
     (data) => userService.updateUser(userId, data),
@@ -40,6 +42,7 @@ const useSteps = ({ steps }) => {
       message: 'becomeTutor.successMessage'
     })
     closeModal()
+    dispatch(markUserUpdated())
   }
 
   const { loading, fetchData } = useAxios({
