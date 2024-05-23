@@ -22,7 +22,6 @@ const ResultsNotFound = ({ name = 'category', sx = {} }) => {
     <Box component='section' sx={spliceSx(styles.root, sx.root)}>
       <Box sx={spliceSx(styles.box, sx.box)}>
         <ImgTitleDescription
-          alt='Magnifier'
           description={t('constant.tryAgainText', { name })}
           img={Magnifier}
           style={styles.content}

@@ -1,75 +1,60 @@
-import { renderWithProviders } from '~tests/test-utils'
-import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
-import { screen, fireEvent } from '@testing-library/react'
-import { vi } from 'vitest'
-
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key) => {
-      switch (key) {
-        case 'constant.resultsNotFound':
-          return 'Results Not Found'
-        case 'constant.tryAgainText':
-          return 'Try again with category'
-        case 'constant.buttonRequest':
-          return 'Request New Category'
-        default:
-          return key
-      }
-    }
-  })
-}))
-
-const imgAltMock = 'info'
-const imgSrcMock = '/src/assets/img/guest-home-page/howItWorksStudentSecond.svg'
-const requestNewCategory = vi.fn()
+import { screen, fireEvent, render } from '@testing-library/react'
+import ResultsNotFound from '~/containers/results-not-found/ResultsNotFound'
+import RequestStudyDialog from '~/containers/request-study/request-study-dialog/RequestStudyDialog'
 
 vi.mock('~/components/img-title-description/ImgTitleDescription', () => ({
-  __esModule: true,
-  default: () => (
+  default: ({ title, description, img }) => (
     <div>
-      <img alt={imgAltMock} src={imgSrcMock} />
-      <h2>Results Not Found</h2>
-      <p>Try again with category</p>
+      <img src={img} />
+      <h2>{title}</h2>
+      <p>{description}</p>
     </div>
   )
 }))
 
 vi.mock('~/components/app-button/AppButton', () => ({
-  __esModule: true,
-  default: ({ onClick }) => (
-    <button onClick={onClick}>Request New Category</button>
+  default: ({ onClick, children }) => (
+    <button onClick={onClick}>{children}</button>
   )
 }))
 
+const openModalMock = vi.fn()
+
+vi.mock('~/context/modal-context', async () => {
+  const actual = await vi.importActual('~/context/modal-context')
+
+  return {
+    ...actual,
+    useModalContext: () => ({
+      openModal: openModalMock
+    })
+  }
+})
+
 describe('CategoriesResultsNotFound tests', () => {
   beforeEach(() => {
-    renderWithProviders(<CategoriesResultsNotFound />)
+    render(<ResultsNotFound />)
   })
 
-  it('Image, title and description should be correct', () => {
-    const actualTitle = screen.getByText('Results Not Found')
-    const actualDescription = screen.getByText('Try again with category')
-    const imgElement = screen.getByAltText(imgAltMock)
+  it('should render title, description and button', () => {
+    const title = screen.getByRole('heading', {
+      name: 'constant.resultsNotFound'
+    })
+    const description = screen.getByText('constant.tryAgainText')
+    const button = screen.getByText('constant.buttonRequest')
 
-    expect(actualTitle).toBeInTheDocument()
-    expect(actualDescription).toBeInTheDocument()
-    expect(imgElement).toBeInTheDocument()
-    expect(imgElement).toHaveAttribute('src', imgSrcMock)
+    expect(title).toBeInTheDocument()
+    expect(description).toBeInTheDocument()
+    expect(button).toBeInTheDocument()
   })
 
-  it('Button should be present with correct text', () => {
-    const buttonElement = screen.getByText('Request New Category')
+  it('should open modal when the button is clicked', () => {
+    const button = screen.getByText('constant.buttonRequest')
+    fireEvent.click(button)
 
-    expect(buttonElement).toBeInTheDocument()
-    expect(buttonElement).toHaveTextContent('Request New Category')
-  })
-
-  it('Button should call function requestNewCategory when AppButton is clicked', async () => {
-    fireEvent.click(screen.getByText('Request New Category'))
-
-    assert(() => {
-      expect(requestNewCategory).toHaveBeenCalled
+    expect(openModalMock).toHaveBeenCalled()
+    expect(openModalMock).toHaveBeenCalledWith({
+      component: <RequestStudyDialog />
     })
   })
 })
