@@ -6,7 +6,6 @@ export const styles = {
     gap: '76px',
     p: { xs: '50px 16px', md: '70px 90px' }
   },
-
   formContainer: {
     maxWidth: '394px'
   },

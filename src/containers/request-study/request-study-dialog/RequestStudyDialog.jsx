@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
 import RequestStudyForm from '~/containers/request-study/request-study-form/RequestStudyForm'
+import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 
 import requestStudyImg from '~/assets/img/request-study-dialog/request-study.svg'
-import { styles } from '~/containers/request-study/request-study-dialog/RequestStudyDialog.styles'
 import useBreakpoints from '~/hooks/use-breakpoints'
-import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
+import { styles } from '~/containers/request-study/request-study-dialog/RequestStudyDialog.styles'
 
 const RequestStudyDialog = () => {
   const { t } = useTranslation()

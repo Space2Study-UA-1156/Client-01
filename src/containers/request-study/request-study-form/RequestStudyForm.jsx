@@ -1,13 +1,15 @@
 import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
-
-import useForm from '~/hooks/use-form'
 import AppTextArea from '~/components/app-text-area/AppTextArea'
 import AppButton from '~/components/app-button/AppButton'
+
+import useForm from '~/hooks/use-form'
+import useConfirm from '~/hooks/use-confirm'
 import {
   validations,
   initialValues,
@@ -18,6 +20,7 @@ import { styles } from '~/containers/request-study/request-study-form/RequestStu
 
 const RequestStudyForm = () => {
   const { t } = useTranslation()
+  const { setNeedConfirmation } = useConfirm()
 
   const {
     data,
@@ -25,12 +28,17 @@ const RequestStudyForm = () => {
     handleSubmit,
     handleInputChange,
     handleBlur,
-    handleNonInputValueChange
+    handleNonInputValueChange,
+    isDirty
   } = useForm({
     onSubmit: () => {},
     initialValues,
     validations
   })
+
+  useEffect(() => {
+    setNeedConfirmation(isDirty)
+  }, [isDirty, setNeedConfirmation])
 
   const handleChangeCategory = (event, category) => {
     if (typeof category === 'string') {
