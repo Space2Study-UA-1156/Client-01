@@ -63,7 +63,7 @@ describe('Student NavBar test', () => {
     expect(text).toBeInTheDocument()
   })
   it('should render account icon', () => {
-    const icon = screen.getByTestId('AccountCircleOutlinedIcon')
+    const icon = screen.getByTestId('AccountIcon')
 
     expect(icon).toBeInTheDocument()
   })

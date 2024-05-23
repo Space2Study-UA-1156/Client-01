@@ -22,7 +22,8 @@ const initialState = {
   loading: true,
   pageLoad: false,
   error: '',
-  isFirstLogin: true
+  isFirstLogin: true,
+  isUserUpdated: false
 }
 
 export const loginUser = createAsyncThunk(
@@ -124,6 +125,9 @@ export const mainSlice = createSlice({
     markFirstLoginComplete(state) {
       state.isFirstLogin = false
     },
+    markUserUpdated(state) {
+      state.isUserUpdated = true
+    },
     setPageLoading(state, action) {
       state.pageLoad = action.payload
     }
@@ -157,7 +161,12 @@ export const mainSlice = createSlice({
 
 const { actions, reducer } = mainSlice
 
-export const { setUser, logout, markFirstLoginComplete, setPageLoading } =
-  actions
+export const {
+  setUser,
+  logout,
+  markFirstLoginComplete,
+  markUserUpdated,
+  setPageLoading
+} = actions
 
 export default reducer
