@@ -105,7 +105,7 @@ const OfferCardList = ({ offer }) => {
                 readOnly
                 size='small'
                 sx={styles.rating}
-                value={rating}
+                value={parseFloat(rating)}
               />
             }
           />

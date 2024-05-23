@@ -7,7 +7,7 @@ export const styles = {
     padding: '31px 20px',
     flexDirection: 'row',
     maxWidth: '1088px',
-    gap: '50px',
+    gap: { xs: '20px', md: '50px' },
     justifyContent: 'space-between'
   },
   leftBox: {
@@ -31,12 +31,11 @@ export const styles = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: '50px'
+    gap: { xs: '20px', md: '50px' }
   },
   avatar: {
     width: { xs: '72px', md: '100px' },
     height: { xs: '72px', md: '100px' },
-
     marginBottom: '16px'
   },
   name: {
