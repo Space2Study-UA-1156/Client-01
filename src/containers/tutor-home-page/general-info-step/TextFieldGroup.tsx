@@ -4,11 +4,14 @@ import AppTextField from '~/components/app-text-field/AppTextField'
 import SelectGroup from './SelectGroup'
 import { useTextFieldGroupStyles } from './TextFieldGroup.styles'
 import translations from '~/constants/translations/en/common.json'
-import { firstName, lastName } from '~/utils/validations/auth'
+import {
+  firstName,
+  lastName,
+  professionalSummary
+} from '~/utils/validations/stepper'
 import translation from '~/constants/translations/en/become-tutor.json'
 import { useStepContext } from '~/context/step-context'
 import {
-  TextFieldGroupProps,
   FormData,
   StepContextType
 } from '~/containers/tutor-home-page/general-info-step/interfaces/ITextFieldGroup'
@@ -111,15 +114,11 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   ])
 
   useEffect(() => {
-    const hasErrors = Object.values(validationErrors).some(
+    const hasErrors = Object.values(formData.errors).some(
       (error) => error !== ''
     )
     setFormValidation(!hasErrors)
-  }, [validationErrors, setFormValidation])
-
-  useEffect(() => {
-    handleStepData('General Info', formData, validationErrors)
-  }, [formData, validationErrors, handleStepData])
+  }, [formData, setFormValidation])
 
   useEffect(() => {
     setFormData(generalData.data)
@@ -127,7 +126,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
 
   const handleBlur = (
     e: FocusEvent<HTMLInputElement>,
-    validationFn?: (value: string) => string
+    validationFn: (value: string) => string
   ) => {
     const { value, name } = e.target as { value: string; name: keyof FormData }
     let errorMsg = ''
@@ -181,7 +180,8 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       <div className={classes.inputRow}>
         <AppTextField
           className={classes.halfWidthInput}
-          errorMsg={validationErrors.firstName}
+          defaultValue={formData.firstName}
+          errorMsg={t(formData.errors.firstName)}
           label={translations.labels.firstName}
           multiline={false}
           name='firstName'
@@ -207,7 +207,8 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
         />
         <AppTextField
           className={classes.halfWidthInput}
-          errorMsg={validationErrors.lastName}
+          defaultValue={formData.lastName}
+          errorMsg={t(formData.errors.lastName)}
           label={translations.labels.lastName}
           multiline={false}
           name='lastName'
@@ -235,8 +236,8 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       <SelectGroup />
       <AppTextField
         className={classes.fullWidthInput}
-        errorMsg={validationErrors.message}
-        helperText={`${messageLength}/100`}
+        errorMsg={t(formData.errors.professionalSummary)}
+        helperText={`${String(formData.message).length}/100`}
         label={translation.generalInfo.textFieldLabel}
         multiline
         name='message'

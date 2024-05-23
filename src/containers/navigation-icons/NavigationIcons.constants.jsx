@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import LanguageIcon from '@mui/icons-material/Language'
 import LoginIcon from '@mui/icons-material/Login'
@@ -68,14 +67,6 @@ export const userIcons = [
     buttonProps: ({ openNotifications }) => ({
       onClick: openNotifications,
       sx: { ...styles.studentIcons, color: 'primary.200' }
-    })
-  },
-  {
-    tooltip: 'iconsTooltip.account',
-    icon: <AccountCircleOutlinedIcon />,
-    buttonProps: ({ openMenu }) => ({
-      onClick: openMenu,
-      sx: styles.studentIcons
     })
   },
   menuIcon

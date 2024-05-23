@@ -10,13 +10,13 @@ export interface StepContext {
 }
 
 export interface GeneralData {
-  data: Record<string, unknown>
-  errors: Record<string, unknown>
+  data: Record<string, string>
+  errors: Record<string, string>
 }
 
 export interface StepData {
   general: GeneralData
-  [key: string]: GeneralData | null
+  [key: string]: GeneralData
 }
 
 export interface StepContextType {

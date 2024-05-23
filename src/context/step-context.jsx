@@ -9,6 +9,15 @@ import { useSelector } from 'react-redux'
 
 const StepContext = createContext()
 
+const languageStepInitialValues = {
+  data: {
+    language: null
+  },
+  errors: {
+    language: ''
+  }
+}
+
 const StepProvider = ({ children, initialValues, stepLabels }) => {
   const { firstName, lastName } = useSelector((state) => state.appMain)
 
@@ -22,12 +31,12 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     errors: {
       firstName: '',
       lastName: '',
-      message: ''
+      professionalSummary: ''
     }
   })
 
   const [subject, setSubject] = useState([])
-  const [language, setLanguage] = useState(null)
+  const [language, setLanguage] = useState(languageStepInitialValues)
   const [photo, setPhoto] = useState([])
   const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
   const [isNextDisabled, setIsNextDisabled] = useState(true)
@@ -58,7 +67,10 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
           setSubject(newData)
           break
         case languageLabel:
-          setLanguage(newData)
+          setLanguage((prevState) => ({
+            data: { ...prevState.data, ...newData },
+            errors: { ...prevState.errors, ...newErrors }
+          }))
           break
         case photoLabel:
           setPhoto(newData)

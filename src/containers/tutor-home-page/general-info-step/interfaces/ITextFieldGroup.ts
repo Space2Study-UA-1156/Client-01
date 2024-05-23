@@ -21,6 +21,7 @@ export interface FormData {
 
 export interface StepContextType {
   stepData: StepData
+  stepLabels: string[]
   handleStepData: (
     stepLabel: string,
     newData: Record<string, unknown>,

@@ -12,7 +12,7 @@ import { styles } from '~/components/step-wrapper/StepWrapper.styles'
 import useSteps from '~/hooks/use-steps'
 
 const StepWrapper = ({ children, steps }) => {
-  const { activeStep, erroredSteps, isLastStep, loading, stepOperation } =
+  const { activeStep, stepsWithErrors, isLastStep, loading, stepOperation } =
     useSteps({
       steps
     })
@@ -26,7 +26,7 @@ const StepWrapper = ({ children, steps }) => {
       sx={[
         styles.defaultTab,
         index === activeStep && styles.activeTab,
-        erroredSteps.has(index) && styles.errorTab
+        stepsWithErrors.has(step) && styles.errorTab
       ]}
       typography='caption'
     >

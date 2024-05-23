@@ -15,7 +15,8 @@ export const initialState = {
   loading: true,
   pageLoad: false,
   error: '',
-  isFirstLogin: true
+  isFirstLogin: true,
+  isUserUpdated: false
 }
 
 export const stateAfterLogin = {
@@ -25,7 +26,8 @@ export const stateAfterLogin = {
   loading: false,
   pageLoad: false,
   error: '',
-  isFirstLogin: true
+  isFirstLogin: true,
+  isUserUpdated: false
 }
 
 export const stateAfterSignup = {
@@ -35,7 +37,8 @@ export const stateAfterSignup = {
   pageLoad: false,
   authLoading: false,
   error: '',
-  isFirstLogin: true
+  isFirstLogin: true,
+  isUserUpdated: false
 }
 
 export const errorMessage = 'Request failed with status code 404'

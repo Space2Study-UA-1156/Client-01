@@ -3,13 +3,15 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, beforeEach, expect, vi } from 'vitest'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import FormSection from '~/containers/tutor-home-page/general-info-step/FormSection'
+import { studentStepLabels } from '~/components/user-steps-wrapper/constants'
 
 const handleStepDataMock = vi.fn()
 vi.mock('~/context/step-context', () => ({
   useStepContext: vi.fn(() => ({
     handleStepData: handleStepDataMock,
+    stepLabels: studentStepLabels,
     stepData: {
-      general: {
+      [studentStepLabels[0]]: {
         data: {
           message: ''
         },
@@ -24,6 +26,14 @@ vi.mock('~/context/step-context', () => ({
     isFormValid: false
   }))
 }))
+
+vi.mock(
+  '~/containers/tutor-home-page/general-info-step/TextFieldGroup',
+  () => ({
+    __esModule: true,
+    default: () => <div />
+  })
+)
 
 const theme = createTheme({
   spacing: 8,
