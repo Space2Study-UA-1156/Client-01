@@ -1,16 +1,31 @@
-import { createContext, useCallback, useContext, useState } from 'react'
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useEffect
+} from 'react'
+import { useSelector } from 'react-redux'
 
 const StepContext = createContext()
 
 const StepProvider = ({ children, initialValues, stepLabels }) => {
+  const { firstName, lastName } = useSelector((state) => state.appMain)
+
   const [generalData, setGeneralData] = useState({
-    data: initialValues,
+    data: {
+      ...initialValues,
+      firstName: firstName || initialValues.firstName,
+      lastName: lastName || initialValues.lastName,
+      message: initialValues.message || ''
+    },
     errors: {
       firstName: '',
       lastName: '',
       message: ''
     }
   })
+
   const [subject, setSubject] = useState([])
   const [language, setLanguage] = useState(null)
   const [photo, setPhoto] = useState([])
@@ -59,13 +74,22 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     setIsNextDisabled(disabled)
   }, [])
 
-  const setFormValidation = useCallback(
-    (isValid) => {
-      setIsFormValid(isValid)
-      setIsNextDisabled(!isValid || !isOverEighteen)
-    },
-    [isOverEighteen]
-  )
+  const setFormValidation = useCallback((isValid) => {
+    setIsFormValid(isValid)
+  }, [])
+
+  useEffect(() => {
+    setGeneralData((prevState) => ({
+      ...prevState,
+      data: {
+        ...prevState.data,
+        firstName,
+        lastName
+      }
+    }))
+  }, [firstName, lastName])
+
+  useEffect(() => {}, [generalData])
 
   return (
     <StepContext.Provider
@@ -78,7 +102,9 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
         isOverEighteen,
         handleOverEighteenChange,
         setFormValidation,
-        isFormValid
+        isFormValid,
+        generalData,
+        setGeneralData
       }}
     >
       {children}
@@ -86,6 +112,12 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
   )
 }
 
-const useStepContext = () => useContext(StepContext)
+const useStepContext = () => {
+  const context = useContext(StepContext)
+  if (!context) {
+    throw new Error('useStepContext must be used within a StepProvider')
+  }
+  return context
+}
 
 export { StepProvider, useStepContext }
