@@ -58,6 +58,7 @@ const FindOffers = () => {
       limit: offersPerPage
       // TODO: Use skip param to implement pagination
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
