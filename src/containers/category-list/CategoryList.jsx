@@ -12,7 +12,7 @@ import { categoryService } from '~/services/category-service'
 import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
 
 const CategoryList = ({ limit, gridStyles }) => {
-  const itemsPerPage = limit || 6
+  const itemsPerPage = limit || 24
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const [categories, setCategories] = useState([])
