@@ -35,7 +35,6 @@ const CategoriesTitleInput = () => {
         newParams.set('categoryName', categoryName)
         return newParams
       })
-      setCategoryName('')
     }
   }
 
@@ -77,33 +76,34 @@ const CategoriesTitleInput = () => {
           </AppButton>
         </Box>
 
-        {!isMobile && (
-          <Box sx={styles.inputContainer}>
-            <AppTextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <CloseIcon
-                      data-testid='close-icon'
-                      onClick={handleClose}
-                      sx={{ cursor: 'pointer' }}
-                    />
-                  </InputAdornment>
-                )
-              }}
-              helperText={null}
-              multiline={false}
-              onChange={handleChangeInput}
-              onKeyDown={handleKeyPress}
-              placeholder={t('categoriesPage.searchLabel')}
-              sx={styles.inputField}
-              value={categoryName}
-            />
+        <Box sx={styles.inputContainer}>
+          <AppTextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <CloseIcon
+                    data-testid='close-icon'
+                    onClick={handleClose}
+                    sx={{ cursor: 'pointer' }}
+                  />
+                </InputAdornment>
+              )
+            }}
+            helperText={null}
+            multiline={false}
+            onChange={handleChangeInput}
+            onKeyDown={handleKeyPress}
+            placeholder={t('categoriesPage.searchLabel')}
+            sx={styles.inputField}
+            value={categoryName}
+          />
+
+          {!isMobile && (
             <AppButton
               data_testid='button-search'
               onClick={handleSearch}
@@ -113,37 +113,9 @@ const CategoriesTitleInput = () => {
             >
               {t('common.search')}
             </AppButton>
-          </Box>
-        )}
+          )}
 
-        {isMobile && (
-          <Box sx={styles.inputContainer}>
-            <AppTextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <CloseIcon
-                      data-testid='close-icon'
-                      onClick={handleClose}
-                      sx={{ cursor: 'pointer' }}
-                    />
-                  </InputAdornment>
-                )
-              }}
-              helperText={null}
-              multiline={false}
-              onChange={handleChangeInput}
-              onKeyDown={handleKeyPress}
-              placeholder={t('categoriesPage.searchLabel')}
-              sx={styles.inputField}
-              value={categoryName}
-            />
-
+          {isMobile && (
             <AppButton
               data_testid='button-search'
               onClick={handleSearch}
@@ -153,8 +125,8 @@ const CategoriesTitleInput = () => {
             >
               <SearchIcon />
             </AppButton>
-          </Box>
-        )}
+          )}
+        </Box>
 
         {!isMobile && (
           <Box>

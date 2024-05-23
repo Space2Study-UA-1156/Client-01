@@ -54,21 +54,6 @@ vi.mock('react-router-dom', async (importOriginal) => {
   }
 })
 
-/*vi.mock('~/components/app-text-field/AppTextField', () => ({
-  __esModule: true,
-  default: ({ placeholder, value, onChange, onKeyDown }) => (
-    <div>
-      <input
-        data-testid='mocked-app-textfield'
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        placeholder={placeholder}
-        value={value}
-      />
-    </div>
-  )
-}))*/
-
 vi.mock('~/components/app-text-field/AppTextField', () => ({
   __esModule: true,
   default: ({ InputProps, value, onChange, onKeyDown }) => {
