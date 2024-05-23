@@ -1,13 +1,15 @@
 export const styles = {
   root: {
-    backgroundColor: 'basic.white',
+    bgcolor: 'basic.white',
     borderRadius: '6px',
-    padding: { xs: '32px 25px', md: '124px 25px' }
+    p: '25px',
+    py: { xs: '32px', md: '124px' },
+    mx: { xs: '-16px', sm: '-24px', md: 0 }
   },
   box: {
     textAlign: 'center',
     maxWidth: '488px',
-    margin: 'auto',
+    m: 'auto',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -15,16 +17,16 @@ export const styles = {
   },
   content: {
     root: {
-      margin: '0'
+      m: '0'
     },
     img: {
-      marginBottom: { xs: '16px' }
+      mb: { xs: '16px' }
     },
     titleWithDescription: {
       title: {
         typography: 'h5',
         color: 'primary.900',
-        marginBottom: { xs: '21px', md: '7px' }
+        mb: { xs: '21px', md: '7px' }
       },
       description: {
         color: 'primary.500',

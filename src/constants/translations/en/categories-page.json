@@ -17,6 +17,10 @@
     "subject": "Create a new subject",
     "category": "Add subject to existing category or create a new one.",
     "info": "Provide a brief explanation of why you believe this subject or category should be added.",
-    "labels": { "subject": "New subject" }
+    "labels": {
+      "subject": "New subject",
+      "category": "Category",
+      "info": "Additional information"
+    }
   }
 }

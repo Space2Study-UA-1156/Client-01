@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import ImgTitleDescription from '~/components/img-title-description/ImgTitleDescription'
 import AppButton from '~/components/app-button/AppButton'
+import RequestStudyDialog from '~/containers/request-study/request-study-dialog/RequestStudyDialog'
 
 import Magnifier from '~/assets/img/guest-home-page/howItWorksStudentSecond.svg'
 import { useModalContext } from '~/context/modal-context'
@@ -14,7 +15,7 @@ const ResultsNotFound = ({ name = 'category', sx = {} }) => {
   const { openModal } = useModalContext()
 
   const handleOpenModal = () => {
-    openModal({ component: <p>Temp</p> })
+    openModal({ component: <RequestStudyDialog /> })
   }
 
   return (
