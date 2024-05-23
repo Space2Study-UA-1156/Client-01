@@ -28,18 +28,14 @@ const AccountIcon = ({ buttonProps }) => {
     }
   }, [isUserUpdated, fetchData])
 
-  const fullName = `${response?.firstName} ${response?.lastName}`
-  const firstLetters = fullName
-    .split(' ')
-    .map((word) => word[0])
-    .join('')
+  const initials = `${response?.firstName.at(0)}${response?.lastName.at(0)}`
 
   return (
     <NavigationIcon
       buttonProps={buttonProps}
       icon={
-        <Avatar alt={fullName} data-testid='AccountIcon' src={response?.photo}>
-          {!loading && firstLetters}
+        <Avatar alt={initials} data-testid='AccountIcon' src={response?.photo}>
+          {!loading && initials}
         </Avatar>
       }
       tooltip={t('iconsTooltip.account')}
