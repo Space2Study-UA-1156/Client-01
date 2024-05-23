@@ -10,6 +10,7 @@ const mockCategory = { name: 'Category1' }
 const mockReturnInputValue = vi.fn()
 const mockSet = vi.fn()
 const mockNavigate = vi.fn()
+const mockDelete = vi.fn()
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -47,13 +48,13 @@ vi.mock('react-router-dom', async (importOriginal) => {
     useSearchParams: () => [
       { get: vi.fn() },
       (mockFn) => {
-        mockFn({ set: mockSet })
+        mockFn({ set: mockSet, delete: mockDelete })
       }
     ]
   }
 })
 
-vi.mock('~/components/app-text-field/AppTextField', () => ({
+/*vi.mock('~/components/app-text-field/AppTextField', () => ({
   __esModule: true,
   default: ({ placeholder, value, onChange, onKeyDown }) => (
     <div>
@@ -64,9 +65,26 @@ vi.mock('~/components/app-text-field/AppTextField', () => ({
         placeholder={placeholder}
         value={value}
       />
-      <button data-testid='button-search' onClick={() => {}}></button>
     </div>
   )
+}))*/
+
+vi.mock('~/components/app-text-field/AppTextField', () => ({
+  __esModule: true,
+  default: ({ InputProps, value, onChange, onKeyDown }) => {
+    return (
+      <div>
+        {InputProps.startAdornment}
+        <input
+          data-testid='mocked-app-textfield'
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          value={value}
+        />
+        {InputProps.endAdornment}
+      </div>
+    )
+  }
 }))
 
 vi.mock('@mui/material', async (importOriginal) => {
@@ -108,11 +126,11 @@ describe('CategoriesTitleInput container', () => {
   it('should update categoryName state when input value changes', () => {
     useBreakpoints.mockReturnValue({ isMobile: false })
     renderWithProviders(<CategoriesTitleInput />)
-    const searchInput = screen.getByPlaceholderText('input')
+    const categoryInput = screen.getByTestId('mocked-app-textfield')
     const testValue = 'test search value'
-    fireEvent.change(searchInput, { target: { value: testValue } })
+    fireEvent.change(categoryInput, { target: { value: testValue } })
 
-    expect(searchInput.value).toBe(testValue)
+    expect(categoryInput.value).toBe(testValue)
   })
 
   it('should set search params when "Search" button is clicked', () => {
@@ -121,7 +139,7 @@ describe('CategoriesTitleInput container', () => {
 
     mockReturnInputValue.mockImplementation(() => mockCategory)
 
-    const categoryInput = screen.getByPlaceholderText('input')
+    const categoryInput = screen.getByTestId('mocked-app-textfield')
     const searchButton = screen.getByTestId('button-search')
     fireEvent.change(categoryInput, { target: { value: 'test' } })
     fireEvent.click(searchButton)
@@ -136,7 +154,7 @@ describe('CategoriesTitleInput container', () => {
 
     mockReturnInputValue.mockImplementationOnce(() => mockCategory)
 
-    const categoryInput = screen.getByPlaceholderText('input')
+    const categoryInput = screen.getByTestId('mocked-app-textfield')
     fireEvent.change(categoryInput, { target: { value: 'test' } })
 
     fireEvent.keyDown(categoryInput, { key: 'Enter', code: 'Enter' })
@@ -193,5 +211,19 @@ describe('CategoriesTitleInput container', () => {
     fireEvent.click(screen.getByTestId('button-show-all'))
 
     expect(mockNavigate).toHaveBeenCalledWith(authRoutes.findOffers.path)
+  })
+
+  it('should clear category field when CloseIcon is clicked', () => {
+    useBreakpoints.mockImplementation(() => ({ isMobile: false }))
+    renderWithProviders(<CategoriesTitleInput />)
+
+    const categoryInput = screen.getByTestId('mocked-app-textfield')
+    const closeIcon = screen.getByTestId('close-icon')
+
+    fireEvent.change(categoryInput, { target: { value: 'Music' } })
+    expect(categoryInput.value).toBe('Music')
+
+    fireEvent.click(closeIcon)
+    expect(categoryInput.value).toBe('')
   })
 })

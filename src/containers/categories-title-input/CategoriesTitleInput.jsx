@@ -10,6 +10,7 @@ import { authRoutes } from '~/router/constants/authRoutes'
 import { styles } from '~/containers/categories-title-input/CategoriesTitleInput.styles'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import useBreakpoints from '~/hooks/use-breakpoints'
+import CloseIcon from '@mui/icons-material/Close'
 
 const CategoriesTitleInput = () => {
   const { t } = useTranslation()
@@ -44,6 +45,14 @@ const CategoriesTitleInput = () => {
     }
   }
 
+  const handleClose = () => {
+    setCategoryName('')
+    setSearchParams((params) => {
+      params.delete('categoryName')
+      return params
+    })
+  }
+
   return (
     <Box>
       <Box sx={styles.rootInput}>
@@ -68,8 +77,8 @@ const CategoriesTitleInput = () => {
           </AppButton>
         </Box>
 
-        <Box sx={styles.inputContainer}>
-          {!isMobile && (
+        {!isMobile && (
+          <Box sx={styles.inputContainer}>
             <AppTextField
               InputProps={{
                 startAdornment: (
@@ -79,15 +88,11 @@ const CategoriesTitleInput = () => {
                 ),
                 endAdornment: (
                   <InputAdornment position='end'>
-                    <AppButton
-                      data_testid='button-search'
-                      onClick={handleSearch}
-                      size='large'
-                      sx={styles.buttonSearch}
-                      variant='containedLight'
-                    >
-                      {t('common.search')}
-                    </AppButton>
+                    <CloseIcon
+                      data-testid='close-icon'
+                      onClick={handleClose}
+                      sx={{ cursor: 'pointer' }}
+                    />
                   </InputAdornment>
                 )
               }}
@@ -99,21 +104,34 @@ const CategoriesTitleInput = () => {
               sx={styles.inputField}
               value={categoryName}
             />
-          )}
-          {isMobile && (
+            <AppButton
+              data_testid='button-search'
+              onClick={handleSearch}
+              size='large'
+              sx={styles.buttonSearch}
+              variant='containedLight'
+            >
+              {t('common.search')}
+            </AppButton>
+          </Box>
+        )}
+
+        {isMobile && (
+          <Box sx={styles.inputContainer}>
             <AppTextField
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
                 endAdornment: (
                   <InputAdornment position='end'>
-                    <AppButton
-                      data_testid='button-search'
-                      onClick={handleSearch}
-                      size='large'
-                      sx={styles.buttonSearch}
-                      variant='containedLight'
-                    >
-                      <SearchIcon />
-                    </AppButton>
+                    <CloseIcon
+                      data-testid='close-icon'
+                      onClick={handleClose}
+                      sx={{ cursor: 'pointer' }}
+                    />
                   </InputAdornment>
                 )
               }}
@@ -125,8 +143,18 @@ const CategoriesTitleInput = () => {
               sx={styles.inputField}
               value={categoryName}
             />
-          )}
-        </Box>
+
+            <AppButton
+              data_testid='button-search'
+              onClick={handleSearch}
+              size='large'
+              sx={styles.buttonSearch}
+              variant='containedLight'
+            >
+              <SearchIcon />
+            </AppButton>
+          </Box>
+        )}
 
         {!isMobile && (
           <Box>

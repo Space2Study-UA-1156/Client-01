@@ -23,11 +23,7 @@ const CategoryList = ({ limit, gridStyles }) => {
 
   const onResponse = (res) => {
     if (res?.items) {
-      if (categoryName) {
-        setCategories((prevCategories) => [...prevCategories, ...res.items])
-      } else {
-        setCategories((prevCategories) => [...prevCategories, ...res.items])
-      }
+      setCategories((prevCategories) => [...prevCategories, ...res.items])
       setIsMore(res.count > itemsPerPage * page)
     } else {
       setIsMore(false)
