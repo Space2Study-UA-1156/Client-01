@@ -1,7 +1,7 @@
 import { mainShadow } from '~/styles/app-theme/custom-shadows'
 
 export const styles = {
-  root: {
+  rootInput: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -13,7 +13,8 @@ export const styles = {
   },
 
   title: {
-    width: '100%'
+    width: '100%',
+    marginTop: '20px'
   },
 
   titleWithDescription: {
@@ -93,7 +94,8 @@ export const styles = {
     variant: 'body2',
     color: 'primary.500',
     fontSize: '14px',
-    fontWeight: 400
+    fontWeight: 400,
+    marginBottom: '20px'
   },
 
   requestLink: {

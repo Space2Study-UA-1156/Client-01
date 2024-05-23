@@ -46,7 +46,7 @@ const CategoriesTitleInput = () => {
 
   return (
     <Box>
-      <Box sx={styles.root}>
+      <Box sx={styles.rootInput}>
         <Box sx={styles.title}>
           <TitleWithDescription
             description={t('categoriesPage.description')}

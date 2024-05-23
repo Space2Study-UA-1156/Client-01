@@ -12,7 +12,7 @@ import { categoryService } from '~/services/category-service'
 import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
 
 const CategoryList = ({ limit, gridStyles }) => {
-  const itemsPerPage = limit || 24
+  const itemsPerPage = limit || 6
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const [categories, setCategories] = useState([])
@@ -22,17 +22,9 @@ const CategoryList = ({ limit, gridStyles }) => {
   const categoryName = searchParams.get('categoryName')
 
   const onResponse = (res) => {
-    console.log('Response received:', res)
-
     if (res?.items) {
       if (categoryName) {
-        const filteredCategories = res.items.filter((category) =>
-          category.name.toLowerCase().includes(categoryName.toLowerCase())
-        )
-        setCategories((prevCategories) => [
-          ...prevCategories,
-          ...filteredCategories
-        ])
+        setCategories((prevCategories) => [...prevCategories, ...res.items])
       } else {
         setCategories((prevCategories) => [...prevCategories, ...res.items])
       }
