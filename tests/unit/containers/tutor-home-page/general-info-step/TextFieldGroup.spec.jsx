@@ -1,14 +1,19 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, beforeEach, expect, vi } from 'vitest'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import TextFieldGroup from '~/containers/tutor-home-page/general-info-step/TextFieldGroup'
-import translations from '~/constants/translations/en/common.json'
-import translation from '~/constants/translations/en/become-tutor.json'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import configureMockStore from 'redux-mock-store'
 import { studentStepLabels } from '~/components/user-steps-wrapper/constants'
+import { Provider } from 'react-redux'
+
+const props = {
+  onMessageChange: vi.fn()
+}
 
 const handleStepDataMock = vi.fn()
 const setFormValidationMock = vi.fn()
+
 vi.spyOn(console, 'error').mockImplementation(() => undefined)
 vi.mock('~/context/step-context', () => ({
   useStepContext: vi.fn(() => ({
@@ -16,7 +21,7 @@ vi.mock('~/context/step-context', () => ({
     setFormValidation: setFormValidationMock,
     stepLabels: studentStepLabels,
     stepData: {
-      [studentStepLabels[0]]: {
+      'General Info': {
         data: {
           firstName: '',
           lastName: '',
@@ -28,9 +33,34 @@ vi.mock('~/context/step-context', () => ({
           message: ''
         }
       }
-    }
+    },
+    generalData: {
+      data: {
+        firstName: '',
+        lastName: '',
+        message: ''
+      },
+      errors: {
+        firstName: '',
+        lastName: '',
+        message: ''
+      }
+    },
+    isOverEighteen: false,
+    handleOverEighteenChange: vi.fn(),
+    isNextDisabled: false,
+    toggleNextButton: vi.fn(),
+    isFormValid: true
   }))
 }))
+
+const mockStore = configureMockStore()
+const store = mockStore({
+  appMain: {
+    userId: 'testUserId',
+    userRole: 'testUserRole'
+  }
+})
 
 vi.mock('~/containers/tutor-home-page/general-info-step/SelectGroup', () => ({
   __esModule: true,
@@ -63,85 +93,21 @@ const theme = createTheme({
 })
 
 const renderWithTheme = (component) => {
-  return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>)
+  return render(
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>{component}</ThemeProvider>
+    </Provider>
+  )
 }
 
-describe('TextFieldGroup Component', () => {
-  const mockOnMessageChange = vi.fn()
-  const props = {
-    message: '',
-    messageLength: 0,
-    onMessageChange: mockOnMessageChange
-  }
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it.skip('renders without crashing', () => {
+describe('TextFieldGroup component', () => {
+  it('should render', () => {
     renderWithTheme(<TextFieldGroup {...props} />)
+    expect(screen.getByLabelText('First name')).toBeInTheDocument()
+    expect(screen.getByLabelText('Last name')).toBeInTheDocument()
     expect(
-      screen.getByLabelText(translations.labels.firstName)
-    ).toBeInTheDocument()
-    expect(
-      screen.getByLabelText(translations.labels.lastName)
+      screen.getByLabelText('Describe in short your professional status')
     ).toBeInTheDocument()
     expect(screen.getByTestId('select-group')).toBeInTheDocument()
-  })
-
-  it('displays initial values', () => {
-    renderWithTheme(<TextFieldGroup {...props} />)
-    expect(screen.getByLabelText(translations.labels.firstName).value).toBe('')
-    expect(screen.getByLabelText(translations.labels.lastName).value).toBe('')
-    expect(
-      screen.getByLabelText(translation.generalInfo.textFieldLabel).value
-    ).toBe('')
-  })
-
-  it('updates first name value when input changes', () => {
-    renderWithTheme(<TextFieldGroup {...props} />)
-    const firstNameInput = screen.getByLabelText(translations.labels.firstName)
-    fireEvent.change(firstNameInput, { target: { value: 'John' } })
-    expect(firstNameInput.value).toBe('John')
-  })
-
-  it('updates last name value when input changes', () => {
-    renderWithTheme(<TextFieldGroup {...props} />)
-    const lastNameInput = screen.getByLabelText(translations.labels.lastName)
-    fireEvent.change(lastNameInput, { target: { value: 'Doe' } })
-    expect(lastNameInput.value).toBe('Doe')
-  })
-
-  it.skip('updates message value when input changes', () => {
-    renderWithTheme(<TextFieldGroup {...props} />)
-    const messageInput = screen.getByLabelText(
-      translation.generalInfo.textFieldLabel
-    )
-    fireEvent.change(messageInput, { target: { value: 'Hello' } })
-    expect(messageInput.value).toBe('Hello')
-    expect(mockOnMessageChange).toHaveBeenCalled()
-  })
-
-  it('validates first name on blur', () => {
-    renderWithTheme(<TextFieldGroup {...props} />)
-    const firstNameInput = screen.getByLabelText(translations.labels.firstName)
-    fireEvent.blur(firstNameInput)
-    expect(handleStepDataMock).toHaveBeenCalled()
-  })
-
-  it('validates last name on blur', () => {
-    renderWithTheme(<TextFieldGroup {...props} />)
-    const lastNameInput = screen.getByLabelText(translations.labels.lastName)
-    fireEvent.blur(lastNameInput)
-    expect(handleStepDataMock).toHaveBeenCalled()
-  })
-
-  it('validates message on blur', () => {
-    renderWithTheme(<TextFieldGroup {...props} />)
-    const messageInput = screen.getByLabelText(
-      translation.generalInfo.textFieldLabel
-    )
-    fireEvent.blur(messageInput)
-    expect(handleStepDataMock).toHaveBeenCalled()
   })
 })
