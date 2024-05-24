@@ -16,8 +16,10 @@ const CategoriesTitleInput = () => {
   const { t } = useTranslation()
   const { isMobile = false } = useBreakpoints()
   const navigate = useNavigate()
-  const [, setSearchParams] = useSearchParams()
-  const [categoryName, setCategoryName] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [categoryName, setCategoryName] = useState(
+    () => searchParams.get('categoryName') || ''
+  )
 
   const showAllOffers = () => {
     navigate(authRoutes.findOffers.path)
@@ -31,9 +33,8 @@ const CategoriesTitleInput = () => {
   const handleSearch = () => {
     if (categoryName.trim() !== '') {
       setSearchParams((params) => {
-        const newParams = new URLSearchParams(params)
-        newParams.set('categoryName', categoryName)
-        return newParams
+        params.set('categoryName', categoryName)
+        return params
       })
     }
   }
