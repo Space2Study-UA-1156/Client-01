@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 import { Typography, Checkbox, FormControlLabel, Box } from '@mui/material'
 import TextFieldGroup from './TextFieldGroup'
 import { useStepContext } from '~/context/step-context'
@@ -12,6 +12,7 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
     useStepContext() as StepContextType
 
   const [isConfirmed, setIsConfirmed] = useState<boolean>(isOverEighteen)
+  const [message, setMessage] = useState<string>('')
 
   useEffect(() => {
     setIsConfirmed(isOverEighteen)
@@ -25,6 +26,10 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
     const isChecked = event.target.checked
     setIsConfirmed(isChecked)
     handleOverEighteenChange(isChecked)
+  }
+
+  const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value)
   }
 
   return (
@@ -41,7 +46,11 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
         <Typography gutterBottom variant='body1'>
           Amet minim mollit non deserunt sit aliqua dolor do amet sint.
         </Typography>
-        <TextFieldGroup />
+        <TextFieldGroup
+          message={message}
+          messageLength={message.length}
+          onMessageChange={handleMessageChange}
+        />
         <FormControlLabel
           control={
             <Checkbox checked={isConfirmed} onChange={handleCheckboxChange} />

@@ -236,7 +236,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       <AppTextField
         className={classes.fullWidthInput}
         errorMsg={validationErrors.message}
-        helperText={`${messageLength}/100`}
+        helperText={`${formData.message.length}/100`}
         label={translation.generalInfo.textFieldLabel}
         multiline
         name='message'
