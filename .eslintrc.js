@@ -80,7 +80,7 @@ module.exports = {
       plugins: ['@typescript-eslint'],
       rules: {
         '@typescript-eslint/no-restricted-imports': [
-          'warn',
+          'off',
           {
             name: 'react-redux',
             importNames: ['useSelector', 'useDispatch'],

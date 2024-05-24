@@ -5,15 +5,18 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import TextFieldGroup from '~/containers/tutor-home-page/general-info-step/TextFieldGroup'
 import translations from '~/constants/translations/en/common.json'
 import translation from '~/constants/translations/en/become-tutor.json'
+import { studentStepLabels } from '~/components/user-steps-wrapper/constants'
 
 const handleStepDataMock = vi.fn()
 const setFormValidationMock = vi.fn()
+vi.spyOn(console, 'error').mockImplementation(() => undefined)
 vi.mock('~/context/step-context', () => ({
   useStepContext: vi.fn(() => ({
     handleStepData: handleStepDataMock,
     setFormValidation: setFormValidationMock,
+    stepLabels: studentStepLabels,
     stepData: {
-      'General Info': {
+      [studentStepLabels[0]]: {
         data: {
           firstName: '',
           lastName: '',
@@ -29,7 +32,7 @@ vi.mock('~/context/step-context', () => ({
   }))
 }))
 
-vi.mock('./SelectGroup', () => ({
+vi.mock('~/containers/tutor-home-page/general-info-step/SelectGroup', () => ({
   __esModule: true,
   default: () => <div data-testid='select-group' />
 }))

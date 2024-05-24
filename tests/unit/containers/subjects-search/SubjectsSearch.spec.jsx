@@ -8,6 +8,7 @@ import { renderWithProviders } from '../../../test-utils'
 
 const mockCategory = { _id: '1', name: 'Category1' }
 const mockReturnInputValue = vi.fn()
+const mockReturnInputChangeReason = vi.fn()
 const mockSet = vi.fn()
 const mockDelete = vi.fn()
 
@@ -23,10 +24,17 @@ vi.mock('~/components/title-with-description/TitleWithDescription', () => ({
 
 vi.mock('~/components/async-autocomlete/AsyncAutocomplete', () => ({
   __esModule: true,
-  default: ({ onChange, textFieldProps }) => (
+  default: ({ onChange, textFieldProps, onInputChange }) => (
     <input
       data-testid={textFieldProps.placeholder}
-      onChange={() => onChange(null, mockReturnInputValue())}
+      onChange={() => {
+        onChange(null, mockReturnInputValue())
+        onInputChange(
+          null,
+          mockReturnInputValue(),
+          mockReturnInputChangeReason()
+        )
+      }}
     />
   )
 }))
@@ -142,6 +150,7 @@ describe('SubjectsSearch container test', () => {
   it('should set search params', () => {
     useBreakpoints.mockImplementation(() => ({ isMobile: false }))
     mockReturnInputValue.mockImplementation(() => mockCategory)
+    mockReturnInputChangeReason.mockImplementation(() => 'reset')
     renderWithProviders(<SubjectsSearch />)
 
     const categoryInput = screen.getByTestId(
@@ -154,12 +163,13 @@ describe('SubjectsSearch container test', () => {
     fireEvent.change(categoryInput, { target: { value: 'test' } })
     fireEvent.change(subjectInput, { target: { value: 'test' } })
     fireEvent.click(searchButton)
-    expect(mockSet).toHaveBeenCalledTimes(3)
+    expect(mockSet).toHaveBeenCalledTimes(2)
   })
 
   it('should clear all search params', () => {
     useBreakpoints.mockImplementation(() => ({ isMobile: false }))
     mockReturnInputValue.mockImplementation(() => null)
+    mockReturnInputChangeReason.mockImplementation(() => 'clear')
     renderWithProviders(<SubjectsSearch />)
 
     const categoryInput = screen.getByTestId(
@@ -172,6 +182,6 @@ describe('SubjectsSearch container test', () => {
     fireEvent.change(categoryInput, { target: { value: 'test' } })
     fireEvent.change(subjectInput, { target: { value: '' } })
     fireEvent.click(searchButton)
-    expect(mockDelete).toHaveBeenCalledTimes(3)
+    expect(mockDelete).toHaveBeenCalledTimes(2)
   })
 })

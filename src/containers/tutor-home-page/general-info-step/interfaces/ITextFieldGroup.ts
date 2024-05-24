@@ -21,10 +21,11 @@ export interface FormData {
 
 export interface StepContextType {
   stepData: StepData
+  stepLabels: string[]
   handleStepData: (
     stepLabel: string,
     newData: Record<string, unknown>,
-    newErrors?: Record<string, unknown>
+    newErrors: Record<string, unknown>
   ) => void
   isNextDisabled: boolean
   toggleNextButton: (disabled: boolean) => void
@@ -32,4 +33,9 @@ export interface StepContextType {
   handleOverEighteenChange: (value: boolean) => void
   isFormValid: boolean
   setFormValidation: (isValid: boolean) => void
+  generalData: {
+    data: FormData
+    errors: FormData
+  }
+  setGeneralData: (data: { data: FormData; errors: FormData }) => void
 }

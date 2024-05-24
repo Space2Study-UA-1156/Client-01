@@ -1,7 +1,6 @@
 export const styles = {
   card: {
     boxSizing: 'border-box',
-    maxWidth: '360px',
     width: '100%',
     padding: { xs: '20px 30px', lg: '25px 32px' },
     display: 'flex',

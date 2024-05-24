@@ -17,26 +17,29 @@ const SubjectsSearch = () => {
   const { t } = useTranslation()
   const { isMobile } = useBreakpoints()
   const [searchParams, setSearchParams] = useSearchParams()
+  const [categoryName, setCategoryName] = useState('')
   const [subjectName, setSubjectName] = useState(
     () => searchParams.get('subjectName') || ''
   )
-
-  const categoryName = searchParams.get('categoryName')
 
   const handleCategoryChange = (_e, categoryValue) => {
     if (!categoryValue) {
       setSearchParams((params) => {
         params.delete('categoryId')
-        params.delete('categoryName')
         return params
       })
       return
     }
     setSearchParams((params) => {
       params.set('categoryId', categoryValue._id)
-      params.set('categoryName', categoryValue.name)
       return params
     })
+  }
+
+  const handleCategoryInputChange = (_e, value, reason) => {
+    if (reason === 'reset' || reason === 'clear') {
+      setCategoryName(value)
+    }
   }
 
   const handleSubjectChange = (e) => {
@@ -63,6 +66,7 @@ const SubjectsSearch = () => {
     <AsyncAutocomplete
       labelField='name'
       onChange={handleCategoryChange}
+      onInputChange={handleCategoryInputChange}
       service={categoryService.getCategoriesNames}
       sx={styles.categoryInput}
       textFieldProps={{
