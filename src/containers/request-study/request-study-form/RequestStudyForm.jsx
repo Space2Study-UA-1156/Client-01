@@ -17,14 +17,49 @@ import {
 } from '~/containers/request-study/request-study-form/constants'
 import { categoryService } from '~/services/category-service'
 import { styles } from '~/containers/request-study/request-study-form/RequestStudyForm.styles'
+import useAxios from '~/hooks/use-axios'
+import { subjectService } from '~/services/subject-service'
 
 const RequestStudyForm = () => {
   const { t } = useTranslation()
   const { setNeedConfirmation } = useConfirm()
   const [existingCategoryId, setExistingCategoryId] = useState(null)
 
+  const onSubmit = async () => {
+    if (!existingCategoryId) {
+      createCategory({
+        name: formValues.category,
+        appearance: {
+          path: 'path-to-icon',
+          color: '#f9f9f9'
+        }
+      })
+    } else {
+      await createSubject({
+        name: formValues.subject,
+        category: existingCategoryId
+      })
+    }
+  }
+
+  const { fetchData: createSubject, loading: subjectLoading } = useAxios({
+    service: subjectService.createSubject,
+    fetchOnMount: false
+  })
+
+  const { fetchData: createCategory, loading: categoryLoading } = useAxios({
+    service: categoryService.createCategory,
+    fetchOnMount: false,
+    onResponse: (response) => {
+      createSubject({
+        name: formValues.subject,
+        category: response._id
+      })
+    }
+  })
+
   const {
-    data,
+    data: formValues,
     errors,
     handleSubmit,
     handleInputChange,
@@ -32,11 +67,7 @@ const RequestStudyForm = () => {
     handleNonInputValueChange,
     isDirty
   } = useForm({
-    onSubmit: () => {
-      if (!existingCategoryId) {
-        return
-      }
-    },
+    onSubmit,
     initialValues,
     validations
   })
@@ -45,17 +76,20 @@ const RequestStudyForm = () => {
     setNeedConfirmation(isDirty)
   }, [isDirty, setNeedConfirmation])
 
-  const handleChangeCategory = (event, category) => {
+  const handleSelectChange = (event, category) => {
     if (typeof category === 'string') {
+      setExistingCategoryId(null)
       handleNonInputValueChange('category', category)
       return
     }
 
-    handleNonInputValueChange('category', category?.name ?? '')
-    setExistingCategoryId(category?._id ?? null)
+    const { name = '', _id = null } = category
+    handleNonInputValueChange('category', name)
+    setExistingCategoryId(_id)
   }
 
   const hasErrors = Object.values(errors).filter(Boolean).length > 0
+  const isSubmitting = categoryLoading || subjectLoading
 
   return (
     <Box component='form' onSubmit={handleSubmit}>
@@ -71,7 +105,7 @@ const RequestStudyForm = () => {
           onChange={handleInputChange('subject')}
           placeholder={t('categoriesPage.newSubject.labels.subject')}
           sx={styles.placeholder}
-          value={data.subject}
+          value={formValues.subject}
         />
       </Box>
 
@@ -83,11 +117,11 @@ const RequestStudyForm = () => {
         <AsyncAutocomplete
           fetchOnFocus
           freeSolo
-          inputValue={data.category}
+          inputValue={formValues.category}
           labelField='name'
           onBlur={handleBlur('category')}
-          onChange={handleChangeCategory}
-          onInputChange={handleChangeCategory}
+          onChange={handleSelectChange}
+          onInputChange={handleSelectChange}
           service={categoryService.getCategoriesNames}
           sx={styles.placeholder}
           textFieldProps={{
@@ -95,7 +129,7 @@ const RequestStudyForm = () => {
             error: Boolean(errors.category),
             helperText: ` ${t(errors.category)}`
           }}
-          value={data.category}
+          value={formValues.category}
           valueField='name'
         />
       </Box>
@@ -113,11 +147,15 @@ const RequestStudyForm = () => {
           onChange={handleInputChange('info')}
           placeholder={t('categoriesPage.newSubject.labels.info')}
           sx={styles.placeholder}
-          value={data.info}
+          value={formValues.info}
         />
       </Box>
 
-      <AppButton disabled={hasErrors} sx={styles.button} type='submit'>
+      <AppButton
+        disabled={hasErrors || isSubmitting}
+        sx={styles.button}
+        type='submit'
+      >
         {t('button.sendRequest')}
       </AppButton>
     </Box>

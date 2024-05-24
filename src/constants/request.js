@@ -29,11 +29,13 @@ export const URLs = {
   categories: {
     get: '/categories',
     getNames: '/categories/names',
-    priceRange: '/price-range'
+    priceRange: '/price-range',
+    create: '/categories'
   },
   subjects: {
     get: '/subjects',
-    getNames: '/subjects/names'
+    getNames: '/subjects/names',
+    create: '/subjects'
   },
   cooperations: {
     get: '/cooperations',

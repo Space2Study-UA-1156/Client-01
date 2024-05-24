@@ -8,5 +8,8 @@ export const categoryService = {
   },
   getCategoriesNames: () => {
     return axiosClient.get(URLs.categories.getNames)
+  },
+  createCategory: (categoryData) => {
+    return axiosClient.post(URLs.categories.get, categoryData)
   }
 }
