@@ -10,12 +10,16 @@ import { useModalContext } from '~/context/modal-context'
 import { spliceSx } from '~/utils/helper-functions'
 import { styles } from '~/containers/results-not-found/ResultsNotFound.styles'
 
-const ResultsNotFound = ({ name = 'category', sx = {} }) => {
+const ResultsNotFound = ({
+  name = 'category',
+  dialog = <RequestStudyDialog />,
+  sx = {}
+}) => {
   const { t } = useTranslation()
   const { openModal } = useModalContext()
 
   const handleOpenModal = () => {
-    openModal({ component: <RequestStudyDialog /> })
+    openModal({ component: dialog })
   }
 
   return (

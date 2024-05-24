@@ -1,6 +1,5 @@
 import { screen, fireEvent, render } from '@testing-library/react'
 import ResultsNotFound from '~/containers/results-not-found/ResultsNotFound'
-import RequestStudyDialog from '~/containers/request-study/request-study-dialog/RequestStudyDialog'
 
 vi.mock('~/components/img-title-description/ImgTitleDescription', () => ({
   default: ({ title, description, img }) => (
@@ -32,11 +31,9 @@ vi.mock('~/context/modal-context', async () => {
 })
 
 describe('CategoriesResultsNotFound tests', () => {
-  beforeEach(() => {
-    render(<ResultsNotFound />)
-  })
-
   it('should render title, description and button', () => {
+    render(<ResultsNotFound />)
+
     const title = screen.getByRole('heading', {
       name: 'constant.resultsNotFound'
     })
@@ -49,12 +46,15 @@ describe('CategoriesResultsNotFound tests', () => {
   })
 
   it('should open modal when the button is clicked', () => {
+    const dialogMock = <div>Dialog</div>
+    render(<ResultsNotFound dialog={dialogMock} />)
+
     const button = screen.getByText('constant.buttonRequest')
     fireEvent.click(button)
 
     expect(openModalMock).toHaveBeenCalled()
     expect(openModalMock).toHaveBeenCalledWith({
-      component: <RequestStudyDialog />
+      component: dialogMock
     })
   })
 })
