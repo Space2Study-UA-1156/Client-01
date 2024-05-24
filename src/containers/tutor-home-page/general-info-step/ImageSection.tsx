@@ -4,7 +4,19 @@ import generalInfoStepImage from '~/assets/img/tutor-home-page/become-tutor/gene
 
 const ImageSection: React.FC = () => {
   return (
-    <Box>
+    <Box
+      sx={{
+        display: { xs: 'none', md: 'block' },
+        width: '100%',
+        height: 'auto',
+        maxWidth: '600px',
+        margin: '0 auto',
+        '& img': {
+          width: '100%',
+          height: 'auto'
+        }
+      }}
+    >
       <img alt='general-info-step' src={generalInfoStepImage} />
     </Box>
   )

@@ -28,10 +28,7 @@ interface AppMainState {
   isFirstLogin: boolean
 }
 
-const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
-  messageLength,
-  onMessageChange
-}) => {
+const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
   const classes = useTextFieldGroupStyles()
   const { t } = useTranslation()
   const {

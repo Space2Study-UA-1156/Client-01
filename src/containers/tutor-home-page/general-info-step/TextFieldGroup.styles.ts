@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
-export const useTextFieldGroupStyles = makeStyles((theme: Theme) => ({
+export const useTextFieldGroupStyles = makeStyles(() => ({
   inputRow: {
     display: 'flex',
     flexDirection: 'row',

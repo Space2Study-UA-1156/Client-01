@@ -12,10 +12,11 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
   contentContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    gap: '140px',
+    gap: '80px',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
+      gap: '20px'
     }
   },
   btnContainer: {
@@ -23,14 +24,13 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: '20px',
-    gap: '200px',
+    gap: '20px',
     width: '100%'
   },
   formSection: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '100%',
-    height: '100%'
+    width: '100%'
   }
 }))
