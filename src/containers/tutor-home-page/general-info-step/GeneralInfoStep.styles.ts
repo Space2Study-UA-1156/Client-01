@@ -5,12 +5,14 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: 0,
+    padding: 0
   },
   contentContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    gap: '115px',
+    gap: '140px',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
@@ -28,6 +30,7 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
+    height: '100%'
   }
 }))

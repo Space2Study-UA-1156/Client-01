@@ -159,7 +159,10 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   }
 
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
+    let { value } = e.target
+    if (value.length > 100) {
+      value = value.substring(0, 100)
+    }
     setFormData((prevData) => ({
       ...prevData,
       message: value
@@ -201,6 +204,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               errors: generalData.errors
             })
           }}
+          placeholder={t('First Name')}
           required
           value={formData.firstName || ''}
           variant='outlined'
@@ -227,6 +231,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               errors: generalData.errors
             })
           }}
+          placeholder={t('Last Name')}
           required
           value={formData.lastName || ''}
           variant='outlined'

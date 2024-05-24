@@ -2,12 +2,15 @@ import React, { useState, useEffect, ChangeEvent } from 'react'
 import { Typography, Checkbox, FormControlLabel, Box } from '@mui/material'
 import TextFieldGroup from './TextFieldGroup'
 import { useStepContext } from '~/context/step-context'
+
 import {
   FormSectionProps,
   StepContextType
 } from '~/containers/tutor-home-page/general-info-step/interfaces/IFormSection'
+import { useFormSectionStyles } from '~/containers/tutor-home-page/general-info-step/FormSection.styles'
 
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
+  const classes = useFormSectionStyles()
   const { isOverEighteen, handleOverEighteenChange, isNextDisabled } =
     useStepContext() as StepContextType
 
@@ -33,17 +36,13 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
   }
 
   return (
-    <Box
-      data-testid='form-section'
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%'
-      }}
-    >
-      <Box sx={{ width: '100%', maxWidth: '435px' }}>
-        <Typography gutterBottom variant='body1'>
+    <Box className={classes.formSection} data-testid='form-section'>
+      <Box className={classes.contentBox} data-testid='content-box'>
+        <Typography
+          className={classes.topFormText}
+          gutterBottom
+          variant='body1'
+        >
           Amet minim mollit non deserunt sit aliqua dolor do amet sint.
         </Typography>
         <TextFieldGroup

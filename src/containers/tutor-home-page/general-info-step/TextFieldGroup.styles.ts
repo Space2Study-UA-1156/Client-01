@@ -12,6 +12,6 @@ export const useTextFieldGroupStyles = makeStyles((theme: Theme) => ({
   },
   fullWidthInput: {
     width: '100%',
-    margin: theme.spacing(1, 0)
+    margin: '14px 0'
   }
 }))
