@@ -4,7 +4,7 @@ import { Theme } from '@mui/material/styles'
 export const useFormSectionStyles = makeStyles((theme: Theme) => ({
   formContainer: {
     width: '100%',
-    maxWidth: '435px',
+    minWidth: '435px',
     minHeight: '430px',
     display: 'flex',
     flexDirection: 'column',
@@ -18,7 +18,7 @@ export const useFormSectionStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '100%'
+    minWidth: '435px'
   },
   contentBox: {
     width: '100%',

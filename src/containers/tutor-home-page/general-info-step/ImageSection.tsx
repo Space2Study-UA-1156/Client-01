@@ -9,7 +9,7 @@ const ImageSection: React.FC = () => {
         display: { xs: 'none', md: 'block' },
         width: '100%',
         height: 'auto',
-        maxWidth: '600px',
+        maxWidth: { xs: '100%', sm: '320px', lg: '600px' },
         margin: '0 auto',
         '& img': {
           width: '100%',
