@@ -20,10 +20,22 @@ const ExploreOffers = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { isMobile, isTablet } = useBreakpoints()
-  const [, setSearchParams] = useSearchParams()
-  const [category, setCategory] = useState(null)
-  const [subject, setSubject] = useState([])
-  const [tutor, setTutor] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const [category, setCategory] = useState(() => {
+    const categoryId = searchParams.get('categoryId')
+    return categoryId ? { _id: categoryId, name: '' } : ''
+  })
+  const [subject, setSubject] = useState(() => {
+    const subjectId = searchParams.get('subjectId')
+    return subjectId ? { _id: subjectId, name: '' } : ''
+  })
+
+  const [tutor, setTutor] = useState(() => {
+    const firstName = searchParams.get('tutorFirstName') || ''
+    const lastName = searchParams.get('tutorLastName') || ''
+    return firstName || lastName ? `${firstName} ${lastName}`.trim() : ''
+  })
 
   const returnToCategories = () => {
     navigate(authRoutes.categories.path)
@@ -35,10 +47,12 @@ const ExploreOffers = () => {
 
   const handleChangeCategory = (_e, categoryValue) => {
     setCategory(categoryValue)
+    console.log('CategoryValue:', categoryValue)
 
     setSearchParams((params) => {
       if (categoryValue) {
         params.set('categoryId', categoryValue._id)
+        params.delete('subjectId')
       } else {
         params.delete('categoryId')
       }
@@ -62,16 +76,6 @@ const ExploreOffers = () => {
   const handleChangeTutor = (e) => {
     const value = e.target.value
     setTutor(value)
-  }
-
-  const handleClose = () => {
-    setTutor('')
-  }
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch()
-    }
   }
 
   const handleSearch = async () => {
@@ -102,8 +106,23 @@ const ExploreOffers = () => {
     })
   }
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
+  const handleClose = () => {
+    setTutor('')
+    setSearchParams((params) => {
+      params.delete('tutorFirstName')
+      params.delete('tutorLastName')
+      return params
+    })
+  }
+
   return (
-    <Box component='section' sx={styles.root}>
+    <Box component='section' sx={styles.rootInput}>
       <TitleWithDescription
         description={t('findOffers.titleWithDescription.description')}
         style={styles.titleWithDescription}

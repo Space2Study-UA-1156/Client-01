@@ -1,43 +1,43 @@
 import { mainShadow } from '~/styles/app-theme/custom-shadows'
 
 export const styles = {
-  root: {
+  rootInput: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
     maxWidth: '1128px',
+    marginBottom: '30px',
     width: '100%',
     margin: '0 auto'
   },
 
   titleWithDescription: {
-    wrapper: {
-      margin: '0 auto',
-      mb: { xs: '20px', md: '30px' },
-      textAlign: 'center'
-    },
     title: {
-      typography: 'h4',
+      typography: { xs: 'h5', md: 'h4' },
       fontSize: { xs: '24px', md: '32px' }
     },
     description: {
-      typography: 'body1',
+      typography: { xs: 'body2', md: 'body1' },
       fontSize: { xs: '14px', md: '16px' },
-      fontWeight: 400
+      width: '100%'
     }
   },
 
   buttonsNavigationContainer: {
+    marginRight: { xs: '0px', md: '25px' },
+    marginBottom: '15px',
+    marginTop: '15px',
     display: 'flex',
     justifyContent: 'space-between',
-    width: '100%',
-    mb: '10px'
+    width: '100%'
   },
 
   buttonsNavigation: {
-    color: 'primary.500',
     fontSize: { xs: '12px', sm: '16px' },
-    padding: { xs: '0 10px', sm: '12px 24px' }
+    padding: { xs: '0 10px', sm: '12px 24px' },
+    color: 'primary.500'
   },
 
   searchContainer: {
@@ -67,12 +67,14 @@ export const styles = {
   },
 
   inputTutor: {
-    width: { sm: 'max-content', md: '330px' },
-    flexGrow: { sm: 1, md: 0 },
+    width: { md: '330px' },
+    flexGrow: { md: 0 },
     '& fieldset': { border: 'none' },
     input: {
       '&::placeholder': {
         color: 'primary.300',
+        fontSize: '16px',
+        fontWeight: 400,
         opacity: 1
       }
     }
