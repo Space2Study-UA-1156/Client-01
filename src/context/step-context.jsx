@@ -101,8 +101,6 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     }))
   }, [firstName, lastName])
 
-  useEffect(() => {}, [generalData])
-
   return (
     <StepContext.Provider
       value={{
