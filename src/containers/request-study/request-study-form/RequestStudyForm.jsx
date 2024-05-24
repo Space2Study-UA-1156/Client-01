@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -21,6 +21,7 @@ import { styles } from '~/containers/request-study/request-study-form/RequestStu
 const RequestStudyForm = () => {
   const { t } = useTranslation()
   const { setNeedConfirmation } = useConfirm()
+  const [existingCategoryId, setExistingCategoryId] = useState(null)
 
   const {
     data,
@@ -31,7 +32,11 @@ const RequestStudyForm = () => {
     handleNonInputValueChange,
     isDirty
   } = useForm({
-    onSubmit: () => {},
+    onSubmit: () => {
+      if (!existingCategoryId) {
+        return
+      }
+    },
     initialValues,
     validations
   })
@@ -47,6 +52,7 @@ const RequestStudyForm = () => {
     }
 
     handleNonInputValueChange('category', category?.name ?? '')
+    setExistingCategoryId(category?._id ?? null)
   }
 
   const hasErrors = Object.values(errors).filter(Boolean).length > 0
@@ -61,9 +67,10 @@ const RequestStudyForm = () => {
         <AppTextField
           errorMsg={t(errors.subject)}
           fullWidth
-          label={t('categoriesPage.newSubject.labels.subject')}
           onBlur={handleBlur('subject')}
           onChange={handleInputChange('subject')}
+          placeholder={t('categoriesPage.newSubject.labels.subject')}
+          sx={styles.placeholder}
           value={data.subject}
         />
       </Box>
@@ -76,13 +83,15 @@ const RequestStudyForm = () => {
         <AsyncAutocomplete
           fetchOnFocus
           freeSolo
+          inputValue={data.category}
           labelField='name'
           onBlur={handleBlur('category')}
           onChange={handleChangeCategory}
           onInputChange={handleChangeCategory}
           service={categoryService.getCategoriesNames}
+          sx={styles.placeholder}
           textFieldProps={{
-            label: t('categoriesPage.newSubject.labels.category'),
+            placeholder: t('categoriesPage.newSubject.labels.category'),
             error: Boolean(errors.category),
             helperText: ` ${t(errors.category)}`
           }}
@@ -99,10 +108,11 @@ const RequestStudyForm = () => {
         <AppTextArea
           errorMsg={t(errors.info)}
           fullWidth
-          label={t('categoriesPage.newSubject.labels.info')}
           maxLength={MAX_LENGTH}
           onBlur={handleBlur('info')}
           onChange={handleInputChange('info')}
+          placeholder={t('categoriesPage.newSubject.labels.info')}
+          sx={styles.placeholder}
           value={data.info}
         />
       </Box>
