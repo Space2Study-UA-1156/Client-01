@@ -12,7 +12,8 @@ import Magnifier from '~/assets/img/guest-home-page/howItWorksStudentSecond.svg'
 const ResultsNotFound = ({
   name = 'category',
   dialog = <p>default dialog</p>, // TODO
-  sx = {}
+  sx = {},
+  showButton = true
 }) => {
   const { t } = useTranslation()
   const { openModal } = useModalContext()
@@ -30,9 +31,16 @@ const ResultsNotFound = ({
           style={styles.content}
           title={t('constant.resultsNotFound')}
         />
-        <AppButton onClick={handleOpenModal} sx={styles.button} variant='tonal'>
-          {t('constant.buttonRequest', { name })}
-        </AppButton>
+
+        {showButton && (
+          <AppButton
+            onClick={handleOpenModal}
+            sx={styles.button}
+            variant='tonal'
+          >
+            {t('constant.buttonRequest', { name })}
+          </AppButton>
+        )}
       </Box>
     </Box>
   )
