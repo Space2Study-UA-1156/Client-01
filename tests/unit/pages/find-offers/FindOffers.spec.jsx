@@ -28,6 +28,10 @@ vi.mock('~/components/app-content-switcher/AppContentSwitcher', () => ({
   )
 }))
 
+vi.mock('~/components/~/components/sort-menu/SortMenu/SortMenu', () => ({
+  default: ({ onChange }) => <input data-testid='sort' onChange={onChange} />
+}))
+
 describe('FindOffers component', () => {
   it('renders the Find Offers page', async () => {
     renderWithProviders(<FindOffers />)
@@ -44,7 +48,8 @@ describe('FindOffers component', () => {
 
     expect(mockSetSearchParams).toHaveBeenCalledWith({
       view: 'list',
-      role: tutor
+      role: tutor,
+      sort: 'newest'
     })
   })
 
@@ -58,7 +63,8 @@ describe('FindOffers component', () => {
 
     expect(mockSetSearchParams).toHaveBeenCalledWith({
       view: 'list',
-      role: student
+      role: student,
+      sort: 'newest'
     })
   })
 })
