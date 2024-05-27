@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Box, MenuItem } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import Select from '@mui/material/Select'
@@ -6,10 +5,9 @@ import { styles } from '~/components/sort-menu/SortMenu.styles.js'
 import AppButton from '~/components/app-button/AppButton'
 import { useSearchParams } from 'react-router-dom'
 
-const SortMenu = () => {
+const SortMenu = ({ sort, setSort }) => {
   const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [sort, setSort] = useState(searchParams.get('sort') || 'newest')
 
   const handleChange = (event) => {
     const newValue = event.target.value
