@@ -11,8 +11,12 @@ import { useFormSectionStyles } from '~/containers/tutor-home-page/general-info-
 
 const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
   const classes = useFormSectionStyles()
-  const { isOverEighteen, handleOverEighteenChange, isNextDisabled } =
-    useStepContext() as StepContextType
+  const {
+    isOverEighteen,
+    handleOverEighteenChange,
+    isNextDisabled,
+    checkboxError
+  } = useStepContext() as StepContextType
 
   const [isConfirmed, setIsConfirmed] = useState<boolean>(isOverEighteen)
   const [message, setMessage] = useState<string>('')
@@ -50,6 +54,11 @@ const FormSection: React.FC<FormSectionProps> = ({ btnsBox }) => {
           messageLength={message.length}
           onMessageChange={handleMessageChange}
         />
+        {checkboxError && (
+          <Typography color='error' variant='body2'>
+            {checkboxError}
+          </Typography>
+        )}
         <FormControlLabel
           control={
             <Checkbox checked={isConfirmed} onChange={handleCheckboxChange} />

@@ -11,20 +11,24 @@ import { useSelectGroupStyles } from './SelectGroup.styles'
 import { LocationService } from '~/services/location-service'
 import { useStepContext } from '~/context/step-context'
 import { StepContextType } from './interfaces/ITextFieldGroup'
+import { userService } from '~/services/user-service'
+import { useSelector } from 'react-redux'
 
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
   const classes = useSelectGroupStyles()
-  const [countries, setCountries] = useState<string[]>([])
-  const [cities, setCities] = useState<string[]>([])
-  const { stepData, handleStepData, stepLabels } =
+  const { stepData, handleStepData, stepLabels, generalData, setGeneralData } =
     useStepContext() as StepContextType
+  const { userId, userRole } = useSelector((state) => state.appMain)
 
   const [generalStepLabel] = stepLabels
-  const selectedCountry = stepData[generalStepLabel].data.country
-  const selectedCity = stepData[generalStepLabel].data.city
+  const selectedCountry = stepData[generalStepLabel]?.data?.country || ''
+  const selectedCity = stepData[generalStepLabel]?.data?.city || ''
+  const [countries, setCountries] = useState<string[]>([])
+  const [cities, setCities] = useState<string[]>([])
 
   useEffect(() => {
+    console.log('Fetching countries...')
     const fetchCountries = async () => {
       try {
         const response = await LocationService.getCountries()
@@ -39,6 +43,7 @@ const SelectGroup: React.FC = () => {
 
   useEffect(() => {
     if (selectedCountry) {
+      console.log('Fetching cities for country:', selectedCountry)
       const fetchCities = async () => {
         try {
           const response = await LocationService.getCities(selectedCountry)
@@ -48,19 +53,55 @@ const SelectGroup: React.FC = () => {
         }
       }
       void fetchCities()
-    } else {
-      setCities([])
-      handleStepData(generalStepLabel, { city: '' }, {})
     }
-  }, [generalStepLabel, handleStepData, selectedCountry])
+  }, [selectedCountry])
 
-  const handleCountryChange = (event: SelectChangeEvent) => {
-    handleStepData(generalStepLabel, { country: event.target.value }, {})
+  const handleCountryChange = async (event: SelectChangeEvent) => {
+    const newCountry = event.target.value
+    console.log('Country changed:', newCountry)
+    handleStepData(generalStepLabel, { country: newCountry, city: '' }, {})
+    setGeneralData({
+      data: {
+        ...generalData.data,
+        country: newCountry,
+        city: ''
+      },
+      errors: generalData.errors
+    })
+    setCities([]) // Reset cities when country changes
+    try {
+      await userService.updateUser(userId, {
+        address: { country: newCountry, city: '' }
+      })
+    } catch (error) {
+      console.error('Error updating user country:', error)
+    }
   }
 
-  const handleCityChange = (event: SelectChangeEvent) => {
-    handleStepData(generalStepLabel, { city: event.target.value }, {})
+  const handleCityChange = async (event: SelectChangeEvent) => {
+    const newCity = event.target.value
+    console.log('City changed:', newCity)
+    handleStepData(generalStepLabel, { city: newCity }, {})
+    setGeneralData({
+      data: {
+        ...generalData.data,
+        city: newCity
+      },
+      errors: generalData.errors
+    })
+    try {
+      await userService.updateUser(userId, {
+        address: { country: selectedCountry, city: newCity }
+      })
+    } catch (error) {
+      console.error('Error updating user city:', error)
+    }
   }
+
+  useEffect(() => {
+    console.log('Initial country:', selectedCountry)
+    console.log('Initial city:', selectedCity)
+  }, [selectedCountry, selectedCity])
 
   return (
     <div
