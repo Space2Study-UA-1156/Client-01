@@ -15,13 +15,10 @@ vi.mock('~/components/category-card/CategoryCard', () => ({
   )
 }))
 
-vi.mock(
-  '~/containers/categories-results-not-found/CategoriesResultsNotFound',
-  () => ({
-    __esModule: true,
-    default: () => <div data-testid='not-found' />
-  })
-)
+vi.mock('~/components/results-not-found/ResultsNotFound', () => ({
+  __esModule: true,
+  default: () => <div data-testid='not-found' />
+}))
 
 vi.mock('~/components/loader/Loader', () => ({
   __esModule: true,
