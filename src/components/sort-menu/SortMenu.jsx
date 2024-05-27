@@ -19,12 +19,7 @@ const SortMenu = ({ sort, setSort }) => {
     <Box sx={styles.root}>
       <Box sx={styles.label}>{t('common.labels.sortBy')}</Box>
       <Box sx={styles.sortContainer}>
-        <Select
-          id='demo-simple-select'
-          labelId='demo-simple-select-label'
-          onChange={handleChange}
-          value={sort}
-        >
+        <Select id='demo-simple-select' onChange={handleChange} value={sort}>
           <MenuItem value='newest'>
             <AppButton
               data_testid='button-newest'
