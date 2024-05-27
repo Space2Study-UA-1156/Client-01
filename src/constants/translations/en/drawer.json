@@ -1,0 +1,23 @@
+{
+  "createNewRequest": {
+    "title": "Create a New Request",
+    "describeYourLearningNeeds": "Describe Your Learning Needs",
+    "category": "Category",
+    "subject": "Subject",
+    "selectPreparationLevel": "Select the preparation level you want to achieve",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "testPreparation": "Test Preparation",
+      "professional": "Professional",
+      "specialized": "Specialized"
+    },
+    "preferredTeachingParameters": "Preferred Teaching Parameters",
+    "describeYourOffer": "Describe your offer",
+    "tutoringLanguages": "Tutoring languages",
+    "setPreferredOfferValue": "Set the preferred offer value",
+    "createOffer": "Create Offer",
+    "addToDrafts": "Add to Drafts"
+  }
+}
