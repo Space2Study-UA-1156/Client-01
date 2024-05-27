@@ -1,4 +1,10 @@
-import React, { useState, useEffect, FocusEvent, ChangeEvent } from 'react'
+import React, {
+  useState,
+  useEffect,
+  FocusEvent,
+  ChangeEvent,
+  useCallback
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import SelectGroup from './SelectGroup'
@@ -14,7 +20,10 @@ import {
 } from '~/containers/tutor-home-page/general-info-step/interfaces/ITextFieldGroup'
 import { userService } from '~/services/user-service'
 import { useSelector } from 'react-redux'
-import { RootState } from '@reduxjs/toolkit/query'
+import { useDebounce } from '~/hooks/use-debounce'
+import { store } from '~/redux/store'
+
+export type RootState = ReturnType<typeof store.getState>
 
 const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
   const classes = useTextFieldGroupStyles()
@@ -27,9 +36,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
     setGeneralData
   } = useStepContext() as StepContextType
 
-  const { userId, userRole } = useSelector(
-    (state: RootState<string, string, any>) => state.appMain
-  )
+  const { userId, userRole } = useSelector((state: RootState) => state.appMain)
 
   const initialValidationErrors: FormData = (stepData['General Info']
     ?.errors as unknown as FormData) || {
@@ -54,6 +61,8 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [isDataFetched, setIsDataFetched] = useState<boolean>(false)
 
+  const debouncedFormData = useDebounce(formData, 1500)
+
   useEffect(() => {
     let isMounted = true
 
@@ -64,7 +73,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
           setFormData({
             firstName: data.firstName,
             lastName: data.lastName,
-            message: data.message || '',
+            message: data.professionalSummary || '',
             country: data.address?.country || '',
             city: data.address?.city || ''
           })
@@ -72,7 +81,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
             data: {
               firstName: data.firstName,
               lastName: data.lastName,
-              message: data.message || '',
+              message: data.professionalSummary || '',
               country: data.address?.country || '',
               city: data.address?.city || ''
             },
@@ -86,9 +95,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
     }
 
     if (userId && !isDataFetched) {
-      fetchUserData().catch((error) =>
-        console.error('Error in useEffect:', error)
-      )
+      void fetchUserData()
     }
 
     return () => {
@@ -107,15 +114,29 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
     handleStepData('General Info', formData, validationErrors)
   }, [formData, validationErrors, handleStepData])
 
-  const updateUserData = async (name: keyof FormData, value: string) => {
+  const updateUserData = useCallback(async () => {
     try {
-      await userService.updateUser(userId, { [name]: value })
+      await userService.updateUser(userId, {
+        firstName: debouncedFormData.firstName,
+        lastName: debouncedFormData.lastName,
+        address: {
+          country: debouncedFormData.country,
+          city: debouncedFormData.city
+        },
+        professionalSummary: debouncedFormData.message
+      })
     } catch (error) {
       console.error('Error updating user data:', error)
     }
-  }
+  }, [debouncedFormData, userId])
 
-  const handleBlur = async (
+  useEffect(() => {
+    if (debouncedFormData) {
+      void updateUserData()
+    }
+  }, [debouncedFormData, updateUserData])
+
+  const handleBlur = (
     e: FocusEvent<HTMLInputElement>,
     validationFn?: (value: string) => string
   ) => {
@@ -145,7 +166,6 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
         [name]: t(errorMsg)
       }
     })
-    await updateUserData(name, value)
   }
 
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -177,7 +197,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
           label={translations.labels.firstName}
           multiline={false}
           name='firstName'
-          onBlur={(e) => handleBlur(e, firstName)}
+          onBlur={(e) => void handleBlur(e, firstName)}
           onChange={(e) => {
             const { value } = e.target
             setFormData((prevData) => ({
@@ -203,7 +223,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
           label={translations.labels.lastName}
           multiline={false}
           name='lastName'
-          onBlur={(e) => handleBlur(e, lastName)}
+          onBlur={(e) => void handleBlur(e, lastName)}
           onChange={(e) => {
             const { value } = e.target
             setFormData((prevData) => ({
@@ -224,21 +244,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
           variant='outlined'
         />
       </div>
-      <SelectGroup
-        onChange={(value) => {
-          setFormData((prevData) => ({
-            ...prevData,
-            country: value
-          }))
-          setGeneralData({
-            data: {
-              ...generalData.data,
-              country: value
-            },
-            errors: generalData.errors
-          })
-        }}
-      />
+      <SelectGroup />
       <AppTextField
         className={classes.fullWidthInput}
         errorMsg={validationErrors.message}
@@ -246,7 +252,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
         label={translation.generalInfo.textFieldLabel}
         multiline
         name='message'
-        onBlur={handleBlur}
+        onBlur={(e) => void handleBlur(e)}
         onChange={handleMessageChange}
         rows={5}
         value={formData.message}

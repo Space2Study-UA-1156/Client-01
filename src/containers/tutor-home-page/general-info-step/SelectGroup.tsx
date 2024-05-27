@@ -13,13 +13,14 @@ import { useStepContext } from '~/context/step-context'
 import { StepContextType } from './interfaces/ITextFieldGroup'
 import { userService } from '~/services/user-service'
 import { useSelector } from 'react-redux'
+import { RootState } from '~/containers/tutor-home-page/general-info-step/interfaces/store'
 
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
   const classes = useSelectGroupStyles()
   const { stepData, handleStepData, stepLabels, generalData, setGeneralData } =
     useStepContext() as StepContextType
-  const { userId, userRole } = useSelector((state) => state.appMain)
+  const userId = useSelector((state: RootState) => state.appMain.userId)
 
   const [generalStepLabel] = stepLabels
   const selectedCountry = stepData[generalStepLabel]?.data?.country || ''
@@ -28,7 +29,6 @@ const SelectGroup: React.FC = () => {
   const [cities, setCities] = useState<string[]>([])
 
   useEffect(() => {
-    console.log('Fetching countries...')
     const fetchCountries = async () => {
       try {
         const response = await LocationService.getCountries()
@@ -43,7 +43,6 @@ const SelectGroup: React.FC = () => {
 
   useEffect(() => {
     if (selectedCountry) {
-      console.log('Fetching cities for country:', selectedCountry)
       const fetchCities = async () => {
         try {
           const response = await LocationService.getCities(selectedCountry)
@@ -56,9 +55,8 @@ const SelectGroup: React.FC = () => {
     }
   }, [selectedCountry])
 
-  const handleCountryChange = async (event: SelectChangeEvent) => {
+  const handleCountryChange = (event: SelectChangeEvent) => {
     const newCountry = event.target.value
-    console.log('Country changed:', newCountry)
     handleStepData(generalStepLabel, { country: newCountry, city: '' }, {})
     setGeneralData({
       data: {
@@ -68,7 +66,24 @@ const SelectGroup: React.FC = () => {
       },
       errors: generalData.errors
     })
-    setCities([]) // Reset cities when country changes
+    setCities([])
+    void updateUserCountry(newCountry)
+  }
+
+  const handleCityChange = (event: SelectChangeEvent) => {
+    const newCity = event.target.value
+    handleStepData(generalStepLabel, { city: newCity }, {})
+    setGeneralData({
+      data: {
+        ...generalData.data,
+        city: newCity
+      },
+      errors: generalData.errors
+    })
+    void updateUserCity(newCity)
+  }
+
+  const updateUserCountry = async (newCountry: string) => {
     try {
       await userService.updateUser(userId, {
         address: { country: newCountry, city: '' }
@@ -78,17 +93,7 @@ const SelectGroup: React.FC = () => {
     }
   }
 
-  const handleCityChange = async (event: SelectChangeEvent) => {
-    const newCity = event.target.value
-    console.log('City changed:', newCity)
-    handleStepData(generalStepLabel, { city: newCity }, {})
-    setGeneralData({
-      data: {
-        ...generalData.data,
-        city: newCity
-      },
-      errors: generalData.errors
-    })
+  const updateUserCity = async (newCity: string) => {
     try {
       await userService.updateUser(userId, {
         address: { country: selectedCountry, city: newCity }
@@ -97,11 +102,6 @@ const SelectGroup: React.FC = () => {
       console.error('Error updating user city:', error)
     }
   }
-
-  useEffect(() => {
-    console.log('Initial country:', selectedCountry)
-    console.log('Initial city:', selectedCity)
-  }, [selectedCountry, selectedCity])
 
   return (
     <div
@@ -112,7 +112,7 @@ const SelectGroup: React.FC = () => {
         <Select
           label={t('common.labels.country')}
           labelId='country-label'
-          onChange={handleCountryChange}
+          onChange={(e) => handleCountryChange(e)}
           value={selectedCountry}
         >
           {countries.map((country) => (
@@ -128,7 +128,7 @@ const SelectGroup: React.FC = () => {
           disabled={!selectedCountry}
           label={t('common.labels.city')}
           labelId='city-label'
-          onChange={handleCityChange}
+          onChange={(e) => handleCityChange(e)}
           value={selectedCity}
         >
           {cities.map((city) => (
