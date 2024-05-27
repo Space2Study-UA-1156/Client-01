@@ -47,6 +47,9 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
         <Typography gutterBottom variant='h6'>
           {t('drawer.createNewRequest.title')}
         </Typography>
+        <Typography gutterBottom variant='body1'>
+          {t('drawer.createNewRequest.description')}
+        </Typography>
         <Box component='form' sx={styles.form}>
           <Typography gutterBottom variant='subtitle1'>
             {t('drawer.createNewRequest.describeYourLearningNeeds')}

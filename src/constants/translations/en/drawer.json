@@ -1,6 +1,7 @@
 {
   "createNewRequest": {
     "title": "Create a New Request",
+    "description": "Find the perfect tutor for your needs by creating a request below. Select the options that best describe what you're looking for, and we'll match you with qualified tutors who can help you reach your academic goals.",
     "describeYourLearningNeeds": "Describe Your Learning Needs",
     "category": "Category",
     "subject": "Subject",
