@@ -21,15 +21,31 @@ import { student } from '~/constants'
 const UserStepsWrapper = ({ userRole }) => {
   const [isUserFetched, setIsUserFetched] = useState(false)
   const dispatch = useDispatch()
-  const [modal] = useState(null)
-  const [timer, setTimer] = useState(null)
-  const { closeModal } = useModalContext()
   const { setNeedConfirmation } = useConfirm()
 
   useEffect(() => {
     setNeedConfirmation(true)
     dispatch(markFirstLoginComplete())
   }, [dispatch, setNeedConfirmation])
+
+  const stepLabels = userRole === student ? studentStepLabels : tutorStepLabels
+
+  return (
+    <StepProvider initialValues={initialValues} stepLabels={stepLabels}>
+      <UserStepsContent
+        isUserFetched={isUserFetched}
+        setIsUserFetched={setIsUserFetched}
+        stepLabels={stepLabels}
+      />
+    </StepProvider>
+  )
+}
+
+const UserStepsContent = ({ isUserFetched, setIsUserFetched, stepLabels }) => {
+  const { generalData } = useStepContext()
+  const { closeModal } = useModalContext()
+  const [modal] = useState(null)
+  const [timer, setTimer] = useState(null)
 
   const closeModalAfterDelay = useCallback(
     (delay) => {
@@ -39,16 +55,21 @@ const UserStepsWrapper = ({ userRole }) => {
     [closeModal]
   )
 
-  const saveDataToBackend = useCallback(async (currentStep, isLastStep) => {
-    if (isLastStep) {
-      const { generalData } = useStepContext()
-      try {
-        await userService.updateUser(generalData.data.userId, generalData.data)
-      } catch (error) {
-        console.error('Error saving user data:', error)
+  useEffect(() => {
+    return () => {
+      if (timer) {
+        clearTimeout(timer)
       }
     }
-  }, [])
+  }, [timer])
+
+  const saveDataToBackend = useCallback(async () => {
+    try {
+      await userService.updateUser(generalData.data.userId, generalData.data)
+    } catch (error) {
+      console.error('Error saving user data:', error)
+    }
+  }, [generalData.data])
 
   const childrenArr = [
     <GeneralInfoStep
@@ -61,11 +82,9 @@ const UserStepsWrapper = ({ userRole }) => {
     <AddPhotoStep key='4' />
   ]
 
-  const stepLabels = userRole === student ? studentStepLabels : tutorStepLabels
-
   return (
-    <StepProvider initialValues={initialValues} stepLabels={stepLabels}>
-      <StepWrapper steps={stepLabels} onStepChange={saveDataToBackend}>
+    <>
+      <StepWrapper onStepChange={saveDataToBackend} steps={stepLabels}>
         {childrenArr}
       </StepWrapper>
       {modal && (
@@ -76,7 +95,7 @@ const UserStepsWrapper = ({ userRole }) => {
           timerId={timer}
         />
       )}
-    </StepProvider>
+    </>
   )
 }
 
