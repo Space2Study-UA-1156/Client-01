@@ -5,6 +5,11 @@ export const styles = {
     width: '100%'
   },
 
+  switch: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+
   filterSwitcherMenuViewContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -12,10 +17,5 @@ export const styles = {
     gap: '40px',
     padding: '0px 20px 0px 20px',
     marginTop: '40px'
-  },
-
-  switch: {
-    display: 'flex',
-    justifyContent: 'center'
   }
 }
