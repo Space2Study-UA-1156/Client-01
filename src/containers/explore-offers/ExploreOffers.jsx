@@ -11,7 +11,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 import SearchIcon from '@mui/icons-material/Search'
-import CloseIcon from '@mui/icons-material/Close'
 import useBreakpoints from '~/hooks/use-breakpoints'
 import { authRoutes } from '~/router/constants/authRoutes'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
@@ -22,6 +21,8 @@ const ExploreOffers = () => {
   const { isMobile, isTablet } = useBreakpoints()
   const [searchParams, setSearchParams] = useSearchParams()
 
+  console.log('searchParams:', searchParams)
+
   const [category, setCategory] = useState(() => {
     const categoryId = searchParams.get('categoryId')
     return categoryId ? { _id: categoryId, name: '' } : ''
@@ -30,12 +31,14 @@ const ExploreOffers = () => {
     const subjectId = searchParams.get('subjectId')
     return subjectId ? { _id: subjectId, name: '' } : ''
   })
-
-  const [tutor, setTutor] = useState(() => {
-    const firstName = searchParams.get('tutorFirstName') || ''
-    const lastName = searchParams.get('tutorLastName') || ''
-    return firstName || lastName ? `${firstName} ${lastName}`.trim() : ''
+  const [search, setSearch] = useState(() => {
+    const search = searchParams.get('search') || ''
+    return search ? `${search}`.trim() : ''
   })
+
+  console.log('category:', category)
+  console.log('subject:', subject)
+  console.log('search:', search)
 
   const returnToCategories = () => {
     navigate(authRoutes.categories.path)
@@ -47,14 +50,14 @@ const ExploreOffers = () => {
 
   const handleChangeCategory = (_e, categoryValue) => {
     setCategory(categoryValue)
-    console.log('CategoryValue:', categoryValue)
-
+    setSubject('')
     setSearchParams((params) => {
       if (categoryValue) {
         params.set('categoryId', categoryValue._id)
         params.delete('subjectId')
       } else {
         params.delete('categoryId')
+        params.delete('subjectId')
       }
       return params
     })
@@ -62,7 +65,6 @@ const ExploreOffers = () => {
 
   const handleChangeSubject = (_e, subjectValue) => {
     setSubject(subjectValue)
-
     setSearchParams((params) => {
       if (subjectValue) {
         params.set('subjectId', subjectValue._id)
@@ -75,61 +77,50 @@ const ExploreOffers = () => {
 
   const handleChangeTutor = (e) => {
     const value = e.target.value
-    setTutor(value)
-  }
-
-  const handleSearch = async () => {
-    const tutorParts = tutor.trim().split(' ')
-    let firstName = ''
-    let lastName = ''
-
-    if (tutorParts.length === 1) {
-      lastName = tutorParts[0]
-    } else if (tutorParts.length >= 2) {
-      firstName = tutorParts[0]
-      lastName = tutorParts[tutorParts.length - 1]
+    setSearch(value)
+    const params = new URLSearchParams(searchParams)
+    if (value) {
+      params.set('search', value)
+    } else {
+      params.delete('search')
     }
-
-    setSearchParams((params) => {
-      if (firstName) {
-        params.set('tutorFirstName', firstName)
-      } else {
-        params.delete('tutorFirstName')
-      }
-
-      if (lastName) {
-        params.set('tutorLastName', lastName)
-      } else {
-        params.delete('tutorLastName')
-      }
-      return params
-    })
+    setSearchParams(params)
   }
+
+  const handleSearch = () => {
+    const params = new URLSearchParams(searchParams)
+    if (search) {
+      params.set('search', search)
+    } else {
+      params.delete('search')
+    }
+    setSearchParams(params)
+  }
+
+  /*useEffect(() => {
+    if (isMobile || isTablet) {
+      setSearch('')
+      const params = new URLSearchParams(searchParams)
+      params.delete('search')
+      setSearchParams(params)
+    }
+  }, [isMobile, isTablet, setSearchParams])*/
 
   useEffect(() => {
     if (isMobile || isTablet) {
-      setTutor('')
-      setSearchParams((params) => {
-        params.delete('tutorFirstName')
-        params.delete('tutorLastName')
-        return params
-      })
+      setSearch('')
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete('search')
+      setSearchParams(params)
     }
-  }, [isMobile, isTablet, setSearchParams])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile, isTablet, setSearchParams, searchParams.toString()])
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
+      e.preventDefault()
       handleSearch()
     }
-  }
-
-  const handleClose = () => {
-    setTutor('')
-    setSearchParams((params) => {
-      params.delete('tutorFirstName')
-      params.delete('tutorLastName')
-      return params
-    })
   }
 
   return (
@@ -166,7 +157,7 @@ const ExploreOffers = () => {
         )}
       </Box>
 
-      <Box sx={styles.searchContainer}>
+      <Box component='form' sx={styles.searchContainer}>
         <AsyncAutocomplete
           labelField='name'
           onChange={handleChangeCategory}
@@ -198,15 +189,6 @@ const ExploreOffers = () => {
                 <InputAdornment position='start'>
                   <SearchIcon />
                 </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <CloseIcon
-                    data-testid='close-icon'
-                    onClick={handleClose}
-                    sx={{ cursor: 'pointer' }}
-                  />
-                </InputAdornment>
               )
             }}
             helperText={null}
@@ -215,7 +197,7 @@ const ExploreOffers = () => {
             onKeyDown={handleKeyPress}
             placeholder={t('findOffers.searchToolbar.label')}
             sx={styles.inputTutor}
-            value={tutor}
+            value={search}
           />
         )}
 
