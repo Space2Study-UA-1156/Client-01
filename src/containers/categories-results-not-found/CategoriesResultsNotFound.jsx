@@ -12,14 +12,17 @@ const CategoriesResultsNotFound = () => {
   const requestNewCategory = () => {}
 
   return (
-    <Box sx={styles.box}>
-      <ImgTitleDescription
-        alt='Magnifier'
-        description={t('constant.tryAgainText', { name: 'category' })}
-        img={Magnifier}
-        style={styles}
-        title={t('constant.resultsNotFound')}
-      />
+    <Box sx={styles.banner}>
+      <Box sx={styles.boxTitle}>
+        <ImgTitleDescription
+          alt='Magnifier'
+          description={t('constant.tryAgainText', { name: 'category' })}
+          img={Magnifier}
+          style={styles}
+          title={t('constant.resultsNotFound')}
+        />
+      </Box>
+
       <AppButton
         onClick={requestNewCategory}
         size={'large'}

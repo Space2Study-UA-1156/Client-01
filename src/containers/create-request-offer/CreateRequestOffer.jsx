@@ -22,26 +22,28 @@ const CreateRequestOffer = () => {
   }
 
   return (
-    <Box component='section' sx={styles.root}>
-      <Box sx={styles.row}>
-        <Box>
-          <TitleWithDescription
-            description={t(`findOffers.offerRequestBlock.description`)}
-            style={styles.titleWithDescription}
-            title={t(`findOffers.offerRequestBlock.title.${userRole}`)}
-          />
+    <Box component='section' sx={styles.main}>
+      <Box sx={styles.root}>
+        <Box sx={styles.row}>
+          <Box>
+            <TitleWithDescription
+              description={t(`findOffers.offerRequestBlock.description`)}
+              style={styles.titleWithDescription}
+              title={t(`findOffers.offerRequestBlock.title.${userRole}`)}
+            />
 
-          <AppButton onClick={handleOpen} sx={styles.button}>
-            {t(`findOffers.offerRequestBlock.button.${userRole}`)}
-          </AppButton>
+            <AppButton onClick={handleOpen} sx={styles.button}>
+              {t(`findOffers.offerRequestBlock.button.${userRole}`)}
+            </AppButton>
+          </Box>
+
+          {!isMobile && <Box alt='subject' component='img' src={subjectIcon} />}
         </Box>
 
-        {!isMobile && <Box alt='subject' component='img' src={subjectIcon} />}
+        <AppDrawer onClose={closeDrawer} open={isOpen}>
+          {/* TODO: add a new request/offer form */}
+        </AppDrawer>
       </Box>
-
-      <AppDrawer onClose={closeDrawer} open={isOpen}>
-        {/* TODO: add a new request/offer form */}
-      </AppDrawer>
     </Box>
   )
 }
