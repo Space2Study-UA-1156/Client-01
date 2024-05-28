@@ -4,7 +4,7 @@ export const MAX_LENGTH = 1000
 
 export const validations = {
   subject: (value) => emptyField(value),
-  category: (value) => emptyField(value.name),
+  category: (value) => emptyField(value),
   info: (value) =>
     emptyField(
       value,

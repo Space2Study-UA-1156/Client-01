@@ -11,7 +11,7 @@
   "offers": "offers",
   "totalOffers": "{{totalOffers}} Offers",
   "newSubject": {
-    "successMessage": "Request send successfully",
+    "successMessage": "Request has been sent successfully",
     "title": "Request a new study",
     "description": "If you can’t find a specific category or subject that you need, you can submit a request to our team to review your request and take necessary actions.",
     "subject": "Create a new subject",

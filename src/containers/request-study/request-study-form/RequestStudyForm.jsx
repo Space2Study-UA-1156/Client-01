@@ -11,6 +11,8 @@ import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 import useConfirm from '~/hooks/use-confirm'
 import useForm from '~/hooks/use-form'
 import useAxios from '~/hooks/use-axios'
+import { useModalContext } from '~/context/modal-context'
+import { useSnackBarContext } from '~/context/snackbar-context'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 import {
@@ -18,15 +20,36 @@ import {
   validations,
   MAX_LENGTH
 } from '~/containers/request-study/request-study-form/constants'
+import { snackbarVariants } from '~/constants'
 import { styles } from '~/containers/request-study/request-study-form/RequestStudyForm.styles'
 
 const RequestStudyForm = () => {
   const { t } = useTranslation()
   const { setNeedConfirmation } = useConfirm()
+  const { setAlert } = useSnackBarContext()
+  const { closeModal } = useModalContext()
+
+  const showSuccessAlert = () => {
+    setAlert({
+      severity: snackbarVariants.success,
+      message: 'categoriesPage.newSubject.successMessage'
+    })
+
+    closeModal()
+  }
+
+  const showErrorAlert = (e) => {
+    setAlert({
+      severity: snackbarVariants.error,
+      message: `errors.${e.code}`
+    })
+  }
 
   const { fetchData: fetchSubject } = useAxios({
     service: subjectService.createSubject,
-    fetchOnMount: false
+    fetchOnMount: false,
+    onResponse: showSuccessAlert,
+    onResponseError: showErrorAlert
   })
 
   const { fetchData: fetchCategories } = useAxios({
@@ -37,7 +60,8 @@ const RequestStudyForm = () => {
         category: response._id,
         name: data.subject
       })
-    }
+    },
+    onResponseError: showErrorAlert
   })
 
   const {
@@ -53,12 +77,10 @@ const RequestStudyForm = () => {
       const { subject, category } = data
 
       if (category._id) {
-        fetchSubject({
+        return fetchSubject({
           name: subject,
           category: category._id
         })
-
-        return
       }
 
       fetchCategories({
@@ -83,8 +105,10 @@ const RequestStudyForm = () => {
       return
     }
 
-    const { _id = null, name = '' } = value
-    handleNonInputValueChange('category', { _id, name })
+    handleNonInputValueChange('category', {
+      _id: value?._id ?? null,
+      name: value?.name ?? ''
+    })
   }
 
   const hasErrors = Object.values(errors).filter(Boolean).length > 0
@@ -123,7 +147,7 @@ const RequestStudyForm = () => {
           service={categoryService.getCategoriesNames}
           sx={styles.placeholder}
           textFieldProps={{
-            label: t('becomeTutor.categories.subjectLabel'),
+            placeholder: t('becomeTutor.categories.subjectLabel'),
             error: Boolean(errors.category),
             helperText: ` ${t(errors.category)}`
           }}
