@@ -1,4 +1,10 @@
 export const styles = {
+  main: {
+    margin: '0 auto',
+    maxWidth: '1128px',
+    width: '100%'
+  },
+
   root: {
     backgroundColor: 'companyBlue',
     borderRadius: '16px',
