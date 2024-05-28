@@ -21,8 +21,6 @@ const ExploreOffers = () => {
   const { isMobile, isTablet } = useBreakpoints()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  console.log('searchParams:', searchParams)
-
   const [category, setCategory] = useState(() => {
     const categoryId = searchParams.get('categoryId')
     return categoryId ? { _id: categoryId, name: '' } : ''
@@ -35,10 +33,6 @@ const ExploreOffers = () => {
     const search = searchParams.get('search') || ''
     return search ? `${search}`.trim() : ''
   })
-
-  console.log('category:', category)
-  console.log('subject:', subject)
-  console.log('search:', search)
 
   const returnToCategories = () => {
     navigate(authRoutes.categories.path)
@@ -97,15 +91,6 @@ const ExploreOffers = () => {
     setSearchParams(params)
   }
 
-  /*useEffect(() => {
-    if (isMobile || isTablet) {
-      setSearch('')
-      const params = new URLSearchParams(searchParams)
-      params.delete('search')
-      setSearchParams(params)
-    }
-  }, [isMobile, isTablet, setSearchParams])*/
-
   useEffect(() => {
     if (isMobile || isTablet) {
       setSearch('')
@@ -113,7 +98,6 @@ const ExploreOffers = () => {
       params.delete('search')
       setSearchParams(params)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, isTablet, setSearchParams, searchParams.toString()])
 
   const handleKeyPress = (e) => {
