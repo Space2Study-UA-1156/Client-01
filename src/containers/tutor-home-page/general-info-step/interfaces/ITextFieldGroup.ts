@@ -38,4 +38,5 @@ export interface StepContextType {
     errors: FormData
   }
   setGeneralData: (data: { data: FormData; errors: FormData }) => void
+  checkboxError: string
 }
