@@ -6,7 +6,7 @@ import Box from '@mui/material/Box'
 import CardList from '~/components/card-list/CardList'
 import AppButton from '~/components/app-button/AppButton'
 import CategoryCard from '~/components/category-card/CategoryCard'
-import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
+import ResultsNotFound from '~/components/results-not-found/ResultsNotFound'
 
 import useViewMore from '~/hooks/use-view-more'
 import { subjectService } from '~/services/subject-service'
@@ -44,11 +44,7 @@ const SubjectList = ({ cardsPerPage = 24 }) => {
   ))
 
   if (error || (!data.length && !loading)) {
-    return (
-      <Box sx={styles.notFoundContainer}>
-        <CategoriesResultsNotFound />
-      </Box>
-    )
+    return <ResultsNotFound name='subject' />
   }
 
   return (
