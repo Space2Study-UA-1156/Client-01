@@ -9,7 +9,7 @@ import Slider from '@mui/material/Slider'
 import { useTranslation } from 'react-i18next'
 import { styles } from '~/components/app-drawer/AppDrawer.styles'
 
-const RequestForm: React.FC = () => {
+const OfferForm: React.FC<{ user: any }> = ({ user }) => {
   const { t } = useTranslation()
 
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -35,21 +35,21 @@ const RequestForm: React.FC = () => {
   return (
     <Box sx={styles.content}>
       <Typography gutterBottom variant='h6'>
-        {t('drawer.createNewRequest.title')}
+        {t('drawer.createNewOffer.title')}
       </Typography>
       <Typography gutterBottom variant='body1'>
-        {t('drawer.createNewRequest.description')}
+        {t('drawer.createNewOffer.description')}
       </Typography>
       <Box component='form' sx={styles.form}>
         <Typography gutterBottom variant='subtitle1'>
-          {t('drawer.createNewRequest.describeYourLearningNeeds')}
+          {t('drawer.createNewOffer.pickYourSpecialization')}
         </Typography>
         <TextField
           SelectProps={{
             native: true
           }}
           fullWidth
-          label={t('drawer.createNewRequest.category')}
+          label={t('drawer.createNewOffer.category')}
           margin='normal'
           onChange={handleCategoryChange}
           select
@@ -69,7 +69,7 @@ const RequestForm: React.FC = () => {
             native: true
           }}
           fullWidth
-          label={t('drawer.createNewRequest.subject')}
+          label={t('drawer.createNewOffer.subject')}
           margin='normal'
           onChange={handleSubjectChange}
           select
@@ -83,7 +83,7 @@ const RequestForm: React.FC = () => {
           ))}
         </TextField>
         <Typography gutterBottom variant='subtitle1'>
-          {t('drawer.createNewRequest.selectPreparationLevel')}
+          {t('drawer.createNewOffer.selectPreparationLevel')}
         </Typography>
         {[
           'beginner',
@@ -96,15 +96,22 @@ const RequestForm: React.FC = () => {
           <FormControlLabel
             control={<Checkbox />}
             key={level}
-            label={t(`drawer.createNewRequest.levels.${level}`)}
+            label={t(`drawer.createNewOffer.levels.${level}`)}
           />
         ))}
         <Typography gutterBottom variant='subtitle1'>
-          {t('drawer.createNewRequest.preferredTeachingParameters')}
+          {t('drawer.createNewOffer.teachingParameters')}
         </Typography>
         <TextField
           fullWidth
-          label={t('drawer.createNewRequest.describeYourOffer')}
+          label={t('drawer.createNewOffer.title')}
+          margin='normal'
+          multiline
+          rows={1}
+        />
+        <TextField
+          fullWidth
+          label={t('drawer.createNewOffer.describeYourOffer')}
           margin='normal'
           multiline
           rows={4}
@@ -114,7 +121,7 @@ const RequestForm: React.FC = () => {
             native: true
           }}
           fullWidth
-          label={t('drawer.createNewRequest.tutoringLanguages')}
+          label={t('drawer.createNewOffer.tutoringLanguages')}
           margin='normal'
           onChange={handleLanguageChange}
           select
@@ -130,7 +137,7 @@ const RequestForm: React.FC = () => {
           )}
         </TextField>
         <Typography gutterBottom variant='subtitle1'>
-          {t('drawer.createNewRequest.setPreferredOfferValue')}
+          {t('drawer.createNewOffer.setPreferredOfferValue')}
         </Typography>
         <Slider
           defaultValue={500}
@@ -138,15 +145,18 @@ const RequestForm: React.FC = () => {
           min={100}
           valueLabelDisplay='auto'
         />
+        <Typography gutterBottom variant='subtitle1'>
+          {t('drawer.createNewOffer.faq')}
+        </Typography>
         <Button color='primary' sx={styles.button} variant='contained'>
-          {t('drawer.createNewRequest.createOffer')}
+          {t('drawer.createNewOffer.createOffer')}
         </Button>
         <Button sx={styles.button} variant='outlined'>
-          {t('drawer.createNewRequest.addToDrafts')}
+          {t('drawer.createNewOffer.addToDrafts')}
         </Button>
       </Box>
     </Box>
   )
 }
 
-export default RequestForm
+export default OfferForm
