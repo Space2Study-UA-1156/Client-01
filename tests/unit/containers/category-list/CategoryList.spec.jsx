@@ -1,155 +1,120 @@
 import { fireEvent, screen } from '@testing-library/react'
-import { expect, vi } from 'vitest'
-import CategoryList from '~/containers/category-list/CategoryList'
-import useAxios from '~/hooks/use-axios'
 import { renderWithProviders } from '~tests/test-utils'
+import useViewMoreMock from '~/hooks/use-view-more'
+import CategoryList from '~/containers/category-list/CategoryList'
+
+vi.mock('~/hooks/use-view-more')
 
 vi.mock('~/components/category-card/CategoryCard', () => ({
-  __esModule: true,
-  default: ({ img, title, totalOffers }) => (
-    <div data-testid='card'>
-      <img alt={title} src={img} />
-      <h2>{title}</h2>
-      <p>{totalOffers}</p>
+  default: ({ title }) => (
+    <div data-testid='card' key={title}>
+      {title}
     </div>
   )
 }))
 
+vi.mock('~/components/card-list/CardList', () => ({
+  default: ({ cards }) => <div data-testid='card-list'>{cards}</div>
+}))
+
 vi.mock('~/components/results-not-found/ResultsNotFound', () => ({
   __esModule: true,
-  default: () => <div data-testid='not-found' />
+  default: () => <div data-testid='results-not-found' />
 }))
 
-vi.mock('~/components/loader/Loader', () => ({
-  __esModule: true,
-  default: () => <div data-testid='loader'></div>
+vi.mock('~/components/app-button/AppButton', () => ({
+  default: ({ children, onClick, loading }) => (
+    <button disabled={loading} onClick={onClick}>
+      {children}
+    </button>
+  )
 }))
 
-vi.mock('~/hooks/use-axios')
-
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
-  return {
-    ...actual,
-    useSearchParams: () => [{ get: vi.fn() }, vi.fn()]
+const handleViewMoreMock = vi.fn()
+const dataMock = [
+  {
+    _id: 1,
+    name: 'English',
+    appearance: { path: '', color: '' },
+    totalOffers: {
+      tutor: 0,
+      student: 0
+    }
   }
-})
+]
 
-const mockFirstResponse = {
-  items: [
-    {
-      _id: 1,
-      name: 'Languages',
-      title: 'Languages',
-      appearance: {
-        color: '#79B260',
-        icon: 'learnImg.png'
-      },
-      totalOffers: {
-        student: 234,
-        tutor: 234
-      }
-    }
-  ],
-  count: 100
-}
-const mockSecondResponse = {
-  items: [
-    {
-      _id: 2,
-      name: 'Languages',
-      title: 'Languages',
-      appearance: {
-        color: '#79B260',
-        icon: 'learnImg.png'
-      },
-      totalOffers: {
-        student: 234,
-        tutor: 234
-      }
-    }
-  ],
-  count: 100
-}
-
-describe('CategoryList container', () => {
-  it('should render "Sorry, no results found"', () => {
-    const fakeData = {
-      loading: false,
-      fetchData: () => vi.fn()
-    }
-    useAxios.mockImplementation(() => fakeData)
+describe('SubjectList container', () => {
+  it('should call handleViewMore function on button click', () => {
+    useViewMoreMock.mockReturnValueOnce({
+      data: dataMock,
+      isViewMoreVisable: true,
+      handleViewMore: handleViewMoreMock
+    })
     renderWithProviders(<CategoryList />)
 
-    expect(screen.getByTestId('not-found')).toBeInTheDocument()
+    const viewMoreButton = screen.getByRole('button', {
+      name: 'categoriesPage.viewMore'
+    })
+    fireEvent.click(viewMoreButton)
+
+    expect(handleViewMoreMock).toHaveBeenCalled()
   })
 
-  it('should render Loader', () => {
-    const fakeData = {
+  it('should render ResultsNotFound component if there are no items to display', () => {
+    useViewMoreMock.mockReturnValueOnce({
+      data: [],
+      loading: false,
+      error: null
+    })
+    renderWithProviders(<CategoryList />)
+
+    const resultsNotFound = screen.getByTestId('results-not-found')
+
+    expect(resultsNotFound).toBeInTheDocument()
+  })
+
+  it('should render ResultsNotFound component in case of error', () => {
+    useViewMoreMock.mockReturnValueOnce({
+      data: dataMock,
+      error: {
+        status: 500,
+        code: 'INTERNAL_SERVER_ERROR'
+      }
+    })
+    renderWithProviders(<CategoryList />)
+
+    const resultsNotFound = screen.getByTestId('results-not-found')
+
+    expect(resultsNotFound).toBeInTheDocument()
+  })
+
+  it("should not render 'View more' button if there are no more cards to display", () => {
+    useViewMoreMock.mockReturnValueOnce({
+      data: dataMock,
+      isViewMoreVisable: false
+    })
+    renderWithProviders(<CategoryList />)
+
+    const viewMoreButton = screen.queryByRole('button', {
+      name: 'categoriesPage.viewMore'
+    })
+
+    expect(viewMoreButton).toBeNull()
+    expect(viewMoreButton).not.toBeInTheDocument()
+  })
+
+  it("should disable 'View more' button while loading new cards", () => {
+    useViewMoreMock.mockReturnValueOnce({
       loading: true,
-      fetchData: vi.fn()
-    }
-    useAxios.mockImplementation(() => fakeData)
+      data: [],
+      isViewMoreVisable: true
+    })
     renderWithProviders(<CategoryList />)
 
-    expect(screen.getByTestId('loader')).toBeInTheDocument()
-  })
+    const viewMoreButton = screen.getByRole('button', {
+      name: 'categoriesPage.viewMore'
+    })
 
-  it('should render more cards after "View more" button click', () => {
-    const mockFetchData = vi
-      .fn()
-      .mockImplementationOnce(() => mockFirstResponse)
-      .mockImplementationOnce(() => mockSecondResponse)
-    useAxios.mockImplementation(({ onResponse }) => ({
-      loading: false,
-      fetchData: () => {
-        onResponse(mockFetchData())
-      }
-    }))
-    renderWithProviders(<CategoryList />)
-
-    expect(screen.getAllByTestId('card')).toHaveLength(1)
-
-    fireEvent.click(screen.getByText('categoriesPage.viewMore'))
-
-    expect(screen.getAllByTestId('card')).toHaveLength(2)
-  })
-
-  it('"View more" button should disappear if there are no more cards to display', () => {
-    const mockFetchData = vi
-      .fn()
-      .mockImplementationOnce(() => mockFirstResponse)
-      .mockImplementationOnce(() => ({
-        items: [],
-        count: 0
-      }))
-    useAxios.mockImplementation(({ onResponse }) => ({
-      loading: false,
-      fetchData: () => {
-        onResponse(mockFetchData())
-      }
-    }))
-    renderWithProviders(<CategoryList />)
-
-    const btn = screen.getByText('categoriesPage.viewMore')
-    expect(btn).toBeInTheDocument()
-    fireEvent.click(btn)
-    expect(btn).not.toBeInTheDocument()
-  })
-
-  it('"View more" button should disappear if there is "limit" property', () => {
-    const mockFetchData = vi
-      .fn()
-      .mockImplementationOnce(() => mockFirstResponse)
-    useAxios.mockImplementation(({ onResponse }) => ({
-      loading: false,
-      fetchData: () => {
-        onResponse(mockFetchData())
-      }
-    }))
-    renderWithProviders(<CategoryList limit={8} />)
-
-    const btn = screen.queryByText('categoriesPage.viewMore')
-    expect(btn).not.toBeInTheDocument()
+    expect(viewMoreButton).toBeDisabled()
   })
 })
