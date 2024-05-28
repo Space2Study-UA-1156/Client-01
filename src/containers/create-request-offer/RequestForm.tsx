@@ -77,6 +77,12 @@ const RequestForm: React.FC = () => {
     }
   }
 
+  const handleSubmitWrapper = (event: React.FormEvent) => {
+    handleSubmit(event).catch((error) => {
+      console.error('Error handling submit:', error)
+    })
+  }
+
   return (
     <Box sx={styles.content}>
       <Typography gutterBottom variant='h6'>
@@ -85,7 +91,7 @@ const RequestForm: React.FC = () => {
       <Typography gutterBottom variant='body1'>
         {t('drawer.createNewRequest.description')}
       </Typography>
-      <Box component='form' sx={styles.form} onSubmit={handleSubmit}>
+      <Box component='form' onSubmit={handleSubmitWrapper} sx={styles.form}>
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewRequest.describeYourLearningNeeds')}
         </Typography>
@@ -158,9 +164,9 @@ const RequestForm: React.FC = () => {
           label={t('drawer.createNewRequest.describeYourOffer')}
           margin='normal'
           multiline
+          onChange={handleDescriptionChange}
           rows={4}
           value={offerDescription}
-          onChange={handleDescriptionChange}
         />
         <TextField
           SelectProps={{
@@ -189,24 +195,24 @@ const RequestForm: React.FC = () => {
           defaultValue={500}
           max={3500}
           min={100}
+          onChange={handleValueChange}
           value={offerValue}
           valueLabelDisplay='auto'
-          onChange={handleValueChange}
         />
         <Button
           color='primary'
+          onClick={handleSubmitWrapper}
           sx={styles.button}
-          variant='contained'
           type='submit'
-          onClick={handleSubmit}
+          variant='contained'
         >
           {t('drawer.createNewRequest.createOffer')}
         </Button>
         <Button
+          onClick={handleSubmitWrapper}
           sx={styles.button}
-          variant='outlined'
           type='submit'
-          onClick={handleSubmit}
+          variant='outlined'
         >
           {t('drawer.createNewRequest.addToDrafts')}
         </Button>

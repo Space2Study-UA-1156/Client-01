@@ -25,7 +25,14 @@ const OfferForm: React.FC<{ user: any }> = () => {
   const { fetchData: createOffer } = useAxios({
     service: offerService.createOffer,
     defaultResponse: {},
-    fetchOnMount: false
+    fetchOnMount: false,
+    transform: (data: any) => data,
+    onResponse: () => {
+      // no-op
+    },
+    onResponseError: () => {
+      // no-op
+    }
   })
 
   const handleCategoryChange = (event: { target: { value: any } }) => {
@@ -44,7 +51,9 @@ const OfferForm: React.FC<{ user: any }> = () => {
     setSelectedLanguage(language)
   }
 
-  const handlePreparationLevelChange = (event: { target: { value: any } }) => {
+  const handlePreparationLevelChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value, checked } = event.target
     setPreparationLevel((prev) =>
       checked ? [...prev, value] : prev.filter((level) => level !== value)
@@ -85,6 +94,11 @@ const OfferForm: React.FC<{ user: any }> = () => {
     }
   }
 
+  const handleSubmitWrapper = (event: React.FormEvent) => {
+    handleSubmit(event).catch((error) => {
+      console.error('Error handling submit:', error)
+    })
+  }
   return (
     <Box sx={styles.content}>
       <Typography gutterBottom variant='h6'>
@@ -93,7 +107,7 @@ const OfferForm: React.FC<{ user: any }> = () => {
       <Typography gutterBottom variant='body1'>
         {t('drawer.createNewOffer.description')}
       </Typography>
-      <Box component='form' sx={styles.form} onSubmit={handleSubmit}>
+      <Box component='form' onSubmit={handleSubmitWrapper} sx={styles.form}>
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.pickYourSpecialization')}
         </Typography>
@@ -166,18 +180,18 @@ const OfferForm: React.FC<{ user: any }> = () => {
           label={t('drawer.createNewOffer.title')}
           margin='normal'
           multiline
+          onChange={handleTitleChange}
           rows={1}
           value={offerTitle}
-          onChange={handleTitleChange}
         />
         <TextField
           fullWidth
           label={t('drawer.createNewOffer.describeYourOffer')}
           margin='normal'
           multiline
+          onChange={handleDescriptionChange}
           rows={4}
           value={offerDescription}
-          onChange={handleDescriptionChange}
         />
         <TextField
           SelectProps={{
@@ -206,9 +220,9 @@ const OfferForm: React.FC<{ user: any }> = () => {
           defaultValue={500}
           max={3500}
           min={100}
+          onChange={handleValueChange}
           value={offerValue}
           valueLabelDisplay='auto'
-          onChange={handleValueChange}
         />
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.faq')}
@@ -216,8 +230,8 @@ const OfferForm: React.FC<{ user: any }> = () => {
         <Button
           color='primary'
           sx={styles.button}
-          variant='contained'
           type='submit'
+          variant='contained'
         >
           {t('drawer.createNewOffer.createOffer')}
         </Button>
