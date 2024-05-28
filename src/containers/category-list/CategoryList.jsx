@@ -9,7 +9,7 @@ import { styles } from '~/containers/category-list/CategoryList.styles'
 import useAxios from '~/hooks/use-axios'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
-import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
+import ResultsNotFound from '~/components/results-not-found/ResultsNotFound'
 
 const CategoryList = ({ limit, gridStyles }) => {
   const itemsPerPage = limit || 24
@@ -23,9 +23,9 @@ const CategoryList = ({ limit, gridStyles }) => {
 
   const onResponse = (res) => {
     if (res?.items) {
-      setCategories([...categories, ...res.items])
-    }
-    if (res?.count <= itemsPerPage * page) {
+      setCategories((prevCategories) => [...prevCategories, ...res.items])
+      setIsMore(res.count > itemsPerPage * page)
+    } else {
       setIsMore(false)
     }
   }
@@ -64,11 +64,7 @@ const CategoryList = ({ limit, gridStyles }) => {
   }
 
   if (!loading && !categories.length) {
-    return (
-      <Box component='section' sx={{ ...styles.root, pt: '100px' }}>
-        <CategoriesResultsNotFound />
-      </Box>
-    )
+    return <ResultsNotFound />
   }
 
   return (

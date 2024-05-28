@@ -1,4 +1,10 @@
-import React, { useState, useEffect, FocusEvent, ChangeEvent } from 'react'
+import React, {
+  useState,
+  useEffect,
+  FocusEvent,
+  ChangeEvent,
+  useCallback
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import SelectGroup from './SelectGroup'
@@ -14,24 +20,12 @@ import {
 } from '~/containers/tutor-home-page/general-info-step/interfaces/ITextFieldGroup'
 import { userService } from '~/services/user-service'
 import { useSelector } from 'react-redux'
+import { useDebounce } from '~/hooks/use-debounce'
+import { store } from '~/redux/store'
 
-interface RootState {
-  appMain: AppMainState
-}
-interface AppMainState {
-  userId: string
-  userRole: string
-  authLoading: boolean
-  loading: boolean
-  pageLoad: boolean
-  error: string
-  isFirstLogin: boolean
-}
+export type RootState = ReturnType<typeof store.getState>
 
-const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
-  messageLength,
-  onMessageChange
-}) => {
+const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
   const classes = useTextFieldGroupStyles()
   const { t } = useTranslation()
   const {
@@ -48,13 +42,17 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     ?.errors as unknown as FormData) || {
     firstName: '',
     lastName: '',
-    message: ''
+    message: '',
+    country: '',
+    city: ''
   }
 
   const initialFormData: FormData = generalData.data || {
     firstName: '',
     lastName: '',
-    message: ''
+    message: '',
+    country: '',
+    city: ''
   }
 
   const [validationErrors, setValidationErrors] = useState<FormData>(
@@ -63,6 +61,8 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [isDataFetched, setIsDataFetched] = useState<boolean>(false)
 
+  const debouncedFormData = useDebounce(formData, 1500)
+
   useEffect(() => {
     let isMounted = true
 
@@ -70,18 +70,20 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       try {
         const { data } = await userService.getUserById(userId, userRole)
         if (isMounted) {
-          setFormData((prevData) => ({
-            ...prevData,
+          setFormData({
             firstName: data.firstName,
             lastName: data.lastName,
-            message: prevData.message || ''
-          }))
+            message: data.professionalSummary || '',
+            country: data.address?.country || '',
+            city: data.address?.city || ''
+          })
           setGeneralData({
             data: {
-              ...generalData.data,
               firstName: data.firstName,
               lastName: data.lastName,
-              message: generalData.data.message || ''
+              message: data.professionalSummary || '',
+              country: data.address?.country || '',
+              city: data.address?.city || ''
             },
             errors: generalData.errors
           })
@@ -93,22 +95,13 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     }
 
     if (userId && !isDataFetched) {
-      fetchUserData().catch((error) =>
-        console.error('Error in useEffect:', error)
-      )
+      void fetchUserData()
     }
 
     return () => {
       isMounted = false
     }
-  }, [
-    userId,
-    userRole,
-    setGeneralData,
-    isDataFetched,
-    generalData.data,
-    generalData.errors
-  ])
+  }, [userId, userRole, setGeneralData, isDataFetched, generalData.errors])
 
   useEffect(() => {
     const hasErrors = Object.values(validationErrors).some(
@@ -121,9 +114,27 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     handleStepData('General Info', formData, validationErrors)
   }, [formData, validationErrors, handleStepData])
 
+  const updateUserData = useCallback(async () => {
+    try {
+      await userService.updateUser(userId, {
+        firstName: debouncedFormData.firstName,
+        lastName: debouncedFormData.lastName,
+        address: {
+          country: debouncedFormData.country,
+          city: debouncedFormData.city
+        },
+        professionalSummary: debouncedFormData.message
+      })
+    } catch (error) {
+      console.error('Error updating user data:', error)
+    }
+  }, [debouncedFormData, userId])
+
   useEffect(() => {
-    setFormData(generalData.data)
-  }, [generalData.data])
+    if (debouncedFormData) {
+      void updateUserData()
+    }
+  }, [debouncedFormData, updateUserData])
 
   const handleBlur = (
     e: FocusEvent<HTMLInputElement>,
@@ -146,7 +157,6 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       [name]: value
     }))
     setGeneralData({
-      ...generalData,
       data: {
         ...generalData.data,
         [name]: value
@@ -159,7 +169,10 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
   }
 
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
+    let { value } = e.target
+    if (value.length > 100) {
+      value = value.substring(0, 100)
+    }
     setFormData((prevData) => ({
       ...prevData,
       message: value
@@ -167,7 +180,6 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
     handleStepData('General Info', { message: value }, validationErrors)
     onMessageChange(e)
     setGeneralData({
-      ...generalData,
       data: {
         ...generalData.data,
         message: value
@@ -185,7 +197,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
           label={translations.labels.firstName}
           multiline={false}
           name='firstName'
-          onBlur={(e) => handleBlur(e, firstName)}
+          onBlur={(e) => void handleBlur(e, firstName)}
           onChange={(e) => {
             const { value } = e.target
             setFormData((prevData) => ({
@@ -193,7 +205,6 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               firstName: value
             }))
             setGeneralData({
-              ...generalData,
               data: {
                 ...generalData.data,
                 firstName: value
@@ -201,6 +212,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               errors: generalData.errors
             })
           }}
+          placeholder={t('First Name')}
           required
           value={formData.firstName || ''}
           variant='outlined'
@@ -211,7 +223,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
           label={translations.labels.lastName}
           multiline={false}
           name='lastName'
-          onBlur={(e) => handleBlur(e, lastName)}
+          onBlur={(e) => void handleBlur(e, lastName)}
           onChange={(e) => {
             const { value } = e.target
             setFormData((prevData) => ({
@@ -219,7 +231,6 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               lastName: value
             }))
             setGeneralData({
-              ...generalData,
               data: {
                 ...generalData.data,
                 lastName: value
@@ -227,6 +238,7 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
               errors: generalData.errors
             })
           }}
+          placeholder={t('Last Name')}
           required
           value={formData.lastName || ''}
           variant='outlined'
@@ -236,11 +248,11 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({
       <AppTextField
         className={classes.fullWidthInput}
         errorMsg={validationErrors.message}
-        helperText={`${messageLength}/100`}
+        helperText={`${formData.message.length}/100`}
         label={translation.generalInfo.textFieldLabel}
         multiline
         name='message'
-        onBlur={handleBlur}
+        onBlur={(e) => void handleBlur(e)}
         onChange={handleMessageChange}
         rows={5}
         value={formData.message}
