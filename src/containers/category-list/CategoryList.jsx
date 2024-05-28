@@ -5,12 +5,12 @@ import { useSearchParams } from 'react-router-dom'
 import AppButton from '~/components/app-button/AppButton'
 import CardList from '~/components/card-list/CardList'
 import CategoryCard from '~/components/category-card/CategoryCard'
-import CategoriesResultsNotFound from '~/containers/categories-results-not-found/CategoriesResultsNotFound'
 import { styles } from '~/containers/category-list/CategoryList.styles'
 import { withLoader } from '~/hocs/withLoader'
 import useViewMore from '~/hooks/use-view-more'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
+import ResultsNotFound from '~/components/results-not-found/ResultsNotFound'
 
 const CardListWithLoader = withLoader(CardList)
 
@@ -49,11 +49,7 @@ const CategoryList = ({
   ))
 
   if (error || (!data.length && !loading)) {
-    return (
-      <Box sx={styles.notFoundContainer}>
-        <CategoriesResultsNotFound />
-      </Box>
-    )
+    return <ResultsNotFound />
   }
 
   return (

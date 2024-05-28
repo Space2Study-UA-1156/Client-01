@@ -17,12 +17,16 @@ vi.mock('~/components/card-list/CardList', () => ({
   default: ({ cards }) => <div data-testid='card-list'>{cards}</div>
 }))
 
-vi.mock(
-  '~/containers/categories-results-not-found/CategoriesResultsNotFound',
-  () => ({
-    default: () => <div data-testid='results-not-found'>NotFound</div>
-  })
-)
+// vi.mock(
+//   '~/containers/categories-results-not-found/CategoriesResultsNotFound',
+//   () => ({
+//     default: () => <div data-testid='results-not-found'>NotFound</div>
+//   })
+// )
+vi.mock('~/components/results-not-found/ResultsNotFound', () => ({
+  __esModule: true,
+  default: () => <div data-testid='results-not-found' />
+}))
 
 vi.mock('~/components/app-button/AppButton', () => ({
   default: ({ children, onClick, loading }) => (

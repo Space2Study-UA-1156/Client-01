@@ -31,4 +31,5 @@ export interface StepContextType {
   isOverEighteen: boolean
   handleOverEighteenChange: (value: boolean) => void
   isFormValid: boolean
+  checkboxError: string
 }

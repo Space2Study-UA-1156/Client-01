@@ -1,7 +1,7 @@
 import { mainShadow } from '~/styles/app-theme/custom-shadows'
 
 export const styles = {
-  root: {
+  rootInput: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -12,22 +12,30 @@ export const styles = {
     margin: '0 auto'
   },
 
+  title: {
+    width: '100%',
+    marginTop: '20px'
+  },
+
   titleWithDescription: {
+    gap: '7px',
     title: {
-      typography: 'h4',
-      fontSize: { xs: '24px', md: '32px' }
+      typography: { xs: 'h5', md: 'h4' },
+      fontSize: { xs: '24px', md: '32px' },
+      width: '100%'
     },
     description: {
-      typography: 'body1',
+      typography: { xs: 'body2', md: 'body1' },
       fontSize: { xs: '14px', md: '16px' },
-      fontWeight: 400
+      width: '100%'
     }
   },
 
   buttonShowAllContainer: {
-    alignSelf: 'flex-end',
-    marginRight: '25px',
-    marginBottom: '15px'
+    marginRight: { xs: '0px', md: '25px' },
+    marginBottom: '15px',
+    marginTop: '15px',
+    alignSelf: 'flex-end'
   },
 
   buttonShowAllOffers: {
@@ -41,7 +49,7 @@ export const styles = {
     width: '100%',
     backgroundColor: 'basic.white',
     boxShadow: mainShadow,
-    borderRadius: '70px',
+    borderRadius: { xs: '30px', sm: '60px', md: '70px' },
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -76,14 +84,18 @@ export const styles = {
 
   buttonSearch: {
     marginRight: { xs: '5px', sm: '20px', md: '25px' },
-    width: { xs: '10px', sm: '105px', md: '105px' }
+    width: { xs: '32px', sm: '105px', md: '105px' },
+    height: { xs: '32px', sm: '48px', md: '48px' },
+    padding: { xs: '0', sm: '7px 24px', md: '7px 24 px' },
+    minWidth: 'unset'
   },
 
   footer: {
     variant: 'body2',
     color: 'primary.500',
     fontSize: '14px',
-    fontWeight: 400
+    fontWeight: 400,
+    marginBottom: '20px'
   },
 
   requestLink: {
