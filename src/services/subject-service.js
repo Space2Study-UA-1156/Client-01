@@ -11,5 +11,8 @@ export const subjectService = {
   getSubjectsNames: (categoryId) => {
     const category = createUrlPath(URLs.categories.get, categoryId)
     return axiosClient.get(`${category}${URLs.subjects.getNames}`)
+  },
+  createSubject: (subjectData) => {
+    return axiosClient.post(URLs.subjects.create, subjectData)
   }
 }

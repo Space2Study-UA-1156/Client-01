@@ -10,7 +10,9 @@ import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 
 import useConfirm from '~/hooks/use-confirm'
 import useForm from '~/hooks/use-form'
+import useAxios from '~/hooks/use-axios'
 import { categoryService } from '~/services/category-service'
+import { subjectService } from '~/services/subject-service'
 import {
   initialValues,
   validations,
@@ -22,16 +24,68 @@ const RequestStudyForm = () => {
   const { t } = useTranslation()
   const { setNeedConfirmation } = useConfirm()
 
-  const { data, errors, handleSubmit, handleInputChange, handleBlur, isDirty } =
-    useForm({
-      onSubmit: () => {},
-      initialValues,
-      validations
-    })
+  const { fetchData: fetchSubject } = useAxios({
+    service: subjectService.createSubject,
+    fetchOnMount: false
+  })
+
+  const { fetchData: fetchCategories } = useAxios({
+    service: categoryService.createCategory,
+    fetchOnMount: false,
+    onResponse: (response) => {
+      fetchSubject({
+        category: response._id,
+        name: data.subject
+      })
+    }
+  })
+
+  const {
+    data,
+    errors,
+    handleSubmit,
+    handleNonInputValueChange,
+    handleInputChange,
+    handleBlur,
+    isDirty
+  } = useForm({
+    onSubmit: () => {
+      const { subject, category } = data
+
+      if (category._id) {
+        fetchSubject({
+          name: subject,
+          category: category._id
+        })
+
+        return
+      }
+
+      fetchCategories({
+        name: category.name,
+        appearance: {
+          path: 'mock-path', // temp
+          color: '#f9f9f9' // temp
+        }
+      })
+    },
+    initialValues,
+    validations
+  })
 
   useEffect(() => {
     setNeedConfirmation(isDirty)
   }, [isDirty, setNeedConfirmation])
+
+  const handleAutocompleteValueChange = (e, value) => {
+    if (typeof value === 'string') {
+      handleNonInputValueChange('category', { _id: null, name: value })
+      return
+    }
+
+    const { _id = null, name = '' } = value
+    handleNonInputValueChange('category', { _id, name })
+  }
 
   const hasErrors = Object.values(errors).filter(Boolean).length > 0
 
@@ -61,20 +115,20 @@ const RequestStudyForm = () => {
         <AsyncAutocomplete
           fetchOnFocus
           freeSolo
-          inputValue={data.category}
+          inputValue={data.category.name}
           labelField='name'
           onBlur={handleBlur('category')}
-          onChange={() => {}}
-          onInputChange={() => {}}
+          onChange={handleAutocompleteValueChange}
+          onInputChange={handleAutocompleteValueChange}
           service={categoryService.getCategoriesNames}
           sx={styles.placeholder}
           textFieldProps={{
-            placeholder: t('categoriesPage.newSubject.labels.category'),
+            label: t('becomeTutor.categories.subjectLabel'),
             error: Boolean(errors.category),
             helperText: ` ${t(errors.category)}`
           }}
-          value={data.category}
-          valueField='name'
+          value={data.category._id}
+          valueField='_id'
         />
       </Box>
 
