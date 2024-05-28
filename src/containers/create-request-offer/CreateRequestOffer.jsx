@@ -39,7 +39,9 @@ const CreateRequestOffer = () => {
         {!isMobile && <Box alt='subject' component='img' src={subjectIcon} />}
       </Box>
 
-      <AppDrawer onClose={closeDrawer} open={isOpen}></AppDrawer>
+      <AppDrawer onClose={closeDrawer} open={isOpen}>
+        {/* TODO: add a new request/offer form */}
+      </AppDrawer>
     </Box>
   )
 }

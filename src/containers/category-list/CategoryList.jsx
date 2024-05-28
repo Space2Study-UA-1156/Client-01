@@ -23,9 +23,9 @@ const CategoryList = ({ limit, gridStyles }) => {
 
   const onResponse = (res) => {
     if (res?.items) {
-      setCategories([...categories, ...res.items])
-    }
-    if (res?.count <= itemsPerPage * page) {
+      setCategories((prevCategories) => [...prevCategories, ...res.items])
+      setIsMore(res.count > itemsPerPage * page)
+    } else {
       setIsMore(false)
     }
   }
@@ -65,7 +65,7 @@ const CategoryList = ({ limit, gridStyles }) => {
 
   if (!loading && !categories.length) {
     return (
-      <Box component='section' sx={{ ...styles.root, pt: '100px' }}>
+      <Box component='section' sx={{ ...styles.root, pt: '25px' }}>
         <CategoriesResultsNotFound />
       </Box>
     )

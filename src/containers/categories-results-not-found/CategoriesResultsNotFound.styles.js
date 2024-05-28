@@ -1,20 +1,19 @@
 export const styles = {
-  box: {
-    m: { xs: '0 05vw', sm: '0 10vw', md: '0 25vw' },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center'
+  banner: {
+    margin: { xs: '0 auto', sm: 0 },
+    padding: { xs: 4, md: 11 },
+    textAlign: 'center',
+    boxShadow: 'none',
+    borderRadius: '8px'
   },
+
   button: {
     size: 'large',
-    mt: '32px',
-    color: 'primary.900',
-    backgroundColor: 'primary.50',
-    '&:hover': {
-      color: 'basic.white'
-    }
+    mt: '32px'
+  },
+  boxTitle: {
+    width: { xs: '100%', sm: '75%', md: '60%' },
+    margin: '0 auto'
   },
   titleWithDescription: {
     title: {

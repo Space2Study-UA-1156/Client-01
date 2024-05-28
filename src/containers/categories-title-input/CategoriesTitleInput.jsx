@@ -10,13 +10,16 @@ import { authRoutes } from '~/router/constants/authRoutes'
 import { styles } from '~/containers/categories-title-input/CategoriesTitleInput.styles'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import useBreakpoints from '~/hooks/use-breakpoints'
+import CloseIcon from '@mui/icons-material/Close'
 
 const CategoriesTitleInput = () => {
   const { t } = useTranslation()
   const { isMobile = false } = useBreakpoints()
   const navigate = useNavigate()
-  const [, setSearchParams] = useSearchParams()
-  const [categoryName, setCategoryName] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [categoryName, setCategoryName] = useState(
+    () => searchParams.get('categoryName') || ''
+  )
 
   const showAllOffers = () => {
     navigate(authRoutes.findOffers.path)
@@ -30,11 +33,9 @@ const CategoriesTitleInput = () => {
   const handleSearch = () => {
     if (categoryName.trim() !== '') {
       setSearchParams((params) => {
-        const newParams = new URLSearchParams(params)
-        newParams.set('categoryName', categoryName)
-        return newParams
+        params.set('categoryName', categoryName)
+        return params
       })
-      setCategoryName('')
     }
   }
 
@@ -44,9 +45,17 @@ const CategoriesTitleInput = () => {
     }
   }
 
+  const handleClose = () => {
+    setCategoryName('')
+    setSearchParams((params) => {
+      params.delete('categoryName')
+      return params
+    })
+  }
+
   return (
     <Box>
-      <Box sx={styles.root}>
+      <Box sx={styles.rootInput}>
         <Box sx={styles.title}>
           <TitleWithDescription
             description={t('categoriesPage.description')}
@@ -69,62 +78,54 @@ const CategoriesTitleInput = () => {
         </Box>
 
         <Box sx={styles.inputContainer}>
+          <AppTextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <CloseIcon
+                    data-testid='close-icon'
+                    onClick={handleClose}
+                    sx={{ cursor: 'pointer' }}
+                  />
+                </InputAdornment>
+              )
+            }}
+            helperText={null}
+            multiline={false}
+            onChange={handleChangeInput}
+            onKeyDown={handleKeyPress}
+            placeholder={t('categoriesPage.searchLabel')}
+            sx={styles.inputField}
+            value={categoryName}
+          />
+
           {!isMobile && (
-            <AppTextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <AppButton
-                      data_testid='button-search'
-                      onClick={handleSearch}
-                      size='large'
-                      sx={styles.buttonSearch}
-                      variant='containedLight'
-                    >
-                      {t('common.search')}
-                    </AppButton>
-                  </InputAdornment>
-                )
-              }}
-              helperText={null}
-              multiline={false}
-              onChange={handleChangeInput}
-              onKeyDown={handleKeyPress}
-              placeholder={t('categoriesPage.searchLabel')}
-              sx={styles.inputField}
-              value={categoryName}
-            />
+            <AppButton
+              data_testid='button-search'
+              onClick={handleSearch}
+              size='large'
+              sx={styles.buttonSearch}
+              variant='containedLight'
+            >
+              {t('common.search')}
+            </AppButton>
           )}
+
           {isMobile && (
-            <AppTextField
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <AppButton
-                      data_testid='button-search'
-                      onClick={handleSearch}
-                      size='large'
-                      sx={styles.buttonSearch}
-                      variant='containedLight'
-                    >
-                      <SearchIcon />
-                    </AppButton>
-                  </InputAdornment>
-                )
-              }}
-              helperText={null}
-              multiline={false}
-              onChange={handleChangeInput}
-              onKeyDown={handleKeyPress}
-              placeholder={t('categoriesPage.searchLabel')}
-              sx={styles.inputField}
-              value={categoryName}
-            />
+            <AppButton
+              data_testid='button-search'
+              onClick={handleSearch}
+              size='large'
+              sx={styles.buttonSearch}
+              variant='containedLight'
+            >
+              <SearchIcon />
+            </AppButton>
           )}
         </Box>
 
