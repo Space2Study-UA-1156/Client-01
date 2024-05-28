@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import ImgTitleDescription from '~/components/img-title-description/ImgTitleDescription'
 import AppButton from '~/components/app-button/AppButton'
+import RequestStudyDialog from '~/containers/request-study/request-study-dialog/RequestStudyDialog'
 
 import { useModalContext } from '~/context/modal-context'
 import { spliceSx } from '~/utils/helper-functions'
@@ -11,7 +12,7 @@ import Magnifier from '~/assets/img/guest-home-page/howItWorksStudentSecond.svg'
 
 const ResultsNotFound = ({
   name = 'category',
-  dialog = <p>default dialog</p>, // TODO
+  dialog = <RequestStudyDialog />,
   sx = {},
   showButton = true
 }) => {
