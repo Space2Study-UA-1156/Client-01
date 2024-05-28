@@ -34,6 +34,7 @@ const OfferCardList = ({ offer }) => {
   } = offer
 
   const authorFullName = `${author.firstName} ${author.lastName}`
+  const authorFullNameLaptop = `${author.firstName} ${author.lastName[0]}.`
   const totalReviews = author.totalReviews[authorRole]
   const averageRating = author.averageRating[authorRole]
   const languagesList = languages.join(', ')
@@ -89,7 +90,7 @@ const OfferCardList = ({ offer }) => {
           />
           {isLaptopAndAbove && (
             <Typography component={Link} sx={styles.name} to={profilePath}>
-              {authorFullName}
+              {authorFullNameLaptop}
             </Typography>
           )}
           <TitleWithDescription
