@@ -1,15 +1,15 @@
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import useBreakpoints from '~/hooks/use-breakpoints'
 import { useDrawer } from '~/hooks/use-drawer'
-
 import Box from '@mui/material/Box'
 import AppButton from '~/components/app-button/AppButton'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import AppDrawer from '~/components/app-drawer/AppDrawer'
-
 import subjectIcon from '~/assets/img/create-request-offer/subject_icon.svg'
 import { styles } from '~/containers/create-request-offer/CreateRequestOffer.styles'
+import RequestForm from '~/containers/create-request-offer/RequestForm'
 
 const CreateRequestOffer = () => {
   const { t } = useTranslation()
@@ -40,7 +40,7 @@ const CreateRequestOffer = () => {
       </Box>
 
       <AppDrawer onClose={closeDrawer} open={isOpen}>
-        {/* TODO: add a new request/offer form */}
+        <RequestForm />
       </AppDrawer>
     </Box>
   )
