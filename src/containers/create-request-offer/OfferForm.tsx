@@ -9,8 +9,9 @@ import Slider from '@mui/material/Slider'
 import { useTranslation } from 'react-i18next'
 import { styles } from '~/components/app-drawer/AppDrawer.styles'
 import { offerService } from '~/services/offer-service'
+import useAxios from '~/hooks/use-axios'
 
-const OfferForm: React.FC<{ user: any }> = ({ user }) => {
+const OfferForm: React.FC<{ user: any }> = () => {
   const { t } = useTranslation()
 
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -20,6 +21,12 @@ const OfferForm: React.FC<{ user: any }> = ({ user }) => {
   const [offerTitle, setOfferTitle] = useState('')
   const [offerDescription, setOfferDescription] = useState('')
   const [offerValue, setOfferValue] = useState(500)
+
+  const { fetchData: createOffer } = useAxios({
+    service: offerService.createOffer,
+    defaultResponse: {},
+    fetchOnMount: false
+  })
 
   const handleCategoryChange = (event: { target: { value: any } }) => {
     const categoryId = event.target.value
@@ -37,9 +44,7 @@ const OfferForm: React.FC<{ user: any }> = ({ user }) => {
     setSelectedLanguage(language)
   }
 
-  const handlePreparationLevelChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handlePreparationLevelChange = (event: { target: { value: any } }) => {
     const { value, checked } = event.target
     setPreparationLevel((prev) =>
       checked ? [...prev, value] : prev.filter((level) => level !== value)
@@ -70,11 +75,13 @@ const OfferForm: React.FC<{ user: any }> = ({ user }) => {
       price: offerValue
     }
 
+    console.log('Form Data:', formData)
+
     try {
-      const response = await offerService.createOffer(formData)
-      console.log('Form submitted successfully:', response.data)
+      const response = await createOffer(formData)
+      console.log('Offer created:', response)
     } catch (error) {
-      console.error('Error submitting form:', error)
+      console.error('Error creating offer:', error)
     }
   }
 
