@@ -56,7 +56,6 @@ const RequestForm: React.FC = () => {
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
-    console.log('clicked')
     event.preventDefault()
     const formData = {
       category: selectedCategory,

@@ -25,7 +25,6 @@ const CreateRequestOffer = () => {
       const response = await userService.getUserById(userId, userRole)
       setUser(response.data)
     }
-    console.log(userRole)
     fetchUser()
   }, [userId, userRole])
 
