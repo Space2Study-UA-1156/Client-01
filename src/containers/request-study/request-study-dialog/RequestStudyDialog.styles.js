@@ -9,6 +9,9 @@ export const styles = {
   formContainer: {
     maxWidth: '394px'
   },
+  img: {
+    width: '100%'
+  },
   titleWithDescription: {
     wrapper: {
       mb: '20px'
