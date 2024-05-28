@@ -15,7 +15,6 @@ import useAxios from '~/hooks/use-axios'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 import { languageService } from '~/services/language-service'
-import { AxiosResponse } from 'axios'
 
 interface AppDrawerProps {
   anchor?: 'left' | 'right' | 'top' | 'bottom'
@@ -39,11 +38,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState('')
 
-  const {
-    response: categoryResponse,
-    loading: loadingCategories,
-    fetchData: fetchCategories
-  } = useAxios({
+  const { response: categoryResponse, loading: loadingCategories } = useAxios({
     service: categoryService.getCategories,
     defaultResponse: { items: [] },
     fetchOnMount: true
@@ -59,31 +54,15 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
     fetchOnMount: false
   })
 
-  const {
-    response: languageResponse,
-    loading: loadingLanguages,
-    fetchData: fetchLanguages
-  } = useAxios({
+  const { response: languageResponse, loading: loadingLanguages } = useAxios({
     service: languageService.getLanguages,
-    defaultResponse: { items: [] },
+    defaultResponse: [],
     fetchOnMount: true
   })
 
   const categories = categoryResponse.items
   const subjects = subjectResponse.items
-  const languages = languageResponse.items
-
-  useEffect(() => {
-    console.log('Categories fetched:', categories)
-  }, [categories])
-
-  useEffect(() => {
-    console.log('Subjects fetched:', subjects)
-  }, [subjects])
-
-  useEffect(() => {
-    console.log('Languages fetched:', languages)
-  }, [languages])
+  const languages = languageResponse
 
   useEffect(() => {
     if (selectedCategory) {
@@ -91,22 +70,19 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
     }
   }, [selectedCategory, fetchSubjects])
 
-  const handleCategoryChange = (event) => {
+  const handleCategoryChange = (event: { target: { value: any } }) => {
     const categoryId = event.target.value
-    console.log('Selected category:', categoryId)
     setSelectedCategory(categoryId)
     setSelectedSubject('')
   }
 
-  const handleSubjectChange = (event) => {
+  const handleSubjectChange = (event: { target: { value: any } }) => {
     const subjectId = event.target.value
-    console.log('Selected subject:', subjectId)
     setSelectedSubject(subjectId)
   }
 
-  const handleLanguageChange = (event) => {
+  const handleLanguageChange = (event: { target: { value: any } }) => {
     const language = event.target.value
-    console.log('Selected language:', language)
     setSelectedLanguage(language)
   }
 
@@ -215,8 +191,8 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
             <option value='' />
             {Array.isArray(languages) &&
               languages.map((language) => (
-                <option key={language._id} value={language._id}>
-                  {language.name}
+                <option key={language} value={language}>
+                  {language}
                 </option>
               ))}
           </TextField>
