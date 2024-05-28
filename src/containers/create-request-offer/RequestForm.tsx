@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import Slider from '@mui/material/Slider'
 import { useTranslation } from 'react-i18next'
 import { styles } from '~/components/app-drawer/AppDrawer.styles'
+import { offerService } from '~/services/offer-service'
 
 const RequestForm: React.FC = () => {
   const { t } = useTranslation()
@@ -15,21 +16,65 @@ const RequestForm: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState('')
+  const [preparationLevel, setPreparationLevel] = useState<string[]>([])
+  const [offerDescription, setOfferDescription] = useState('')
+  const [offerValue, setOfferValue] = useState(500)
 
-  const handleCategoryChange = (event: { target: { value: any } }) => {
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const categoryId = event.target.value
     setSelectedCategory(categoryId)
     setSelectedSubject('')
   }
 
-  const handleSubjectChange = (event: { target: { value: any } }) => {
+  const handleSubjectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const subjectId = event.target.value
     setSelectedSubject(subjectId)
   }
 
-  const handleLanguageChange = (event: { target: { value: any } }) => {
+  const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const language = event.target.value
     setSelectedLanguage(language)
+  }
+
+  const handlePreparationLevelChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = event.target
+    setPreparationLevel((prev) =>
+      checked ? [...prev, value] : prev.filter((level) => level !== value)
+    )
+  }
+
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setOfferDescription(event.target.value)
+  }
+
+  const handleValueChange = (event: Event, value: number | number[]) => {
+    setOfferValue(value as number)
+  }
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    console.log('clicked')
+    event.preventDefault()
+    const formData = {
+      category: selectedCategory,
+      subject: selectedSubject,
+      language: selectedLanguage,
+      preparationLevel,
+      description: offerDescription,
+      price: offerValue
+    }
+
+    console.log(formData)
+
+    try {
+      const response = await offerService.createOffer(formData)
+      console.log('Form submitted successfully:', response.data)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+    }
   }
 
   return (
@@ -40,7 +85,7 @@ const RequestForm: React.FC = () => {
       <Typography gutterBottom variant='body1'>
         {t('drawer.createNewRequest.description')}
       </Typography>
-      <Box component='form' sx={styles.form}>
+      <Box component='form' sx={styles.form} onSubmit={handleSubmit}>
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewRequest.describeYourLearningNeeds')}
         </Typography>
@@ -94,7 +139,13 @@ const RequestForm: React.FC = () => {
           'specialized'
         ].map((level) => (
           <FormControlLabel
-            control={<Checkbox />}
+            control={
+              <Checkbox
+                checked={preparationLevel.includes(level)}
+                onChange={handlePreparationLevelChange}
+                value={level}
+              />
+            }
             key={level}
             label={t(`drawer.createNewRequest.levels.${level}`)}
           />
@@ -108,6 +159,8 @@ const RequestForm: React.FC = () => {
           margin='normal'
           multiline
           rows={4}
+          value={offerDescription}
+          onChange={handleDescriptionChange}
         />
         <TextField
           SelectProps={{
@@ -136,12 +189,25 @@ const RequestForm: React.FC = () => {
           defaultValue={500}
           max={3500}
           min={100}
+          value={offerValue}
           valueLabelDisplay='auto'
+          onChange={handleValueChange}
         />
-        <Button color='primary' sx={styles.button} variant='contained'>
+        <Button
+          color='primary'
+          sx={styles.button}
+          variant='contained'
+          type='submit'
+          onClick={handleSubmit}
+        >
           {t('drawer.createNewRequest.createOffer')}
         </Button>
-        <Button sx={styles.button} variant='outlined'>
+        <Button
+          sx={styles.button}
+          variant='outlined'
+          type='submit'
+          onClick={handleSubmit}
+        >
           {t('drawer.createNewRequest.addToDrafts')}
         </Button>
       </Box>

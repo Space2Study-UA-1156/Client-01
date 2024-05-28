@@ -8,13 +8,18 @@ import Button from '@mui/material/Button'
 import Slider from '@mui/material/Slider'
 import { useTranslation } from 'react-i18next'
 import { styles } from '~/components/app-drawer/AppDrawer.styles'
+import { offerService } from '~/services/offer-service'
 
-const OfferForm: React.FC<{ user: any }> = () => {
+const OfferForm: React.FC<{ user: any }> = ({ user }) => {
   const { t } = useTranslation()
 
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState('')
+  const [preparationLevel, setPreparationLevel] = useState<string[]>([])
+  const [offerTitle, setOfferTitle] = useState('')
+  const [offerDescription, setOfferDescription] = useState('')
+  const [offerValue, setOfferValue] = useState(500)
 
   const handleCategoryChange = (event: { target: { value: any } }) => {
     const categoryId = event.target.value
@@ -32,6 +37,47 @@ const OfferForm: React.FC<{ user: any }> = () => {
     setSelectedLanguage(language)
   }
 
+  const handlePreparationLevelChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = event.target
+    setPreparationLevel((prev) =>
+      checked ? [...prev, value] : prev.filter((level) => level !== value)
+    )
+  }
+
+  const handleTitleChange = (event: { target: { value: any } }) => {
+    setOfferTitle(event.target.value)
+  }
+
+  const handleDescriptionChange = (event: { target: { value: any } }) => {
+    setOfferDescription(event.target.value)
+  }
+
+  const handleValueChange = (event: any, value: number | number[]) => {
+    setOfferValue(value as number)
+  }
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    const formData = {
+      category: selectedCategory,
+      subject: selectedSubject,
+      language: selectedLanguage,
+      preparationLevel,
+      title: offerTitle,
+      description: offerDescription,
+      price: offerValue
+    }
+
+    try {
+      const response = await offerService.createOffer(formData)
+      console.log('Form submitted successfully:', response.data)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+    }
+  }
+
   return (
     <Box sx={styles.content}>
       <Typography gutterBottom variant='h6'>
@@ -40,7 +86,7 @@ const OfferForm: React.FC<{ user: any }> = () => {
       <Typography gutterBottom variant='body1'>
         {t('drawer.createNewOffer.description')}
       </Typography>
-      <Box component='form' sx={styles.form}>
+      <Box component='form' sx={styles.form} onSubmit={handleSubmit}>
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.pickYourSpecialization')}
         </Typography>
@@ -94,7 +140,13 @@ const OfferForm: React.FC<{ user: any }> = () => {
           'specialized'
         ].map((level) => (
           <FormControlLabel
-            control={<Checkbox />}
+            control={
+              <Checkbox
+                checked={preparationLevel.includes(level)}
+                onChange={handlePreparationLevelChange}
+                value={level}
+              />
+            }
             key={level}
             label={t(`drawer.createNewOffer.levels.${level}`)}
           />
@@ -108,6 +160,8 @@ const OfferForm: React.FC<{ user: any }> = () => {
           margin='normal'
           multiline
           rows={1}
+          value={offerTitle}
+          onChange={handleTitleChange}
         />
         <TextField
           fullWidth
@@ -115,6 +169,8 @@ const OfferForm: React.FC<{ user: any }> = () => {
           margin='normal'
           multiline
           rows={4}
+          value={offerDescription}
+          onChange={handleDescriptionChange}
         />
         <TextField
           SelectProps={{
@@ -143,12 +199,19 @@ const OfferForm: React.FC<{ user: any }> = () => {
           defaultValue={500}
           max={3500}
           min={100}
+          value={offerValue}
           valueLabelDisplay='auto'
+          onChange={handleValueChange}
         />
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.faq')}
         </Typography>
-        <Button color='primary' sx={styles.button} variant='contained'>
+        <Button
+          color='primary'
+          sx={styles.button}
+          variant='contained'
+          type='submit'
+        >
           {t('drawer.createNewOffer.createOffer')}
         </Button>
         <Button sx={styles.button} variant='outlined'>
