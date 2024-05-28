@@ -11,7 +11,7 @@ const AppRichTextEditor = ({
 
   return (
     <Editor
-      apiKey='dn0tzus4or3d0n2s2p68n9wsuxw75cv0m8pvfj2ygh9twrv6'
+      apiKey={import.meta.env.VITE_TINY_MCE_API_KEY}
       init={{
         height: height,
         menubar: menuBar,
