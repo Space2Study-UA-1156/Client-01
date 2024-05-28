@@ -14,6 +14,8 @@ import { styles } from '~/components/app-drawer/AppDrawer.styles'
 import useAxios from '~/hooks/use-axios'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
+import { languageService } from '~/services/language-service'
+import { AxiosResponse } from 'axios'
 
 interface AppDrawerProps {
   anchor?: 'left' | 'right' | 'top' | 'bottom'
@@ -57,8 +59,19 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
     fetchOnMount: false
   })
 
+  const {
+    response: languageResponse,
+    loading: loadingLanguages,
+    fetchData: fetchLanguages
+  } = useAxios({
+    service: languageService.getLanguages,
+    defaultResponse: { items: [] },
+    fetchOnMount: true
+  })
+
   const categories = categoryResponse.items
   const subjects = subjectResponse.items
+  const languages = languageResponse.items
 
   useEffect(() => {
     console.log('Categories fetched:', categories)
@@ -69,6 +82,10 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
   }, [subjects])
 
   useEffect(() => {
+    console.log('Languages fetched:', languages)
+  }, [languages])
+
+  useEffect(() => {
     if (selectedCategory) {
       fetchSubjects({ categoryId: selectedCategory })
     }
@@ -76,17 +93,20 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
 
   const handleCategoryChange = (event) => {
     const categoryId = event.target.value
+    console.log('Selected category:', categoryId)
     setSelectedCategory(categoryId)
     setSelectedSubject('')
   }
 
   const handleSubjectChange = (event) => {
     const subjectId = event.target.value
+    console.log('Selected subject:', subjectId)
     setSelectedSubject(subjectId)
   }
 
   const handleLanguageChange = (event) => {
     const language = event.target.value
+    console.log('Selected language:', language)
     setSelectedLanguage(language)
   }
 
@@ -187,11 +207,18 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
             select
             value={selectedLanguage}
             onChange={handleLanguageChange}
+            disabled={loadingLanguages}
             SelectProps={{
               native: true
             }}
           >
-            <option value='ukrainian'>Ukrainian</option>
+            <option value='' />
+            {Array.isArray(languages) &&
+              languages.map((language) => (
+                <option key={language._id} value={language._id}>
+                  {language.name}
+                </option>
+              ))}
           </TextField>
           <Typography gutterBottom variant='subtitle1'>
             {t('drawer.createNewRequest.setPreferredOfferValue')}
