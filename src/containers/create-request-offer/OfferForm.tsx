@@ -9,7 +9,7 @@ import Slider from '@mui/material/Slider'
 import { useTranslation } from 'react-i18next'
 import { styles } from '~/components/app-drawer/AppDrawer.styles'
 
-const OfferForm: React.FC<{ user: any }> = ({ user }) => {
+const OfferForm: React.FC<{ user: any }> = () => {
   const { t } = useTranslation()
 
   const [selectedCategory, setSelectedCategory] = useState('')
