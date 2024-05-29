@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
@@ -9,11 +9,15 @@ import Slider from '@mui/material/Slider'
 import { useTranslation } from 'react-i18next'
 import { styles } from '~/components/app-drawer/AppDrawer.styles'
 import { offerService } from '~/services/offer-service'
+import { categoryService } from '~/services/category-service'
+import { subjectService } from '~/services/subject-service'
 import useAxios from '~/hooks/use-axios'
 
 const OfferForm: React.FC<{ user: any }> = () => {
   const { t } = useTranslation()
 
+  const [categories, setCategories] = useState([])
+  const [subjects, setSubjects] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState('')
@@ -35,10 +39,33 @@ const OfferForm: React.FC<{ user: any }> = () => {
     }
   })
 
-  const handleCategoryChange = (event: { target: { value: any } }) => {
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesResponse = await categoryService.getCategories()
+        setCategories(categoriesResponse.data.items)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
+  const fetchSubjects = async (categoryId: any) => {
+    try {
+      const subjectsResponse = await subjectService.getSubjectsNames(categoryId)
+      setSubjects(subjectsResponse.data)
+    } catch (error) {
+      console.error('Error fetching subjects:', error)
+    }
+  }
+
+  const handleCategoryChange = async (event: { target: { value: any } }) => {
     const categoryId = event.target.value
     setSelectedCategory(categoryId)
     setSelectedSubject('')
+    await fetchSubjects(categoryId)
   }
 
   const handleSubjectChange = (event: { target: { value: any } }) => {
@@ -84,13 +111,14 @@ const OfferForm: React.FC<{ user: any }> = () => {
       price: offerValue
     }
 
-    console.log('Form Data:', formData)
-
     try {
       const response = await createOffer(formData)
-      console.log('Offer created:', response)
     } catch (error) {
-      console.error('Error creating offer:', error)
+      if (error.response) {
+        console.error('Error creating offer:', error.response.data)
+      } else {
+        console.error('Error creating offer:', error.message)
+      }
     }
   }
 
@@ -99,6 +127,7 @@ const OfferForm: React.FC<{ user: any }> = () => {
       console.error('Error handling submit:', error)
     })
   }
+
   return (
     <Box sx={styles.content}>
       <Typography gutterBottom variant='h6'>
@@ -123,13 +152,11 @@ const OfferForm: React.FC<{ user: any }> = () => {
           value={selectedCategory}
         >
           <option value='' />
-          {['History', 'Physics', 'Chemistry', 'Languages', 'Music'].map(
-            (category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            )
-          )}
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
         </TextField>
         <TextField
           SelectProps={{
@@ -143,9 +170,9 @@ const OfferForm: React.FC<{ user: any }> = () => {
           value={selectedSubject}
         >
           <option value='' />
-          {['Math', 'Science', 'English', 'Art'].map((subject, index) => (
-            <option key={index} value={subject}>
-              {subject}
+          {subjects.map((subject) => (
+            <option key={subject._id} value={subject._id}>
+              {subject.name}
             </option>
           ))}
         </TextField>
@@ -186,7 +213,7 @@ const OfferForm: React.FC<{ user: any }> = () => {
         />
         <TextField
           fullWidth
-          label={t('drawer.createNewOffer.describeYourOffer')}
+          label={t('drawer.createYourOffer.describeYourOffer')}
           margin='normal'
           multiline
           onChange={handleDescriptionChange}
