@@ -86,11 +86,13 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
     setSelectedCategory(categoryId)
     setSelectedSubject('')
     void fetchSubjects(categoryId)
+    validateField('category', categoryId)
   }
 
   const handleSubjectChange = (event: { target: { value: any } }) => {
     const subjectId = event.target.value
     setSelectedSubject(subjectId)
+    validateField('subject', subjectId)
   }
 
   const handleLanguageChange = (event: { target: { value: any } }) => {
@@ -109,10 +111,12 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
 
   const handleTitleChange = (event: { target: { value: any } }) => {
     setOfferTitle(event.target.value)
+    validateField('title', event.target.value)
   }
 
   const handleDescriptionChange = (event: { target: { value: any } }) => {
     setOfferDescription(event.target.value)
+    validateField('description', event.target.value)
   }
 
   const handleValueChange = (event: any, value: number | number[]) => {
@@ -177,14 +181,28 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
   }
 
   useEffect(() => {
-    const isValid =
+    const isValid: boolean =
+      !!selectedCategory &&
+      !!selectedSubject &&
+      !!offerTitle &&
+      !!offerDescription &&
       !titleError &&
       !descriptionError &&
       !categoryError &&
       !subjectError &&
-      faqs.every((faq) => !faq.answerError)
+      faqs.every((faq) => !faq.answerError && faq.question && faq.answer)
     setIsFormValid(isValid)
-  }, [titleError, descriptionError, categoryError, subjectError, faqs])
+  }, [
+    titleError,
+    descriptionError,
+    categoryError,
+    subjectError,
+    faqs,
+    selectedCategory,
+    selectedSubject,
+    offerTitle,
+    offerDescription
+  ])
 
   const resetForm = () => {
     setSelectedCategory('')
@@ -220,7 +238,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
     }
 
     try {
-      const response = await createOffer(formData)
+      await createOffer(formData)
       resetForm()
       onClose()
     } catch (error: unknown) {
