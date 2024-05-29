@@ -13,6 +13,7 @@ import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 import useAxios from '~/hooks/use-axios'
 import axios from 'axios'
+import { emptyField, nameField, textField } from '~/utils/validations/common'
 
 interface Category {
   _id: string
@@ -36,6 +37,13 @@ const OfferForm: React.FC<{ user: any }> = () => {
   const [offerTitle, setOfferTitle] = useState('')
   const [offerDescription, setOfferDescription] = useState('')
   const [offerValue, setOfferValue] = useState(500)
+
+  const [titleError, setTitleError] = useState('')
+  const [descriptionError, setDescriptionError] = useState('')
+  const [categoryError, setCategoryError] = useState('')
+  const [subjectError, setSubjectError] = useState('')
+
+  const [isFormValid, setIsFormValid] = useState(false)
 
   const { fetchData: createOffer } = useAxios({
     service: offerService.createOffer,
@@ -110,8 +118,45 @@ const OfferForm: React.FC<{ user: any }> = () => {
     setOfferValue(value as number)
   }
 
+  const validateField = (field: string, value: string) => {
+    let error = ''
+    switch (field) {
+      case 'title':
+        error =
+          emptyField(value, t('common.errorMessages.emptyField')) ||
+          nameField(value)
+        setTitleError(t(error))
+        break
+      case 'description':
+        error =
+          emptyField(value, t('common.errorMessages.emptyField')) ||
+          textField(10, 300)(value)
+        setDescriptionError(t(error))
+        break
+      case 'category':
+        error = emptyField(value, t('common.errorMessages.emptyField'))
+        setCategoryError(t(error))
+        break
+      case 'subject':
+        error = emptyField(value, t('common.errorMessages.emptyField'))
+        setSubjectError(t(error))
+        break
+    }
+  }
+
+  useEffect(() => {
+    const isValid =
+      !titleError && !descriptionError && !categoryError && !subjectError
+    setIsFormValid(isValid)
+  }, [titleError, descriptionError, categoryError, subjectError])
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+
+    if (!isFormValid) {
+      return
+    }
+
     const formData = {
       category: selectedCategory,
       subject: selectedSubject,
@@ -159,9 +204,12 @@ const OfferForm: React.FC<{ user: any }> = () => {
           SelectProps={{
             native: true
           }}
+          error={!!categoryError}
           fullWidth
+          helperText={categoryError}
           label={t('drawer.createNewOffer.category')}
           margin='normal'
+          onBlur={() => validateField('category', selectedCategory)}
           onChange={handleCategoryChange}
           select
           value={selectedCategory}
@@ -177,9 +225,12 @@ const OfferForm: React.FC<{ user: any }> = () => {
           SelectProps={{
             native: true
           }}
+          error={!!subjectError}
           fullWidth
+          helperText={subjectError}
           label={t('drawer.createNewOffer.subject')}
           margin='normal'
+          onBlur={() => validateField('subject', selectedSubject)}
           onChange={handleSubjectChange}
           select
           value={selectedSubject}
@@ -218,19 +269,25 @@ const OfferForm: React.FC<{ user: any }> = () => {
           {t('drawer.createNewOffer.teachingParameters')}
         </Typography>
         <TextField
+          error={!!titleError}
           fullWidth
+          helperText={titleError}
           label={t('drawer.createNewOffer.title')}
           margin='normal'
           multiline
+          onBlur={() => validateField('title', offerTitle)}
           onChange={handleTitleChange}
           rows={1}
           value={offerTitle}
         />
         <TextField
+          error={!!descriptionError}
           fullWidth
+          helperText={descriptionError}
           label={t('drawer.createNewOffer.describeYourOffer')}
           margin='normal'
           multiline
+          onBlur={() => validateField('description', offerDescription)}
           onChange={handleDescriptionChange}
           rows={4}
           value={offerDescription}
@@ -271,6 +328,7 @@ const OfferForm: React.FC<{ user: any }> = () => {
         </Typography>
         <Button
           color='primary'
+          disabled={!isFormValid}
           sx={styles.button}
           type='submit'
           variant='contained'
