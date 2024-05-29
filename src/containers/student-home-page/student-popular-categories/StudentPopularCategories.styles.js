@@ -13,7 +13,7 @@ export const styles = {
     gridTemplateColumns: {
       xs: '1fr',
       sm: 'repeat(2, 1fr)',
-      lg: 'repeat(4, 270px)'
+      lg: 'repeat(4, 290px)'
     },
     gap: '24px',
     mb: '30px'

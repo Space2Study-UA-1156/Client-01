@@ -66,10 +66,11 @@ const FindOffers = () => {
   useEffect(() => {
     fetchData({
       limit: offersPerPage,
-      skip: (page - 1) * offersPerPage
+      skip: (page - 1) * offersPerPage,
+      authorRole: role
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [page, role])
 
   return (
     <PageWrapper>
