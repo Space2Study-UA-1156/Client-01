@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+/*import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import Stack from '@mui/material/Stack'
@@ -94,6 +94,153 @@ const FindOffers = () => {
         page={Number(page)}
         pageCount={numberOfPages}
       />
+      <PopularCategories />
+    </PageWrapper>
+  )
+}
+
+export default FindOffers */
+
+//==========================================
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+import Stack from '@mui/material/Stack'
+import { useSearchParams } from 'react-router-dom'
+import PageWrapper from '~/components/page-wrapper/PageWrapper'
+import AppViewSwitcher from '~/components/app-view-switcher/AppViewSwitcher'
+import AppContentSwitcher from '~/components/app-content-switcher/AppContentSwitcher'
+import PopularCategories from '~/containers/popular-categories/PopularCategories'
+import OfferCardsContainer from '~/containers/offer-cards-container/OfferCardsContainer'
+import { styles } from '~/pages/find-offers/FindOffers.styles'
+import { defaultResponses, student, tutor } from '~/constants'
+import useAxios from '~/hooks/use-axios'
+//import { offerService } from '~/services/offer-service'
+import { categoryService } from '~/services/category-service'
+import SortMenu from '~/components/sort-menu/SortMenu'
+import ExploreOffers from '~/containers/explore-offers/ExploreOffers'
+import ResultsNotFound from '~/components/results-not-found/ResultsNotFound'
+import Loader from '~/components/loader/Loader'
+//import AppPagination from '~/components/app-pagination/AppPagination'
+
+const FindOffers = () => {
+  const { userRole } = useSelector((state) => state.appMain)
+  const { t } = useTranslation()
+  const [offers, setOffers] = useState([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [view, setView] = useState(() => searchParams.get('view') || 'list')
+  const [role, setRole] = useState(() => searchParams.get('role') || userRole)
+  const [sort, setSort] = useState(() => searchParams.get('sort') || 'newest')
+  const [categoryId] = useState(() => searchParams.get('categoryId') || '')
+  const [subjectId] = useState(() => searchParams.get('subjectId') || '')
+  const [search] = useState(() => searchParams.get('search') || '')
+
+  //const sort = searchParams.get('sort') || 'newest'
+
+  const [page] = useState(() => searchParams.get('page') || 1)
+
+  const offersPerPage = 9
+
+  const changeRole = () => {
+    setRole(role === tutor ? student : tutor)
+  }
+
+  const switchOptions = {
+    left: {
+      text: t('findOffers.topMenu.tutorsOffers')
+    },
+    right: {
+      text: t('findOffers.topMenu.studentsRequests')
+    }
+  }
+
+  const onResponse = (res) => {
+    if (res?.items) {
+      setOffers(() => res.items)
+      //setNumberOfPages(() => Math.ceil(res.count / offersPerPage))
+    }
+  }
+
+  const { fetchData, loading } = useAxios({
+    service: categoryService.getOffers,
+    fetchOnMount: false,
+    defaultResponse: defaultResponses.array,
+    onResponse
+  })
+
+  useEffect(() => {
+    setSearchParams({ view, role, sort, categoryId, subjectId, search })
+  }, [view, role, sort, categoryId, subjectId, search, setSearchParams])
+
+  useEffect(() => {
+    fetchData(categoryId, subjectId, {
+      limit: offersPerPage,
+      skip: (page - 1) * offersPerPage,
+      search: search,
+      sort: sort,
+      authorRole: role
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, sort, role, categoryId, subjectId])
+
+  /*const [loading, setLoading] = useState(false);
+  const fetchOffers = async (categoryId, subjectId, search, sort) => {
+    try {
+      setLoading(true);
+      console.log('Fetching offers with', categoryId, subjectId, search, sort)
+      const response = await categoryService.getOffers(categoryId, subjectId, search, sort)
+      console.log('Received offers response:', response.data.items)
+      setLoading(false);
+      return response.data.items;
+    } catch (error) {
+      console.error('Error fetching offers:', error)
+      setLoading(false);
+      return [];
+    }
+  }
+  
+  useEffect(() => {
+    const categoryId = searchParams.get('categoryId') || '';
+    const subjectId = searchParams.get('subjectId') || '';
+    const search = searchParams.get('search') || ''; 
+    const sort = searchParams.get('sort') || ''; 
+    //const authorRole = searchParams.get('authorRole') || ''
+
+    const fetchData = async () => {
+      const fetchedOffers = await fetchOffers(categoryId, subjectId, search, sort);
+      
+      setOffers(fetchedOffers);
+    };
+
+    fetchData();
+  }, [searchParams]) */
+
+  return (
+    <PageWrapper>
+      Find offers
+      <Stack>
+        <AppViewSwitcher setView={setView} view={view} />
+        <AppContentSwitcher
+          active={role === 'student'}
+          onChange={changeRole}
+          styles={styles.switch}
+          switchOptions={switchOptions}
+          typographyVariant={'h6'}
+        />
+        <SortMenu setSort={setSort} sort={sort} />
+      </Stack>
+      <ExploreOffers />
+      {loading ? (
+        <Loader pageLoad />
+      ) : (
+        <>
+          {offers.length > 0 ? (
+            <OfferCardsContainer offers={offers} view={view} />
+          ) : (
+            <ResultsNotFound />
+          )}
+        </>
+      )}
       <PopularCategories />
     </PageWrapper>
   )
