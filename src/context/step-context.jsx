@@ -26,12 +26,15 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
       ...initialValues,
       firstName: firstName || initialValues.firstName,
       lastName: lastName || initialValues.lastName,
-      message: initialValues.message || ''
+      message: initialValues.message || '',
+      country: initialValues.country || '',
+      city: initialValues.city || ''
     },
     errors: {
       firstName: '',
       lastName: '',
-      professionalSummary: ''
+      professionalSummary: '',
+      message: ''
     }
   })
 
@@ -42,6 +45,7 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
   const [isNextDisabled, setIsNextDisabled] = useState(true)
   const [isOverEighteen, setIsOverEighteen] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
+  const [checkboxError, setCheckboxError] = useState('')
 
   const stepData = {
     [generalLabel]: generalData,
@@ -52,6 +56,9 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
 
   const handleOverEighteenChange = useCallback((value) => {
     setIsOverEighteen(value)
+    setCheckboxError(
+      value ? '' : 'You must confirm that you are over 18 years old.'
+    )
   }, [])
 
   const handleStepData = useCallback(
@@ -59,8 +66,14 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
       switch (stepLabel) {
         case generalLabel:
           setGeneralData((prevState) => ({
-            data: { ...prevState.data, ...newData },
-            errors: { ...prevState.errors, ...newErrors }
+            data: {
+              ...prevState.data,
+              ...newData
+            },
+            errors: {
+              ...prevState.errors,
+              ...newErrors
+            }
           }))
           break
         case subjectLabel:
@@ -114,7 +127,8 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
         setFormValidation,
         isFormValid,
         generalData,
-        setGeneralData
+        setGeneralData,
+        checkboxError
       }}
     >
       {children}

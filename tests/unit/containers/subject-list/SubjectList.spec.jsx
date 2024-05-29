@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '~tests/test-utils'
 import useViewMoreMock from '~/hooks/use-view-more'
-import CategoryList from '~/containers/category-list/CategoryList'
+import SubjectList from '~/containers/subject-list/SubjectList'
 
 vi.mock('~/hooks/use-view-more')
 
@@ -18,13 +18,12 @@ vi.mock('~/components/card-list/CardList', () => ({
 }))
 
 vi.mock('~/components/results-not-found/ResultsNotFound', () => ({
-  __esModule: true,
-  default: () => <div data-testid='results-not-found' />
+  default: () => <div data-testid='results-not-found'>NotFound</div>
 }))
 
 vi.mock('~/components/app-button/AppButton', () => ({
-  default: ({ children, onClick, loading }) => (
-    <button disabled={loading} onClick={onClick}>
+  default: ({ children, onClick, disabled }) => (
+    <button disabled={disabled} onClick={onClick}>
       {children}
     </button>
   )
@@ -35,7 +34,7 @@ const dataMock = [
   {
     _id: 1,
     name: 'English',
-    appearance: { path: '', color: '' },
+    category: { appearance: '', color: '' },
     totalOffers: {
       tutor: 0,
       student: 0
@@ -50,10 +49,10 @@ describe('SubjectList container', () => {
       isViewMoreVisable: true,
       handleViewMore: handleViewMoreMock
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<SubjectList />)
 
     const viewMoreButton = screen.getByRole('button', {
-      name: 'categoriesPage.viewMore'
+      name: 'subjectsPage.subjects.viewMore'
     })
     fireEvent.click(viewMoreButton)
 
@@ -66,7 +65,7 @@ describe('SubjectList container', () => {
       loading: false,
       error: null
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<SubjectList />)
 
     const resultsNotFound = screen.getByTestId('results-not-found')
 
@@ -81,7 +80,7 @@ describe('SubjectList container', () => {
         code: 'INTERNAL_SERVER_ERROR'
       }
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<SubjectList />)
 
     const resultsNotFound = screen.getByTestId('results-not-found')
 
@@ -93,10 +92,10 @@ describe('SubjectList container', () => {
       data: dataMock,
       isViewMoreVisable: false
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<SubjectList />)
 
     const viewMoreButton = screen.queryByRole('button', {
-      name: 'categoriesPage.viewMore'
+      name: 'subjectsPage.subjects.viewMore'
     })
 
     expect(viewMoreButton).toBeNull()
@@ -109,10 +108,10 @@ describe('SubjectList container', () => {
       data: [],
       isViewMoreVisable: true
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<SubjectList />)
 
     const viewMoreButton = screen.getByRole('button', {
-      name: 'categoriesPage.viewMore'
+      name: 'subjectsPage.subjects.viewMore'
     })
 
     expect(viewMoreButton).toBeDisabled()

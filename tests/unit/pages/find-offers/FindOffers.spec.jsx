@@ -43,6 +43,7 @@ describe('FindOffers component', () => {
     fireEvent.change(switcher, { target: { value: 'test' } })
 
     expect(mockSetSearchParams).toHaveBeenCalledWith({
+      page: 1,
       view: 'list',
       role: tutor
     })
@@ -57,6 +58,7 @@ describe('FindOffers component', () => {
     fireEvent.change(switcher, { target: { value: 'test' } })
 
     expect(mockSetSearchParams).toHaveBeenCalledWith({
+      page: 1,
       view: 'list',
       role: student
     })

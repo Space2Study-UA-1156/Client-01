@@ -23,7 +23,11 @@ const StudentPopularCategories = () => {
         style={styles.titleWithDescription}
         title={t('studentHomePage.popularCategories.title')}
       />
-      <CategoryList gridStyles={styles.grid} limit={8} />
+      <CategoryList
+        cardsPerPage={8}
+        gridStyles={styles.grid}
+        showViewMore={false}
+      />
       <AppButton
         onClick={goToCategories}
         sx={styles.button}
