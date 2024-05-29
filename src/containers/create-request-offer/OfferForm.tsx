@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Button from '@mui/material/Button'
 import Slider from '@mui/material/Slider'
+import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { useTranslation } from 'react-i18next'
 import { styles } from '~/components/app-drawer/AppDrawer.styles'
 import { offerService } from '~/services/offer-service'
@@ -14,24 +15,18 @@ import { subjectService } from '~/services/subject-service'
 import useAxios from '~/hooks/use-axios'
 import axios from 'axios'
 import { emptyField, nameField, textField } from '~/utils/validations/common'
-
-interface Category {
-  _id: string
-  name: string
-}
-
-interface Subject {
-  _id: string
-  name: string
-}
+import ICategory from '~/containers/create-request-offer/interfaces/ICategory'
+import ISubject from '~/containers/create-request-offer/interfaces/ISubject'
+import AppTextField from '~/components/app-text-field/AppTextField'
+import TextField from '@mui/material/TextField'
 
 const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
   onClose
 }) => {
   const { t } = useTranslation()
 
-  const [categories, setCategories] = useState<Category[]>([])
-  const [subjects, setSubjects] = useState<Subject[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([])
+  const [subjects, setSubjects] = useState<ISubject[]>([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState('')
@@ -39,6 +34,10 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
   const [offerTitle, setOfferTitle] = useState('')
   const [offerDescription, setOfferDescription] = useState('')
   const [offerValue, setOfferValue] = useState(500)
+
+  const [faqs, setFaqs] = useState([
+    { question: '', answer: '', answerError: '', touched: false }
+  ])
 
   const [titleError, setTitleError] = useState('')
   const [descriptionError, setDescriptionError] = useState('')
@@ -120,6 +119,37 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
     setOfferValue(value as number)
   }
 
+  const handleFaqChange = (index: number, field: string, value: string) => {
+    const newFaqs = [...faqs]
+    newFaqs[index][field] = value
+    if (field === 'answer') {
+      newFaqs[index].answerError =
+        value.length > 400 ? t('common.errorMessages.longText') : ''
+    }
+    setFaqs(newFaqs)
+  }
+
+  const handleFaqBlur = (index: number, field: string) => {
+    const newFaqs = [...faqs]
+    newFaqs[index].touched = true
+    setFaqs(newFaqs)
+    if (field === 'answer') {
+      handleFaqChange(index, field, faqs[index][field])
+    }
+  }
+
+  const addFaq = () => {
+    setFaqs([
+      ...faqs,
+      { question: '', answer: '', answerError: '', touched: false }
+    ])
+  }
+
+  const removeFaq = (index: number) => {
+    const newFaqs = faqs.filter((_, i) => i !== index)
+    setFaqs(newFaqs)
+  }
+
   const validateField = (field: string, value: string) => {
     let error = ''
     switch (field) {
@@ -148,9 +178,13 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
 
   useEffect(() => {
     const isValid =
-      !titleError && !descriptionError && !categoryError && !subjectError
+      !titleError &&
+      !descriptionError &&
+      !categoryError &&
+      !subjectError &&
+      faqs.every((faq) => !faq.answerError)
     setIsFormValid(isValid)
-  }, [titleError, descriptionError, categoryError, subjectError])
+  }, [titleError, descriptionError, categoryError, subjectError, faqs])
 
   const resetForm = () => {
     setSelectedCategory('')
@@ -160,6 +194,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
     setOfferTitle('')
     setOfferDescription('')
     setOfferValue(500)
+    setFaqs([{ question: '', answer: '', answerError: '', touched: false }])
     setTitleError('')
     setDescriptionError('')
     setCategoryError('')
@@ -180,7 +215,8 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
       preparationLevel,
       title: offerTitle,
       description: offerDescription,
-      price: offerValue
+      price: offerValue,
+      FAQ: faqs
     }
 
     try {
@@ -344,6 +380,47 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.faq')}
         </Typography>
+        {faqs.map((faq, index) => (
+          <Box key={index} mb={2}>
+            <AppTextField
+              errorMsg={
+                faq.touched && !faq.question
+                  ? t('common.errorMessages.emptyField')
+                  : ''
+              }
+              fullWidth
+              label={t('drawer.createNewOffer.insertQuestion')}
+              margin='normal'
+              multiline
+              name={`question-${index}`}
+              onBlur={() => handleFaqBlur(index, 'question')}
+              onChange={(e) =>
+                handleFaqChange(index, 'question', e.target.value)
+              }
+              rows={1}
+              value={faq.question}
+            />
+            <AppTextField
+              errorMsg={faq.answerError}
+              fullWidth
+              helperText={`${faq.answer.length}/400`}
+              label={t('drawer.createNewOffer.insertAnswer')}
+              margin='normal'
+              multiline
+              name={`answer-${index}`}
+              onBlur={() => handleFaqBlur(index, 'answer')}
+              onChange={(e) => handleFaqChange(index, 'answer', e.target.value)}
+              rows={4}
+              value={faq.answer}
+            />
+            <IconButton aria-label='delete' onClick={() => removeFaq(index)}>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        ))}
+        <Button onClick={addFaq} sx={{ mb: 2 }} variant='outlined'>
+          {t('drawer.createNewOffer.addOneMoreQuestion')}
+        </Button>
         <Button
           color='primary'
           disabled={!isFormValid}
