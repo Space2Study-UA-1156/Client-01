@@ -12,12 +12,23 @@ import { offerService } from '~/services/offer-service'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 import useAxios from '~/hooks/use-axios'
+import axios from 'axios'
+
+interface Category {
+  _id: string
+  name: string
+}
+
+interface Subject {
+  _id: string
+  name: string
+}
 
 const OfferForm: React.FC<{ user: any }> = () => {
   const { t } = useTranslation()
 
-  const [categories, setCategories] = useState([])
-  const [subjects, setSubjects] = useState([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [subjects, setSubjects] = useState<Subject[]>([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState('')
@@ -49,10 +60,10 @@ const OfferForm: React.FC<{ user: any }> = () => {
       }
     }
 
-    fetchCategories()
+    void fetchCategories()
   }, [])
 
-  const fetchSubjects = async (categoryId: any) => {
+  const fetchSubjects = async (categoryId: string) => {
     try {
       const subjectsResponse = await subjectService.getSubjectsNames(categoryId)
       setSubjects(subjectsResponse.data)
@@ -61,11 +72,11 @@ const OfferForm: React.FC<{ user: any }> = () => {
     }
   }
 
-  const handleCategoryChange = async (event: { target: { value: any } }) => {
+  const handleCategoryChange = (event: { target: { value: any } }) => {
     const categoryId = event.target.value
     setSelectedCategory(categoryId)
     setSelectedSubject('')
-    await fetchSubjects(categoryId)
+    void fetchSubjects(categoryId)
   }
 
   const handleSubjectChange = (event: { target: { value: any } }) => {
@@ -113,11 +124,15 @@ const OfferForm: React.FC<{ user: any }> = () => {
 
     try {
       const response = await createOffer(formData)
-    } catch (error) {
-      if (error.response) {
-        console.error('Error creating offer:', error.response.data)
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.error('Error creating offer:', error.response.data)
+        } else {
+          console.error('Error creating offer:', error.message)
+        }
       } else {
-        console.error('Error creating offer:', error.message)
+        console.error('Unknown error:', error)
       }
     }
   }
@@ -213,7 +228,7 @@ const OfferForm: React.FC<{ user: any }> = () => {
         />
         <TextField
           fullWidth
-          label={t('drawer.createYourOffer.describeYourOffer')}
+          label={t('drawer.createNewOffer.describeYourOffer')}
           margin='normal'
           multiline
           onChange={handleDescriptionChange}
