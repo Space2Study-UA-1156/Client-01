@@ -25,7 +25,9 @@ interface Subject {
   name: string
 }
 
-const OfferForm: React.FC<{ user: any }> = () => {
+const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
+  onClose
+}) => {
   const { t } = useTranslation()
 
   const [categories, setCategories] = useState<Category[]>([])
@@ -150,6 +152,20 @@ const OfferForm: React.FC<{ user: any }> = () => {
     setIsFormValid(isValid)
   }, [titleError, descriptionError, categoryError, subjectError])
 
+  const resetForm = () => {
+    setSelectedCategory('')
+    setSelectedSubject('')
+    setSelectedLanguage('')
+    setPreparationLevel([])
+    setOfferTitle('')
+    setOfferDescription('')
+    setOfferValue(500)
+    setTitleError('')
+    setDescriptionError('')
+    setCategoryError('')
+    setSubjectError('')
+  }
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
 
@@ -169,6 +185,8 @@ const OfferForm: React.FC<{ user: any }> = () => {
 
     try {
       const response = await createOffer(formData)
+      resetForm()
+      onClose()
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
