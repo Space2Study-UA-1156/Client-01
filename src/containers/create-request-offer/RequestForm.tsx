@@ -28,10 +28,8 @@ const RequestForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string[]>([])
   const [preparationLevel, setPreparationLevel] = useState<string[]>([])
   const [offerDescription, setOfferDescription] = useState('')
-  const [offerValue, setOfferValue] = useState<number[]>([150, 580])
+  const [offerValue, setOfferValue] = useState<number>(580)
   const [offerTitle, setOfferTitle] = useState('')
-  const [minValue, setMinValue] = useState<number>(150)
-  const [maxValue, setMaxValue] = useState<number>(3500)
 
   const [categoryError, setCategoryError] = useState('')
   const [subjectError, setSubjectError] = useState('')
@@ -116,10 +114,6 @@ const RequestForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     validateField('description', event.target.value)
   }
 
-  const handleSliderChange = (event: any, newValue: number | number[]) => {
-    setOfferValue(newValue as number[])
-  }
-
   const handleTitleChange = (event: { target: { value: any } }) => {
     setOfferTitle(event.target.value)
     validateField('title', event.target.value)
@@ -127,14 +121,16 @@ const RequestForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handleMinValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value)
-    setMinValue(newValue)
-    setOfferValue([newValue, offerValue[1]])
+    if (newValue < offerValue) {
+      setOfferValue(newValue)
+    }
   }
 
   const handleMaxValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value)
-    setMaxValue(newValue)
-    setOfferValue([offerValue[0], newValue])
+    if (newValue > offerValue) {
+      setOfferValue(newValue)
+    }
   }
 
   const validateField = (field: string, value: string) => {
@@ -187,14 +183,12 @@ const RequestForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setSelectedLanguage([])
     setPreparationLevel([])
     setOfferDescription('')
-    setOfferValue([150, 580])
+    setOfferValue(580)
     setOfferTitle('')
     setCategoryError('')
     setSubjectError('')
     setDescriptionError('')
     setTitleError('')
-    setMinValue(150)
-    setMaxValue(3500)
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -361,16 +355,6 @@ const RequestForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             {t('drawer.createNewRequest.preferredTeachingParameters')}
           </Typography>
         </Box>
-        <Typography>{t('drawer.createNewRequest.offerTitle')}</Typography>
-        <TextField
-          error={!!titleError}
-          fullWidth
-          helperText={`${offerTitle.length}/100`}
-          margin='normal'
-          onBlur={() => validateField('title', offerTitle)}
-          onChange={handleTitleChange}
-          value={offerTitle}
-        />
         <Typography>
           {t('drawer.createNewRequest.describeYourOffer')}
         </Typography>
@@ -431,30 +415,18 @@ const RequestForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </Typography>
         </Box>
         <Typography>{t('drawer.createNewRequest.offerValue')}</Typography>
-        <Slider
-          marks={[
-            { value: 150, label: '150 UAH' },
-            { value: 3500, label: '3500 UAH' }
-          ]}
-          max={3500}
-          min={150}
-          onChange={handleSliderChange}
-          step={50}
-          value={offerValue}
-          valueLabelDisplay='auto'
-        />
         <Box display='flex' justifyContent='space-between' mt={2}>
           <TextField
             label={t('drawer.createNewRequest.minValue')}
             onChange={handleMinValueChange}
             type='number'
-            value={minValue}
+            value={offerValue}
           />
           <TextField
             label={t('drawer.createNewRequest.maxValue')}
             onChange={handleMaxValueChange}
             type='number'
-            value={maxValue}
+            value={offerValue}
           />
         </Box>
         <Box className={classes.buttonWrapper}>

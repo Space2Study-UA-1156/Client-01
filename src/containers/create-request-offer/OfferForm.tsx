@@ -395,7 +395,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
             {t('drawer.createNewOffer.teachingParameters')}
           </Typography>
         </Box>
-        <Typography>{t('drawer.createNewOffer.offerTitle')}</Typography>
+        <Typography>{t('drawer.createNewOffer.title')}</Typography>
         <Box mb={2}>
           <TextField
             error={!!titleError}
