@@ -15,9 +15,5 @@ export const styles = {
       },
       gap: '24px'
     }
-  },
-  button: {
-    display: 'block',
-    margin: '30px auto 0'
   }
 }
