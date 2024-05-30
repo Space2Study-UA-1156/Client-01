@@ -8,7 +8,6 @@ export const styles = {
     justifyContent: 'center',
     textAlign: 'center',
     marginBottom: '30px',
-    maxWidth: '1128px',
     margin: '0 auto'
   },
 

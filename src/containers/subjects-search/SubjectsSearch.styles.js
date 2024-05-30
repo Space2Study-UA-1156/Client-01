@@ -5,7 +5,6 @@ export const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    maxWidth: '1128px',
     width: '100%',
     margin: '0 auto'
   },
@@ -75,7 +74,8 @@ export const styles = {
   },
   footer: {
     typography: 'body2',
-    color: 'primary.700'
+    color: 'primary.700',
+    marginBottom: '45px'
   },
   requestLink: {
     typography: 'body2',
