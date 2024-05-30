@@ -9,7 +9,6 @@ import TitleWithDescription from '~/components/title-with-description/TitleWithD
 import AppDrawer from '~/components/app-drawer/AppDrawer'
 import subjectIcon from '~/assets/img/create-request-offer/subject_icon.svg'
 import { styles } from '~/containers/create-request-offer/CreateRequestOffer.styles'
-import RequestForm from '~/containers/create-request-offer/RequestForm'
 import OfferForm from '~/containers/create-request-offer/OfferForm'
 import { userService } from '~/services/user-service'
 
@@ -52,11 +51,7 @@ const CreateRequestOffer = () => {
         </Box>
 
         <AppDrawer onClose={closeDrawer} open={isOpen}>
-          {userRole === 'student' ? (
-            <RequestForm onClose={closeDrawer} />
-          ) : (
-            <OfferForm onClose={closeDrawer} user={user} />
-          )}
+          <OfferForm onClose={closeDrawer} user={user} />
         </AppDrawer>
       </Box>
     </Box>
