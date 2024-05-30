@@ -475,9 +475,6 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
           type='number'
           value={offerValue}
         />
-        <Typography gutterBottom variant='subtitle1'>
-          {t('drawer.createNewOffer.faq')}
-        </Typography>
         {faqs.map((faq, index) => (
           <Box key={index} mb={2}>
             <AppTextField
