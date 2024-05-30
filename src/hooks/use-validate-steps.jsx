@@ -34,7 +34,7 @@ const useValidateSteps = (stepLabels, stepData, handleStepData) => {
       (data) =>
         handleFieldValidation(
           generalLabel,
-          'professionalSummary',
+          'message',
           professionalSummary(data.professionalSummary)
         )
     ],
