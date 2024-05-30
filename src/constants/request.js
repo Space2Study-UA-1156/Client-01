@@ -26,6 +26,10 @@ export const URLs = {
     create: '/offers',
     get: '/offers'
   },
+  reviews: {
+    create: '/reviews',
+    get: '/reviews'
+  },
   categories: {
     get: '/categories',
     getNames: '/categories/names',
