@@ -15,6 +15,7 @@ import AppCard from '~/components/app-card/AppCard'
 import { styles } from '~/components/offer-card-list/OfferCardList.styles'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import AppButton from '~/components/app-button/AppButton'
+import useReview from '~/hooks/use-review'
 
 const OfferCardList = ({ offer }) => {
   const { t } = useTranslation()
@@ -33,21 +34,19 @@ const OfferCardList = ({ offer }) => {
     description
   } = offer
 
+  const { rating, reviewAmount, handleRatingChange } = useReview(
+    author,
+    authorRole,
+    _id
+  )
+
   const authorFullName = `${author.firstName} ${author.lastName}`
   const authorFullNameLaptop = `${author.firstName} ${author.lastName[0]}.`
-  const totalReviews = author.totalReviews[authorRole]
-  const averageRating = author.averageRating[authorRole]
   const languagesList = languages.join(', ')
 
-  const reviewAmount = t(
-    `tutorProfilePage.reviews.${
-      totalReviews === 1 ? 'reviewsCount_one' : 'reviewsCount_other'
-    }`,
-    { count: totalReviews }
-  )
-  const rating = Number.isInteger(averageRating)
-    ? averageRating.toFixed(1)
-    : averageRating
+  const reviewText = `tutorProfilePage.reviews.${
+    reviewAmount === 1 ? 'reviewsCount_one' : 'reviewsCount_other'
+  }`
 
   const profilePath = createUrlPath(authRoutes.userProfile.path, author._id, {
     role: authorRole
@@ -94,16 +93,15 @@ const OfferCardList = ({ offer }) => {
             </Typography>
           )}
           <TitleWithDescription
-            description={reviewAmount}
+            description={t(reviewText, { count: reviewAmount })}
             style={styles.review}
             title={
               <Rating
-                defaultValue={0}
                 emptyIcon={
                   <StarIcon fontSize='inherit' style={styles.starIcon} />
                 }
+                onChange={(_e, value) => handleRatingChange(value)}
                 precision={0.5}
-                readOnly
                 size='small'
                 sx={styles.rating}
                 value={parseFloat(rating)}
