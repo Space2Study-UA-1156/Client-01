@@ -63,10 +63,10 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
             city: data.address?.city || ''
           }
           setFormData(userData)
-          setGeneralData({
+          setGeneralData((prevState) => ({
             data: userData,
-            errors: generalData.errors
-          })
+            errors: prevState.errors
+          }))
           setIsDataFetched(true)
         }
       } catch (error) {
@@ -75,13 +75,13 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
     }
 
     if (userId && !isDataFetched) {
-      void fetchUserData()
+      fetchUserData()
     }
 
     return () => {
       isMounted = false
     }
-  }, [userId, userRole, setGeneralData, isDataFetched, generalData.errors])
+  }, [userId, userRole, setGeneralData, isDataFetched])
 
   useEffect(() => {
     const hasErrors = Object.values(validationErrors).some(
@@ -114,16 +114,16 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
       ...prevData,
       [name]: value
     }))
-    setGeneralData({
+    setGeneralData((prevData) => ({
       data: {
-        ...generalData.data,
+        ...prevData.data,
         [name]: value
       },
       errors: {
-        ...generalData.errors,
+        ...prevData.errors,
         [name]: t(errorMsg)
       }
-    })
+    }))
   }
 
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -137,13 +137,13 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
     }))
     handleStepData('General Info', { message: value }, validationErrors)
     onMessageChange(e)
-    setGeneralData({
+    setGeneralData((prevData) => ({
       data: {
-        ...generalData.data,
+        ...prevData.data,
         message: value
       },
-      errors: generalData.errors
-    })
+      errors: prevData.errors
+    }))
   }
 
   return (
@@ -162,13 +162,13 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
               ...prevData,
               firstName: value
             }))
-            setGeneralData({
+            setGeneralData((prevData) => ({
               data: {
-                ...generalData.data,
+                ...prevData.data,
                 firstName: value
               },
-              errors: generalData.errors
-            })
+              errors: prevData.errors
+            }))
           }}
           placeholder={t('First Name')}
           required
@@ -188,13 +188,13 @@ const TextFieldGroup: React.FC<TextFieldGroupProps> = ({ onMessageChange }) => {
               ...prevData,
               lastName: value
             }))
-            setGeneralData({
+            setGeneralData((prevData) => ({
               data: {
-                ...generalData.data,
+                ...prevData.data,
                 lastName: value
               },
-              errors: generalData.errors
-            })
+              errors: prevData.errors
+            }))
           }}
           placeholder={t('Last Name')}
           required

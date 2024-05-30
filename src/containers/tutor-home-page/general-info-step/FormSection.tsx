@@ -2,7 +2,6 @@ import React, { useState, useEffect, ChangeEvent } from 'react'
 import { Typography, Checkbox, FormControlLabel, Box } from '@mui/material'
 import TextFieldGroup from './TextFieldGroup'
 import { useStepContext } from '~/context/step-context'
-
 import {
   FormSectionProps,
   StepContextType

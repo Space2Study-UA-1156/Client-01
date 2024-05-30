@@ -2,8 +2,8 @@ import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
-  useCallback
+  useCallback,
+  useEffect
 } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -64,14 +64,8 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
       switch (stepLabel) {
         case generalLabel:
           setGeneralData((prevState) => ({
-            data: {
-              ...prevState.data,
-              ...newData
-            },
-            errors: {
-              ...prevState.errors,
-              ...newErrors
-            }
+            data: { ...prevState.data, ...newData },
+            errors: { ...prevState.errors, ...newErrors }
           }))
           break
         case subjectLabel:
@@ -104,11 +98,7 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
   useEffect(() => {
     setGeneralData((prevState) => ({
       ...prevState,
-      data: {
-        ...prevState.data,
-        firstName,
-        lastName
-      }
+      data: { ...prevState.data, firstName, lastName }
     }))
   }, [firstName, lastName])
 
