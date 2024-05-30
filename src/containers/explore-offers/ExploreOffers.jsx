@@ -69,7 +69,7 @@ const ExploreOffers = () => {
     })
   }
 
-  const handleChangeTutor = (e) => {
+  /*const handleChangeTutor = (e) => {
     const value = e.target.value
     setSearch(value)
     const params = new URLSearchParams(searchParams)
@@ -79,16 +79,26 @@ const ExploreOffers = () => {
       params.delete('search')
     }
     setSearchParams(params)
+  }*/
+
+  const handleChangeTutor = (e) => {
+    const value = e.target.value
+    setSearch(value)
+    if (!value) {
+      setSearchParams((params) => {
+        params.delete('search')
+        return params
+      })
+    }
   }
 
   const handleSearch = () => {
-    const params = new URLSearchParams(searchParams)
-    if (search) {
-      params.set('search', search)
-    } else {
-      params.delete('search')
+    if (search.trim() !== '') {
+      setSearchParams((params) => {
+        params.set('search', search)
+        return params
+      })
     }
-    setSearchParams(params)
   }
 
   useEffect(() => {
