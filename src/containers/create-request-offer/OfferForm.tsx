@@ -413,7 +413,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
         <TextField
           error={!!descriptionError}
           fullWidth
-          helperText={descriptionError}
+          helperText={`${offerDescription.length}/1000`}
           margin='normal'
           multiline
           onBlur={() => validateField('description', offerDescription)}
@@ -456,9 +456,17 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
             ))}
           </Box>
         </Box>
-        <Typography gutterBottom variant='subtitle1'>
-          {t('drawer.createNewOffer.setPreferredOfferValue')}
-        </Typography>
+        <Box alignItems='center' display='flex' gap='15px' mb={2}>
+          <Box className={classes.numberBox}>3</Box>
+          <Typography
+            className={classes.drawerSubtitle}
+            gutterBottom
+            variant='subtitle1'
+          >
+            {t('drawer.createNewOffer.faq')}
+          </Typography>
+        </Box>
+        <Typography>{t('drawer.createNewOffer.faqDescription')}</Typography>
         <TextField
           fullWidth
           label={t('drawer.createNewOffer.setPreferredOfferValue')}
@@ -511,7 +519,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
         <Button onClick={addFaq} sx={{ mb: 2 }} variant='outlined'>
           {t('drawer.createNewOffer.addOneMoreQuestion')}
         </Button>
-        <Box>
+        <Box className={classes.buttonWrapper}>
           <Button
             color='primary'
             disabled={!isFormValid}
