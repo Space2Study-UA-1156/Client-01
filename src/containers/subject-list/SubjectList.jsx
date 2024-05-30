@@ -15,15 +15,18 @@ import { withLoader } from '~/hocs/withLoader'
 import { authRoutes } from '~/router/constants/authRoutes'
 
 const CATEGORY_ID_SEARCH_PARAMS_KEY = 'categoryId'
+const SUBJECT_NAME_SEARCH_PARAMS_KEY = 'subjectName'
 
 const SubjectList = ({ cardsPerPage = 24 }) => {
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const categoryId = searchParams.get(CATEGORY_ID_SEARCH_PARAMS_KEY)
+  const subjectName = searchParams.get(SUBJECT_NAME_SEARCH_PARAMS_KEY)
 
   const serviceFunction = useCallback(
-    (params) => subjectService.getSubjects(params, categoryId),
-    [categoryId]
+    (params) =>
+      subjectService.getSubjects({ ...params, name: subjectName }, categoryId),
+    [categoryId, subjectName]
   )
 
   const { data, handleViewMore, isViewMoreVisable, error, loading } =
