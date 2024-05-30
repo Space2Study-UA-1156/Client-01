@@ -15,10 +15,6 @@ export const categoryService = {
     const subject = createUrlPath(URLs.subjects.get, subjectId)
 
     const fullUrl = `${category}${subject}/offers`
-    console.log('Full URL:', fullUrl)
-    console.log('Full URL Subject:', subject)
-    console.log('Full URL SubjectId:', subjectId)
-    console.log('Params:', params)
     return axiosClient.get(fullUrl, { params })
   }
 }
