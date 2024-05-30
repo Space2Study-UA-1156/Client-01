@@ -5,7 +5,6 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import Slider from '@mui/material/Slider'
 import { useTranslation } from 'react-i18next'
 import { offerService } from '~/services/offer-service'
 import { categoryService } from '~/services/category-service'
@@ -112,11 +111,6 @@ const RequestForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleDescriptionChange = (event: { target: { value: any } }) => {
     setOfferDescription(event.target.value)
     validateField('description', event.target.value)
-  }
-
-  const handleTitleChange = (event: { target: { value: any } }) => {
-    setOfferTitle(event.target.value)
-    validateField('title', event.target.value)
   }
 
   const handleMinValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
