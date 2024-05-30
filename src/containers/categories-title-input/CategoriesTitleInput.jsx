@@ -34,6 +34,7 @@ const CategoriesTitleInput = () => {
     if (categoryName.trim() !== '') {
       setSearchParams((params) => {
         params.set('categoryName', categoryName)
+        params.delete('page')
         return params
       })
     }

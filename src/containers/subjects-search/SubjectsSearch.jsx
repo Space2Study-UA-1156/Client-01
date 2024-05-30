@@ -32,6 +32,7 @@ const SubjectsSearch = () => {
     }
     setSearchParams((params) => {
       params.set('categoryId', categoryValue._id)
+      params.delete('page')
       return params
     })
   }
@@ -58,6 +59,7 @@ const SubjectsSearch = () => {
 
     setSearchParams((params) => {
       params.set('subjectName', subjectName)
+      params.delete('page')
       return params
     })
   }
