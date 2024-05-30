@@ -322,7 +322,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
           value={selectedCategory}
         >
           <option value='' />
-          {categories.map((category) => (
+          {categories.map((category: ICategory) => (
             <option key={category._id} value={category._id}>
               {category.name}
             </option>
@@ -349,32 +349,42 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
             </option>
           ))}
         </TextField>
-        <Typography gutterBottom variant='subtitle1'>
+        <Typography className={classes.desc} gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.selectPreparationLevel')}
         </Typography>
-        {[
-          'beginner',
-          'intermediate',
-          'advanced',
-          'testPreparation',
-          'professional',
-          'specialized'
-        ].map((level) => (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={preparationLevel.includes(level)}
-                onChange={handlePreparationLevelChange}
-                value={level}
-              />
-            }
-            key={level}
-            label={t(`drawer.createNewOffer.levels.${level}`)}
-          />
-        ))}
-        <Typography gutterBottom variant='subtitle1'>
-          {t('drawer.createNewOffer.teachingParameters')}
-        </Typography>
+        <Box className={classes.checkboxWrapper}>
+          {[
+            'beginner',
+            'intermediate',
+            'advanced',
+            'testPreparation',
+            'professional',
+            'specialized'
+          ].map((level) => (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preparationLevel.includes(level)}
+                  onChange={handlePreparationLevelChange}
+                  value={level}
+                />
+              }
+              key={level}
+              label={t(`drawer.createNewOffer.levels.${level}`)}
+            />
+          ))}
+        </Box>
+        <Box className={classes.drawerHeaderWrapper} mb={2}>
+          <Box className={classes.numberBox}>2</Box>
+          <Typography
+            className={classes.drawerSubtitle}
+            gutterBottom
+            variant='subtitle1'
+          >
+            {t('drawer.createNewOffer.teachingParameters')}
+          </Typography>
+        </Box>
+
         <TextField
           error={!!titleError}
           fullWidth

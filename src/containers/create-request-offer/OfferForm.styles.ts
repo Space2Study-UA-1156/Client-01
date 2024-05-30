@@ -42,5 +42,20 @@ export const userOfferFormStyles = makeStyles(() => ({
     lineHeight: '28px',
     position: 'relative',
     top: '4px'
+  },
+  desc: {
+    color: '#455a64',
+    fontSize: '16px',
+    marginTop: '15px',
+    marginBottom: '15px'
+  },
+  checkboxWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    fontSize: '14px',
+    fontWeight: 400,
+    color: '#455A64',
+    marginBottom: '35px'
   }
 }))
