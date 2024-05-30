@@ -103,61 +103,39 @@ export default FindOffers */
 
 //==========================================
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+//import { useTranslation } from 'react-i18next'
+//import { useSelector } from 'react-redux'
 import Stack from '@mui/material/Stack'
 import { useSearchParams } from 'react-router-dom'
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
 import AppViewSwitcher from '~/components/app-view-switcher/AppViewSwitcher'
-import AppContentSwitcher from '~/components/app-content-switcher/AppContentSwitcher'
+//import AppContentSwitcher from '~/components/app-content-switcher/AppContentSwitcher'
 import PopularCategories from '~/containers/popular-categories/PopularCategories'
 import OfferCardsContainer from '~/containers/offer-cards-container/OfferCardsContainer'
-import { styles } from '~/pages/find-offers/FindOffers.styles'
-import { defaultResponses, student, tutor } from '~/constants'
+//import { styles } from '~/pages/find-offers/FindOffers.styles'
+import { defaultResponses } from '~/constants'
 import useAxios from '~/hooks/use-axios'
-//import { offerService } from '~/services/offer-service'
 import { categoryService } from '~/services/category-service'
 import SortMenu from '~/components/sort-menu/SortMenu'
 import ExploreOffers from '~/containers/explore-offers/ExploreOffers'
 import ResultsNotFound from '~/components/results-not-found/ResultsNotFound'
 import Loader from '~/components/loader/Loader'
-//import AppPagination from '~/components/app-pagination/AppPagination'
 
 const FindOffers = () => {
-  const { userRole } = useSelector((state) => state.appMain)
-  const { t } = useTranslation()
+  //const { t } = useTranslation()
   const [offers, setOffers] = useState([])
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const [view, setView] = useState(() => searchParams.get('view') || 'list')
-  const [role, setRole] = useState(() => searchParams.get('role') || userRole)
+
+  const categoryId = searchParams.get('categoryId') || ''
+  const subjectId = searchParams.get('subjectId') || ''
+  const search = searchParams.get('search') || ''
   const [sort, setSort] = useState(() => searchParams.get('sort') || 'newest')
-  const [categoryId] = useState(() => searchParams.get('categoryId') || '')
-  const [subjectId] = useState(() => searchParams.get('subjectId') || '')
-  const [search] = useState(() => searchParams.get('search') || '')
-
-  //const sort = searchParams.get('sort') || 'newest'
-
-  const [page] = useState(() => searchParams.get('page') || 1)
-
-  const offersPerPage = 9
-
-  const changeRole = () => {
-    setRole(role === tutor ? student : tutor)
-  }
-
-  const switchOptions = {
-    left: {
-      text: t('findOffers.topMenu.tutorsOffers')
-    },
-    right: {
-      text: t('findOffers.topMenu.studentsRequests')
-    }
-  }
 
   const onResponse = (res) => {
+    console.log('API response:', res)
     if (res?.items) {
       setOffers(() => res.items)
-      //setNumberOfPages(() => Math.ceil(res.count / offersPerPage))
     }
   }
 
@@ -169,21 +147,21 @@ const FindOffers = () => {
   })
 
   useEffect(() => {
-    setSearchParams({ view, role, sort, categoryId, subjectId, search })
-  }, [view, role, sort, categoryId, subjectId, search, setSearchParams])
-
-  useEffect(() => {
-    fetchData(categoryId, subjectId, {
-      limit: offersPerPage,
-      skip: (page - 1) * offersPerPage,
-      search: search,
-      sort: sort,
-      authorRole: role
+    console.log('Fetching data with params:', {
+      categoryId,
+      subjectId,
+      search,
+      sort
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, sort, role, categoryId, subjectId])
+    console.log('SubjectId, useEffect:', subjectId)
+    fetchData(categoryId, subjectId, {
+      search: search,
+      sort: sort
+    })
+  }, [categoryId, subjectId, search, sort])
 
   /*const [loading, setLoading] = useState(false);
+
   const fetchOffers = async (categoryId, subjectId, search, sort) => {
     try {
       setLoading(true);
@@ -202,9 +180,8 @@ const FindOffers = () => {
   useEffect(() => {
     const categoryId = searchParams.get('categoryId') || '';
     const subjectId = searchParams.get('subjectId') || '';
-    const search = searchParams.get('search') || ''; 
-    const sort = searchParams.get('sort') || ''; 
-    //const authorRole = searchParams.get('authorRole') || ''
+    const search = searchParams.get('search') || '';
+    const sort = searchParams.get('sort') || 'newest' 
 
     const fetchData = async () => {
       const fetchedOffers = await fetchOffers(categoryId, subjectId, search, sort);
@@ -213,20 +190,14 @@ const FindOffers = () => {
     };
 
     fetchData();
-  }, [searchParams]) */
+  }, [searchParams]);*/
 
   return (
     <PageWrapper>
       Find offers
       <Stack>
         <AppViewSwitcher setView={setView} view={view} />
-        <AppContentSwitcher
-          active={role === 'student'}
-          onChange={changeRole}
-          styles={styles.switch}
-          switchOptions={switchOptions}
-          typographyVariant={'h6'}
-        />
+
         <SortMenu setSort={setSort} sort={sort} />
       </Stack>
       <ExploreOffers />

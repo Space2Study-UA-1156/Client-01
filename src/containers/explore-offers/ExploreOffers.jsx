@@ -33,6 +33,7 @@ const ExploreOffers = () => {
     const search = searchParams.get('search') || ''
     return search ? `${search}`.trim() : ''
   })
+  const searchParamsString = searchParams.toString()
 
   const returnToCategories = () => {
     navigate(authRoutes.categories.path)
@@ -92,15 +93,13 @@ const ExploreOffers = () => {
   }
 
   useEffect(() => {
-    const searchParamsString = searchParams.toString()
-
     if (isMobile || isTablet) {
       setSearch('')
       const params = new URLSearchParams(searchParamsString)
       params.delete('search')
       setSearchParams(params)
     }
-  }, [isMobile, isTablet, setSearchParams, searchParams])
+  }, [isMobile, isTablet, setSearchParams, searchParamsString])
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
