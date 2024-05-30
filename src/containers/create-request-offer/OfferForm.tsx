@@ -421,6 +421,41 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
           rows={4}
           value={offerDescription}
         />
+        <TextField
+          SelectProps={{
+            native: true
+          }}
+          fullWidth
+          label={t('drawer.createNewOffer.tutoringLanguages')}
+          margin='normal'
+          onChange={handleLanguageChange}
+          select
+          value=''
+        >
+          <option value='' />
+          {['English', 'Ukrainian', 'Polish', 'German'].map(
+            (language, index) => (
+              <option key={index} value={language}>
+                {language}
+              </option>
+            )
+          )}
+        </TextField>
+        <Box mb={2}>
+          <Box>
+            {selectedLanguage.map((language) => (
+              <AppChip
+                handleDelete={() => handleLanguageDelete(language)}
+                icon={undefined}
+                key={language}
+                labelSx={undefined}
+                sx={undefined}
+              >
+                {language}
+              </AppChip>
+            ))}
+          </Box>
+        </Box>
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.setPreferredOfferValue')}
         </Typography>
@@ -473,55 +508,22 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
             </IconButton>
           </Box>
         ))}
-        <Box mb={2}>
-          <TextField
-            SelectProps={{
-              native: true
-            }}
-            fullWidth
-            label={t('drawer.createNewOffer.tutoringLanguages')}
-            margin='normal'
-            onChange={handleLanguageChange}
-            select
-            value=''
-          >
-            <option value='' />
-            {['English', 'Ukrainian', 'Polish', 'German'].map(
-              (language, index) => (
-                <option key={index} value={language}>
-                  {language}
-                </option>
-              )
-            )}
-          </TextField>
-          <Box>
-            {selectedLanguage.map((language) => (
-              <AppChip
-                handleDelete={() => handleLanguageDelete(language)}
-                icon={undefined}
-                key={language}
-                labelSx={undefined}
-                sx={undefined}
-              >
-                {language}
-              </AppChip>
-            ))}
-          </Box>
-        </Box>
         <Button onClick={addFaq} sx={{ mb: 2 }} variant='outlined'>
           {t('drawer.createNewOffer.addOneMoreQuestion')}
         </Button>
-        <Button
-          color='primary'
-          disabled={!isFormValid}
-          type='submit'
-          variant='contained'
-        >
-          {t('drawer.createNewOffer.createOffer')}
-        </Button>
-        <Button variant='outlined'>
-          {t('drawer.createNewOffer.addToDrafts')}
-        </Button>
+        <Box>
+          <Button
+            color='primary'
+            disabled={!isFormValid}
+            type='submit'
+            variant='contained'
+          >
+            {t('drawer.createNewOffer.createOffer')}
+          </Button>
+          <Button variant='outlined'>
+            {t('drawer.createNewOffer.addToDrafts')}
+          </Button>
+        </Box>
       </Box>
     </Box>
   )
