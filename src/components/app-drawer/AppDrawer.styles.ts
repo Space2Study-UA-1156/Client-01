@@ -2,14 +2,17 @@ import { SxProps, Theme } from '@mui/material/styles'
 
 export const styles: { [key: string]: SxProps<Theme> } = {
   root: {
-    width: '400px',
+    width: '650px',
     maxWidth: '100%',
-    padding: '16px'
+    paddingTop: '45px',
+    paddingRight: '52px',
+    paddingBottom: '45px',
+    paddingLeft: '52px'
   },
   closeButton: {
     position: 'absolute',
     right: '8px',
-    top: '8px'
+    top: '42px'
   },
   closeIcon: {
     fontSize: '24px'
