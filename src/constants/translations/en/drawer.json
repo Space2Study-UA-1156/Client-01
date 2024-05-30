@@ -5,6 +5,9 @@
     "describeYourLearningNeeds": "Describe Your Learning Needs",
     "category": "Category",
     "subject": "Subject",
+    "minValue": "Min",
+    "maxValue": "Max",
+    "offerValue": "Set the preferred offer value per lesson",
     "selectPreparationLevel": "Select the preparation level you want to achieve with a tutor who can meet you where you're at and help you progress towards your goals.",
     "levels": {
       "beginner": "Beginner",

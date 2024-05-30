@@ -53,7 +53,7 @@ const CreateRequestOffer = () => {
 
         <AppDrawer onClose={closeDrawer} open={isOpen}>
           {userRole === 'student' ? (
-            <RequestForm />
+            <RequestForm onClose={closeDrawer} />
           ) : (
             <OfferForm onClose={closeDrawer} user={user} />
           )}
