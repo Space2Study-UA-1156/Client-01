@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Button from '@mui/material/Button'
-import Slider from '@mui/material/Slider'
+import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTranslation } from 'react-i18next'
@@ -13,11 +13,11 @@ import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 import useAxios from '~/hooks/use-axios'
 import axios from 'axios'
-import { emptyField, nameField, textField } from '~/utils/validations/common'
+import { emptyField, textField } from '~/utils/validations/common'
 import ICategory from '~/containers/create-request-offer/interfaces/ICategory'
 import ISubject from '~/containers/create-request-offer/interfaces/ISubject'
 import AppTextField from '~/components/app-text-field/AppTextField'
-import TextField from '@mui/material/TextField'
+import AppChip from '~/components/app-chip/AppChip'
 import { userOfferFormStyles } from '~/containers/create-request-offer/OfferForm.styles'
 
 const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
@@ -29,7 +29,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
   const [subjects, setSubjects] = useState<ISubject[]>([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
-  const [selectedLanguage, setSelectedLanguage] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState<string[]>([])
   const [preparationLevel, setPreparationLevel] = useState<string[]>([])
   const [offerTitle, setOfferTitle] = useState('')
   const [offerDescription, setOfferDescription] = useState('')
@@ -58,6 +58,14 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
       // no-op
     }
   })
+
+  const handleTitleChange = (event: { target: { value: any } }) => {
+    const value = event.target.value
+    if (value.length <= 100) {
+      setOfferTitle(value)
+      validateField('title', value)
+    }
+  }
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -97,7 +105,15 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
 
   const handleLanguageChange = (event: { target: { value: any } }) => {
     const language = event.target.value
-    setSelectedLanguage(language)
+    if (!selectedLanguage.includes(language) && language) {
+      setSelectedLanguage([...selectedLanguage, language])
+    }
+  }
+
+  const handleLanguageDelete = (languageToDelete: string) => {
+    setSelectedLanguage((languages) =>
+      languages.filter((language) => language !== languageToDelete)
+    )
   }
 
   const handlePreparationLevelChange = (
@@ -109,18 +125,13 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
     )
   }
 
-  const handleTitleChange = (event: { target: { value: any } }) => {
-    setOfferTitle(event.target.value)
-    validateField('title', event.target.value)
-  }
-
   const handleDescriptionChange = (event: { target: { value: any } }) => {
     setOfferDescription(event.target.value)
     validateField('description', event.target.value)
   }
 
-  const handleValueChange = (event: any, value: number | number[]) => {
-    setOfferValue(value as number)
+  const handleValueChange = (event: any) => {
+    setOfferValue(Number(event.target.value))
   }
 
   const handleFaqChange = (index: number, field: string, value: string) => {
@@ -160,22 +171,22 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
       case 'title':
         error =
           emptyField(value, t('common.errorMessages.emptyField')) ||
-          nameField(value)
-        setTitleError(t(error))
+          (value.length > 100 ? t('common.errorMessages.longText') : '')
+        setTitleError(error)
         break
       case 'description':
         error =
           emptyField(value, t('common.errorMessages.emptyField')) ||
           textField(10, 300)(value)
-        setDescriptionError(t(error))
+        setDescriptionError(error)
         break
       case 'category':
         error = emptyField(value, t('common.errorMessages.emptyField'))
-        setCategoryError(t(error))
+        setCategoryError(error)
         break
       case 'subject':
         error = emptyField(value, t('common.errorMessages.emptyField'))
-        setSubjectError(t(error))
+        setSubjectError(error)
         break
     }
   }
@@ -207,7 +218,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
   const resetForm = () => {
     setSelectedCategory('')
     setSelectedSubject('')
-    setSelectedLanguage('')
+    setSelectedLanguage([])
     setPreparationLevel([])
     setOfferTitle('')
     setOfferDescription('')
@@ -261,7 +272,7 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
   }
 
   return (
-    <Box>
+    <Box className={classes.drawerContainer}>
       <Box className={classes.drawerHeaderWrapper} mb={2}>
         <Box className={classes.drawerIcon} ml={1}>
           <svg
@@ -384,24 +395,25 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
             {t('drawer.createNewOffer.teachingParameters')}
           </Typography>
         </Box>
-
-        <TextField
-          error={!!titleError}
-          fullWidth
-          helperText={titleError}
-          label={t('drawer.createNewOffer.title')}
-          margin='normal'
-          multiline
-          onBlur={() => validateField('title', offerTitle)}
-          onChange={handleTitleChange}
-          rows={1}
-          value={offerTitle}
-        />
+        <Typography>{t('drawer.createNewOffer.offerTitle')}</Typography>
+        <Box mb={2}>
+          <TextField
+            error={!!titleError}
+            fullWidth
+            helperText={`${offerTitle.length}/100 ${titleError}`}
+            margin='normal'
+            multiline
+            onBlur={() => validateField('title', offerTitle)}
+            onChange={handleTitleChange}
+            rows={1}
+            value={offerTitle}
+          />
+        </Box>
+        <Typography>{t('drawer.createNewOffer.describeYourOffer')}</Typography>
         <TextField
           error={!!descriptionError}
           fullWidth
           helperText={descriptionError}
-          label={t('drawer.createNewOffer.describeYourOffer')}
           margin='normal'
           multiline
           onBlur={() => validateField('description', offerDescription)}
@@ -409,36 +421,16 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
           rows={4}
           value={offerDescription}
         />
-        <TextField
-          SelectProps={{
-            native: true
-          }}
-          fullWidth
-          label={t('drawer.createNewOffer.tutoringLanguages')}
-          margin='normal'
-          onChange={handleLanguageChange}
-          select
-          value={selectedLanguage}
-        >
-          <option value='' />
-          {['English', 'Ukrainian', 'Polish', 'German'].map(
-            (language, index) => (
-              <option key={index} value={language}>
-                {language}
-              </option>
-            )
-          )}
-        </TextField>
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.setPreferredOfferValue')}
         </Typography>
-        <Slider
-          defaultValue={500}
-          max={3500}
-          min={100}
+        <TextField
+          fullWidth
+          label={t('drawer.createNewOffer.setPreferredOfferValue')}
+          margin='normal'
           onChange={handleValueChange}
+          type='number'
           value={offerValue}
-          valueLabelDisplay='auto'
         />
         <Typography gutterBottom variant='subtitle1'>
           {t('drawer.createNewOffer.faq')}
@@ -481,6 +473,41 @@ const OfferForm: React.FC<{ user: any; onClose: () => void }> = ({
             </IconButton>
           </Box>
         ))}
+        <Box mb={2}>
+          <TextField
+            SelectProps={{
+              native: true
+            }}
+            fullWidth
+            label={t('drawer.createNewOffer.tutoringLanguages')}
+            margin='normal'
+            onChange={handleLanguageChange}
+            select
+            value=''
+          >
+            <option value='' />
+            {['English', 'Ukrainian', 'Polish', 'German'].map(
+              (language, index) => (
+                <option key={index} value={language}>
+                  {language}
+                </option>
+              )
+            )}
+          </TextField>
+          <Box>
+            {selectedLanguage.map((language) => (
+              <AppChip
+                handleDelete={() => handleLanguageDelete(language)}
+                icon={undefined}
+                key={language}
+                labelSx={undefined}
+                sx={undefined}
+              >
+                {language}
+              </AppChip>
+            ))}
+          </Box>
+        </Box>
         <Button onClick={addFaq} sx={{ mb: 2 }} variant='outlined'>
           {t('drawer.createNewOffer.addOneMoreQuestion')}
         </Button>

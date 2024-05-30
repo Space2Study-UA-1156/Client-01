@@ -1,6 +1,9 @@
 import { makeStyles } from '@mui/styles'
 
 export const userOfferFormStyles = makeStyles(() => ({
+  drawerContainer: {
+    paddingBottom: '190px'
+  },
   drawerHeaderWrapper: {
     display: 'flex',
     alignItems: 'center',
