@@ -6,7 +6,7 @@ import { authRoutes } from '~/router/constants/authRoutes'
 import { vi } from 'vitest'
 import useBreakpoints from '~/hooks/use-breakpoints'
 
-const mockCategory = { name: 'Category1' }
+const mockCategory = { categoryName: 'Category1' }
 const mockReturnInputValue = vi.fn()
 const mockSet = vi.fn()
 const mockNavigate = vi.fn()
@@ -40,16 +40,14 @@ vi.mock('~/hooks/use-breakpoints', () => ({
   default: vi.fn().mockReturnValue({ isMobile: false })
 }))
 
-vi.mock('react-router-dom', async (importOriginal) => {
-  const actual = await importOriginal()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
     useNavigate: () => mockNavigate,
     useSearchParams: () => [
       { get: vi.fn() },
-      (mockFn) => {
-        mockFn({ set: mockSet, delete: mockDelete })
-      }
+      vi.fn().mockReturnValue({ set: mockSet, delete: mockDelete })
     ]
   }
 })
@@ -146,6 +144,26 @@ describe('CategoriesTitleInput container', () => {
 
     assert(() => {
       expect(mockSet).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  it('should delete search params when input value is cleared', () => {
+    useBreakpoints.mockImplementation(() => ({ isMobile: false }))
+    renderWithProviders(<CategoriesTitleInput />)
+
+    mockReturnInputValue.mockImplementationOnce(() => mockCategory)
+
+    const categoryInput = screen.getByTestId('mocked-app-textfield')
+
+    fireEvent.change(categoryInput, { target: { value: mockCategory.name } })
+
+    assert(() => {
+      expect(mockSet).toHaveBeenCalledWith('categoryName', mockCategory.name)
+    })
+    fireEvent.change(categoryInput, { target: { value: '' } })
+
+    assert(() => {
+      expect(mockDelete).toHaveBeenCalledWith('categoryName', '')
     })
   })
 
