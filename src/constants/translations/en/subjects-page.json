@@ -1,0 +1,18 @@
+{
+  "subjects": {
+    "title": "{{category}} Subjects",
+    "description": "Explore subjects you're passionate about.",
+    "showAllOffers": "Show all offers",
+    "backToAllCategories": "Back to all categories",
+    "showAllOffersMobile": "Show offers",
+    "backToAllCategoriesMobile": "Categories",
+    "searchLabel": "What would you like to learn?",
+    "viewMore": "View more",
+    "categoryLabel": "Category",
+    "subjectLabel": "What would you like to learn?",
+    "request": "Can't find what you're looking for? Request a new",
+    "or": "or",
+    "category": "category",
+    "subject": "subject"
+  }
+}
