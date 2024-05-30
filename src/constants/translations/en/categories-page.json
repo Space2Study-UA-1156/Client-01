@@ -20,7 +20,7 @@
     "labels": {
       "subject": "New subject",
       "category": "Category",
-      "info": "Additional information"
+      "information": "Additional information"
     }
   }
 }

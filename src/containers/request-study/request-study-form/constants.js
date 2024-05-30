@@ -5,7 +5,7 @@ export const MAX_LENGTH = 1000
 export const validations = {
   subject: (value) => emptyField(value),
   category: (value) => emptyField(value),
-  info: (value) =>
+  information: (value) =>
     emptyField(
       value,
       'common.errorMessages.emptyField',
@@ -15,9 +15,6 @@ export const validations = {
 
 export const initialValues = {
   subject: '',
-  category: {
-    _id: null,
-    name: ''
-  },
-  info: ''
+  category: '',
+  information: ''
 }

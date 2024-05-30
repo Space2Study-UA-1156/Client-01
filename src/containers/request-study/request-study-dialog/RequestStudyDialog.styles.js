@@ -4,7 +4,7 @@ export const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '76px',
-    p: { xs: '50px 16px', md: '70px 90px' }
+    p: { xs: '50px 16px', sm: '50px 70px', md: '70px 90px' }
   },
   formContainer: {
     maxWidth: '394px'

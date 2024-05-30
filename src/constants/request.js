@@ -44,5 +44,8 @@ export const URLs = {
   },
   languages: {
     get: '/languages'
+  },
+  requests: {
+    create: '/requests'
   }
 }

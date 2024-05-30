@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -13,8 +13,8 @@ import useForm from '~/hooks/use-form'
 import useAxios from '~/hooks/use-axios'
 import { useModalContext } from '~/context/modal-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
+import { requestService } from '~/services/request-service'
 import { categoryService } from '~/services/category-service'
-import { subjectService } from '~/services/subject-service'
 import {
   initialValues,
   validations,
@@ -28,6 +28,7 @@ const RequestStudyForm = () => {
   const { setNeedConfirmation } = useConfirm()
   const { setAlert } = useSnackBarContext()
   const { closeModal } = useModalContext()
+  const [categoryId, setCategoryId] = useState(null)
 
   const showSuccessAlert = () => {
     setAlert({
@@ -45,22 +46,10 @@ const RequestStudyForm = () => {
     })
   }
 
-  const { fetchData: fetchSubject } = useAxios({
-    service: subjectService.createSubject,
+  const { fetchData: createStudyRequest } = useAxios({
+    service: requestService.createRequest,
     fetchOnMount: false,
     onResponse: showSuccessAlert,
-    onResponseError: showErrorAlert
-  })
-
-  const { fetchData: fetchCategories } = useAxios({
-    service: categoryService.createCategory,
-    fetchOnMount: false,
-    onResponse: (response) => {
-      fetchSubject({
-        category: response._id,
-        name: data.subject
-      })
-    },
     onResponseError: showErrorAlert
   })
 
@@ -74,22 +63,13 @@ const RequestStudyForm = () => {
     isDirty
   } = useForm({
     onSubmit: () => {
-      const { subject, category } = data
-
-      if (category._id) {
-        return fetchSubject({
-          name: subject,
-          category: category._id
-        })
+      const body = {
+        ...data,
+        categoryId,
+        categoryName: data.category
       }
 
-      fetchCategories({
-        name: category.name,
-        appearance: {
-          path: 'mock-path', // temp
-          color: '#f9f9f9' // temp
-        }
-      })
+      createStudyRequest(body)
     },
     initialValues,
     validations
@@ -101,14 +81,13 @@ const RequestStudyForm = () => {
 
   const handleAutocompleteValueChange = (e, value) => {
     if (typeof value === 'string') {
-      handleNonInputValueChange('category', { _id: null, name: value })
+      handleNonInputValueChange('category', value)
+      setCategoryId(null)
       return
     }
 
-    handleNonInputValueChange('category', {
-      _id: value?._id ?? null,
-      name: value?.name ?? ''
-    })
+    handleNonInputValueChange('category', value?.name ?? '')
+    setCategoryId(value?._id ?? null)
   }
 
   const hasErrors = Object.values(errors).filter(Boolean).length > 0
@@ -139,7 +118,7 @@ const RequestStudyForm = () => {
         <AsyncAutocomplete
           fetchOnFocus
           freeSolo
-          inputValue={data.category.name}
+          inputValue={data.category}
           labelField='name'
           onBlur={handleBlur('category')}
           onChange={handleAutocompleteValueChange}
@@ -147,12 +126,12 @@ const RequestStudyForm = () => {
           service={categoryService.getCategoriesNames}
           sx={styles.placeholder}
           textFieldProps={{
-            placeholder: t('becomeTutor.categories.subjectLabel'),
+            placeholder: t('categoriesPage.newSubject.labels.category'),
             error: Boolean(errors.category),
             helperText: ` ${t(errors.category)}`
           }}
-          value={data.category._id}
-          valueField='_id'
+          value={data.category}
+          valueField='name'
         />
       </Box>
 
@@ -162,14 +141,14 @@ const RequestStudyForm = () => {
         </Typography>
 
         <AppTextArea
-          errorMsg={t(errors.info)}
+          errorMsg={t(errors.information)}
           fullWidth
           maxLength={MAX_LENGTH}
-          onBlur={handleBlur('info')}
-          onChange={handleInputChange('info')}
-          placeholder={t('categoriesPage.newSubject.labels.info')}
+          onBlur={handleBlur('information')}
+          onChange={handleInputChange('information')}
+          placeholder={t('categoriesPage.newSubject.labels.information')}
           sx={styles.placeholder}
-          value={data.info}
+          value={data.information}
         />
       </Box>
 
