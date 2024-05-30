@@ -33,7 +33,8 @@ export const URLs = {
   categories: {
     get: '/categories',
     getNames: '/categories/names',
-    priceRange: '/price-range'
+    priceRange: '/price-range',
+    getOffers: '/categories/:categoryId/subjects/:subjectId/offers'
   },
   subjects: {
     get: '/subjects',
