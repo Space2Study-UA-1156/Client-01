@@ -30,7 +30,7 @@ export const URLs = {
     get: '/categories',
     getNames: '/categories/names',
     priceRange: '/price-range',
-    getOffers: '/categories/:categoryId/subjects/:subjectId/offers' //add===============
+    getOffers: '/categories/:categoryId/subjects/:subjectId/offers' //add==============
   },
   subjects: {
     get: '/subjects',

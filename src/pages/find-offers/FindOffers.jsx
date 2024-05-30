@@ -190,7 +190,7 @@ const FindOffers = () => {
     };
 
     fetchData();
-  }, [searchParams]);*/
+  }, [searchParams])*/
 
   return (
     <PageWrapper>

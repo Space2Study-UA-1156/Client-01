@@ -49,7 +49,7 @@ export const categoryService = {
     return axiosClient.get(fullUrl);
   }
 }*/
-  // ================old version=========
+  // ==============old version=========
   /*getOffers: (categoryId, subjectId) => {
   const category = createUrlPath(URLs.categories.get, categoryId)
   const subject = createUrlPath(URLs.subjects.get, subjectId)

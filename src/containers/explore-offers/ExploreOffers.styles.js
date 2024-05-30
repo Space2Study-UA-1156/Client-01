@@ -1,4 +1,4 @@
-// ====================new==============
+// ===================new==============
 import { mainShadow } from '~/styles/app-theme/custom-shadows'
 
 export const styles = {
