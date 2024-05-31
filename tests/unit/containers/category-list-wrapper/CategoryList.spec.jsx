@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '~tests/test-utils'
 import useViewMoreMock from '~/hooks/use-view-more'
-import CategoryList from '~/containers/category-list/CategoryList'
+import CategoryListWrapper from '~/containers/category-list-wrapper/CategoryListWrapper'
 
 vi.mock('~/hooks/use-view-more')
 
@@ -50,7 +50,7 @@ describe('SubjectList container', () => {
       isViewMoreVisable: true,
       handleViewMore: handleViewMoreMock
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<CategoryListWrapper />)
 
     const viewMoreButton = screen.getByRole('button', {
       name: 'categoriesPage.viewMore'
@@ -66,7 +66,7 @@ describe('SubjectList container', () => {
       loading: false,
       error: null
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<CategoryListWrapper />)
 
     const resultsNotFound = screen.getByTestId('results-not-found')
 
@@ -81,7 +81,7 @@ describe('SubjectList container', () => {
         code: 'INTERNAL_SERVER_ERROR'
       }
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<CategoryListWrapper />)
 
     const resultsNotFound = screen.getByTestId('results-not-found')
 
@@ -93,7 +93,7 @@ describe('SubjectList container', () => {
       data: dataMock,
       isViewMoreVisable: false
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<CategoryListWrapper />)
 
     const viewMoreButton = screen.queryByRole('button', {
       name: 'categoriesPage.viewMore'
@@ -109,7 +109,7 @@ describe('SubjectList container', () => {
       data: [],
       isViewMoreVisable: true
     })
-    renderWithProviders(<CategoryList />)
+    renderWithProviders(<CategoryListWrapper />)
 
     const viewMoreButton = screen.getByRole('button', {
       name: 'categoriesPage.viewMore'

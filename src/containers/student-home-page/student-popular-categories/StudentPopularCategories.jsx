@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import CategoryList from '~/containers/category-list/CategoryList'
+import CategoryListWrapper from '~/containers/category-list-wrapper/CategoryListWrapper'
 import { styles } from './StudentPopularCategories.styles'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import AppButton from '~/components/app-button/AppButton'
@@ -23,7 +23,7 @@ const StudentPopularCategories = () => {
         style={styles.titleWithDescription}
         title={t('studentHomePage.popularCategories.title')}
       />
-      <CategoryList
+      <CategoryListWrapper
         cardsPerPage={8}
         gridStyles={styles.grid}
         showViewMore={false}

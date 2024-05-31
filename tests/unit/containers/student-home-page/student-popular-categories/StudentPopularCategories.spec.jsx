@@ -15,9 +15,9 @@ vi.mock('~/components/title-with-description/TitleWithDescription', () => ({
   default: vi.fn(() => <div data-testid='title-with-description' />)
 }))
 
-vi.mock('~/containers/category-list/CategoryList', () => ({
+vi.mock('~/containers/category-list-wrapper/CategoryListWrapper', () => ({
   __esModule: true,
-  default: vi.fn(() => <div data-testid='category-list' />)
+  default: vi.fn(() => <div data-testid='category-list-wrapper' />)
 }))
 
 vi.mock('~/components/app-button/AppButton', () => ({
@@ -31,11 +31,11 @@ describe('StudentPopularCategories', () => {
   it('renders correctly', () => {
     render(<StudentPopularCategories />)
     const title = screen.getByTestId('title-with-description')
-    const categoryList = screen.getByTestId('category-list')
+    const categoryListWrapper = screen.getByTestId('category-list-wrapper')
     const button = screen.getByTestId('app-button')
 
     expect(title).toBeInTheDocument()
-    expect(categoryList).toBeInTheDocument()
+    expect(categoryListWrapper).toBeInTheDocument()
     expect(button).toBeInTheDocument()
   })
 

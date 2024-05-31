@@ -1,14 +1,14 @@
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
 import CreateRequestOffer from '~/containers/create-request-offer/CreateRequestOffer'
 import CategoriesTitleInput from '~/containers/categories-title-input/CategoriesTitleInput'
-import CategoryList from '~/containers/category-list/CategoryList'
+import CategoryListWrapper from '~/containers/category-list-wrapper/CategoryListWrapper'
 
 const Categories = () => {
   return (
     <PageWrapper>
       <CreateRequestOffer />
       <CategoriesTitleInput />
-      <CategoryList />
+      <CategoryListWrapper />
     </PageWrapper>
   )
 }
