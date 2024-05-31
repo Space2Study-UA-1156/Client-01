@@ -12,7 +12,7 @@ export const useGeneralInfoStepStyles = makeStyles((theme: Theme) => ({
   contentContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    gap: '140px',
+    gap: '136px',
     width: '100%',
     [theme.breakpoints.down('md')]: {
       gap: '40px'
