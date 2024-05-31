@@ -13,7 +13,6 @@ export const categoryService = {
     const { categoryId, subjectId, ...params } = data
     const category = createUrlPath(URLs.categories.get, categoryId)
     const subject = createUrlPath(URLs.subjects.get, subjectId)
-
     const fullUrl = `${category}${subject}/offers`
     return axiosClient.get(fullUrl, { params })
   }
