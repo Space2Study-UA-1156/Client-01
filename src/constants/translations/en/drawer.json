@@ -1,0 +1,57 @@
+{
+  "createNewRequest": {
+    "title": "Create a New Request",
+    "description": "Find the perfect tutor for your needs by creating a request below. Select the options that best describe what you're looking for, and we'll match you with qualified tutors who can help you reach your academic goals.",
+    "describeYourLearningNeeds": "Describe Your Learning Needs",
+    "category": "Category",
+    "subject": "Subject",
+    "minValue": "Min",
+    "maxValue": "Max",
+    "offerValue": "Set the preferred offer value per lesson",
+    "selectPreparationLevel": "Select the preparation level you want to achieve with a tutor who can meet you where you're at and help you progress towards your goals.",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "testPreparation": "Test Preparation",
+      "professional": "Professional",
+      "specialized": "Specialized"
+    },
+    "preferredTeachingParameters": "Preferred Teaching Parameters",
+    "describeYourOffer": "Please describe any additional information about the tutoring you need, such as specific topics or areas you'd like to focus on, your preferred teaching style, or any particular goals you're hoping to achieve.",
+    "tutoringLanguages": "Tutoring languages",
+    "setPreferredOfferValue": "Set the preferred offer value per lesson",
+    "createOffer": "Create Offer",
+    "addToDrafts": "Add to Drafts"
+  },
+  "createNewOffer": {
+    "title": "Create a New Offer",
+    "description": "Start building your tutoring business by creating your offer below. Select the options that best describe your expertise and help students find the perfect match for their needs.",
+    "pickYourSpecialization": "Pick Your Specialization",
+    "category": "Choose the category and subject that you are most qualified to tutor students in.",
+    "subject": "Subject",
+    "selectPreparationLevel": "Select the appropriate preparation levels for this offer ranging from beginner to advanced or others.",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "testPreparation": "Test Preparation",
+      "professional": "Professional",
+      "specialized": "Specialized"
+    },
+    "teachingParameters": "Teaching parameters",
+    "offerTitle": "Create a brief title for your offer",
+    "describeYourOffer": "Please describe any additional information about your tutoring services, your teaching style, the topics you cover, and any specific areas of expertise you have.",
+    "tutoringLanguages": "Indicate the languages you're able to tutor on.",
+    "setPreferredOfferValue": "Set the offer value per lesson",
+    "linkToCreatedCourse": "Link your created course to the offer.",
+    "selectCreatedCourse": "Select a course",
+    "faq": "Frequently asked questions",
+    "faqDescription": "Help students make informed decisions by providing answers to frequently asked questions about your tutoring services. Save them time and provide clarity by addressing common concerns and queries upfront.",
+    "insertQuestion": "Insert question",
+    "insertAnswer": "Insert answer",
+    "addOneMoreQuestion": "Add one more question",
+    "createOffer": "Create Offer",
+    "addToDrafts": "Add to Drafts"
+  }
+}

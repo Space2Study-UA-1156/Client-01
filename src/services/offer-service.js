@@ -9,8 +9,17 @@ export const offerService = {
   getOfferById: (offerId) => {
     return axiosClient.get(createUrlPath(URLs.offers.get, offerId))
   },
-  createOffer: (offerData) => {
-    return axiosClient.post(URLs.offers.create, offerData)
+  createOffer: async (offerData) => {
+    try {
+      const response = await axiosClient.post(URLs.offers.create, offerData)
+      return response.data
+    } catch (error) {
+      console.error(
+        'Error in createOffer service:',
+        error.response ? error.response.data : error.message
+      )
+      throw error
+    }
   },
   updateOffer: (offerId, offerData) => {
     return axiosClient.patch(createUrlPath(URLs.offers.get, offerId), offerData)

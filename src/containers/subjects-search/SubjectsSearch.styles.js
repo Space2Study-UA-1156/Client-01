@@ -12,7 +12,8 @@ export const styles = {
   TitleWithDescription: {
     wrapper: {
       margin: '0 auto',
-      mb: { xs: '20px', md: '30px' },
+      mt: '24px',
+      mb: { xs: '20px', md: '15px' },
       textAlign: 'center'
     },
     title: {
@@ -28,7 +29,7 @@ export const styles = {
   navigationContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '100%',
+    width: '96%',
     mb: '10px'
   },
   navigationBtn: {
@@ -75,7 +76,8 @@ export const styles = {
   },
   footer: {
     typography: 'body2',
-    color: 'primary.700'
+    color: 'primary.700',
+    marginBottom: '30px'
   },
   requestLink: {
     typography: 'body2',

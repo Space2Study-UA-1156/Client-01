@@ -15,7 +15,9 @@ export interface TextFieldGroupProps {
 export interface FormData {
   firstName: string
   lastName: string
-  message: string
+  professionalSummary: string
+  country: string
+  city: string
   [key: string]: unknown
 }
 
@@ -24,8 +26,8 @@ export interface StepContextType {
   stepLabels: string[]
   handleStepData: (
     stepLabel: string,
-    newData: Record<string, unknown>,
-    newErrors: Record<string, unknown>
+    newData: Partial<FormData>,
+    newErrors?: Partial<FormData>
   ) => void
   isNextDisabled: boolean
   toggleNextButton: (disabled: boolean) => void
@@ -33,10 +35,5 @@ export interface StepContextType {
   handleOverEighteenChange: (value: boolean) => void
   isFormValid: boolean
   setFormValidation: (isValid: boolean) => void
-  generalData: {
-    data: FormData
-    errors: FormData
-  }
-  setGeneralData: (data: { data: FormData; errors: FormData }) => void
-  checkboxError: string
+  setGeneralData: (data: StepData) => void
 }

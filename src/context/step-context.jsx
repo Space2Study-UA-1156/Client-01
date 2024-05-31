@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-  useEffect
-} from 'react'
-import { useSelector } from 'react-redux'
+import { createContext, useCallback, useContext, useState } from 'react'
 
 const StepContext = createContext()
 
@@ -19,32 +12,21 @@ const languageStepInitialValues = {
 }
 
 const StepProvider = ({ children, initialValues, stepLabels }) => {
-  const { firstName, lastName } = useSelector((state) => state.appMain)
-
   const [generalData, setGeneralData] = useState({
-    data: {
-      ...initialValues,
-      firstName: firstName || initialValues.firstName,
-      lastName: lastName || initialValues.lastName,
-      message: initialValues.message || '',
-      country: initialValues.country || '',
-      city: initialValues.city || ''
-    },
+    data: initialValues,
     errors: {
       firstName: '',
       lastName: '',
       professionalSummary: ''
     }
   })
-
   const [subject, setSubject] = useState([])
   const [language, setLanguage] = useState(languageStepInitialValues)
   const [photo, setPhoto] = useState([])
   const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
-  const [isNextDisabled, setIsNextDisabled] = useState(true)
+  const [isNextDisabled, setIsNextDisabled] = useState(false)
   const [isOverEighteen, setIsOverEighteen] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
-  const [checkboxError, setCheckboxError] = useState('')
 
   const stepData = {
     [generalLabel]: generalData,
@@ -55,9 +37,6 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
 
   const handleOverEighteenChange = useCallback((value) => {
     setIsOverEighteen(value)
-    setCheckboxError(
-      value ? '' : 'You must confirm that you are over 18 years old.'
-    )
   }, [])
 
   const handleStepData = useCallback(
@@ -65,14 +44,8 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
       switch (stepLabel) {
         case generalLabel:
           setGeneralData((prevState) => ({
-            data: {
-              ...prevState.data,
-              ...newData
-            },
-            errors: {
-              ...prevState.errors,
-              ...newErrors
-            }
+            data: { ...prevState.data, ...newData },
+            errors: { ...prevState.errors, ...newErrors }
           }))
           break
         case subjectLabel:
@@ -98,20 +71,13 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     setIsNextDisabled(disabled)
   }, [])
 
-  const setFormValidation = useCallback((isValid) => {
-    setIsFormValid(isValid)
-  }, [])
-
-  useEffect(() => {
-    setGeneralData((prevState) => ({
-      ...prevState,
-      data: {
-        ...prevState.data,
-        firstName,
-        lastName
-      }
-    }))
-  }, [firstName, lastName])
+  const setFormValidation = useCallback(
+    (isValid) => {
+      setIsFormValid(isValid)
+      setIsNextDisabled(!isValid || !isOverEighteen)
+    },
+    [isOverEighteen]
+  )
 
   return (
     <StepContext.Provider
@@ -124,10 +90,8 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
         isOverEighteen,
         handleOverEighteenChange,
         setFormValidation,
-        isFormValid,
-        generalData,
         setGeneralData,
-        checkboxError
+        isFormValid
       }}
     >
       {children}
@@ -135,12 +99,6 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
   )
 }
 
-const useStepContext = () => {
-  const context = useContext(StepContext)
-  if (!context) {
-    throw new Error('useStepContext must be used within a StepProvider')
-  }
-  return context
-}
+const useStepContext = () => useContext(StepContext)
 
 export { StepProvider, useStepContext }

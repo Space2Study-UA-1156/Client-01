@@ -15,15 +15,14 @@ import { StepContextType } from './interfaces/ITextFieldGroup'
 const SelectGroup: React.FC = () => {
   const { t } = useTranslation()
   const classes = useSelectGroupStyles()
+  const [countries, setCountries] = useState<string[]>([])
+  const [cities, setCities] = useState<string[]>([])
   const { stepData, handleStepData, stepLabels } =
     useStepContext() as StepContextType
 
   const [generalStepLabel] = stepLabels
   const selectedCountry = stepData[generalStepLabel].data.country
   const selectedCity = stepData[generalStepLabel].data.city
-
-  const [countries, setCountries] = useState<string[]>([])
-  const [cities, setCities] = useState<string[]>([])
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -72,7 +71,7 @@ const SelectGroup: React.FC = () => {
         <Select
           label={t('common.labels.country')}
           labelId='country-label'
-          onChange={(e) => handleCountryChange(e)}
+          onChange={handleCountryChange}
           value={selectedCountry}
         >
           {countries.map((country) => (
@@ -88,7 +87,7 @@ const SelectGroup: React.FC = () => {
           disabled={!selectedCountry}
           label={t('common.labels.city')}
           labelId='city-label'
-          onChange={(e) => handleCityChange(e)}
+          onChange={handleCityChange}
           value={selectedCity}
         >
           {cities.map((city) => (

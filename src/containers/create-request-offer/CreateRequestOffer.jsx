@@ -1,21 +1,31 @@
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import useBreakpoints from '~/hooks/use-breakpoints'
 import { useDrawer } from '~/hooks/use-drawer'
-
 import Box from '@mui/material/Box'
 import AppButton from '~/components/app-button/AppButton'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import AppDrawer from '~/components/app-drawer/AppDrawer'
-
 import subjectIcon from '~/assets/img/create-request-offer/subject_icon.svg'
 import { styles } from '~/containers/create-request-offer/CreateRequestOffer.styles'
+import OfferForm from '~/containers/create-request-offer/OfferForm'
+import { userService } from '~/services/user-service'
 
 const CreateRequestOffer = () => {
   const { t } = useTranslation()
-  const { userRole } = useSelector((state) => state.appMain)
+  const { userRole, userId } = useSelector((state) => state.appMain)
   const { isMobile } = useBreakpoints()
   const { isOpen, openDrawer, closeDrawer } = useDrawer()
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await userService.getUserById(userId, userRole)
+      setUser(response.data)
+    }
+    fetchUser()
+  }, [userId, userRole])
 
   const handleOpen = () => {
     openDrawer()
@@ -41,7 +51,7 @@ const CreateRequestOffer = () => {
         </Box>
 
         <AppDrawer onClose={closeDrawer} open={isOpen}>
-          {/* TODO: add a new request/offer form */}
+          <OfferForm onClose={closeDrawer} user={user} />
         </AppDrawer>
       </Box>
     </Box>
