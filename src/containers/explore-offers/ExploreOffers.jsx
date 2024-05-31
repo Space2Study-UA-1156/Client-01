@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { categoryService } from '~/services/category-service'
 import { subjectService } from '~/services/subject-service'
 import { useTranslation } from 'react-i18next'
@@ -88,15 +88,6 @@ const ExploreOffers = () => {
       })
     }
   }
-
-  useEffect(() => {
-    if (isMobile || isTablet) {
-      setSearch('')
-      const params = new URLSearchParams(searchParams.toString())
-      params.delete('search')
-      setSearchParams(params)
-    }
-  }, [isMobile, isTablet, setSearchParams, searchParams])
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
