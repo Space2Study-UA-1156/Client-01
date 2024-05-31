@@ -28,12 +28,19 @@ const CategoriesTitleInput = () => {
   const handleChangeInput = (e) => {
     const value = e.target.value
     setCategoryName(value)
+    if (!value) {
+      setSearchParams((params) => {
+        params.delete('categoryName')
+        return params
+      })
+    }
   }
 
   const handleSearch = () => {
     if (categoryName.trim() !== '') {
       setSearchParams((params) => {
         params.set('categoryName', categoryName)
+        params.delete('page')
         return params
       })
     }

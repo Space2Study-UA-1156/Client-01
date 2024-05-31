@@ -5,13 +5,18 @@ import { expect, vi } from 'vitest'
 import { renderWithProviders } from '~tests/test-utils'
 
 const mockSetSearchParams = vi.fn()
+const mockSetSort = vi.fn()
 
 vi.mock('react-router-dom', async (importOriginal) => {
   const module = await importOriginal()
 
   return {
     ...module,
-    useSearchParams: () => [{ get: vi.fn() }, mockSetSearchParams]
+    useSearchParams: () => {
+      const getSpy = vi.fn()
+      const toStringSpy = vi.fn()
+      return [{ get: getSpy, toString: toStringSpy }, mockSetSearchParams]
+    }
   }
 })
 
@@ -52,7 +57,8 @@ vi.mock('~/components/app-button/AppButton', () => ({
 
 describe('SortMenu', () => {
   it('dropdown appears with 4 sorting options when sort button is clicked', () => {
-    renderWithProviders(<SortMenu />)
+    const sort = 'newest'
+    renderWithProviders(<SortMenu setSort={mockSetSort} sort={sort} />)
     const selectElement = screen.getByRole('combobox')
 
     fireEvent.mouseDown(selectElement)
@@ -64,7 +70,8 @@ describe('SortMenu', () => {
   })
 
   it('selecting an option updates searchParams and displays the selected value', () => {
-    renderWithProviders(<SortMenu />)
+    const sort = 'newest'
+    renderWithProviders(<SortMenu setSort={mockSetSort} sort={sort} />)
 
     const selectElement = screen.getByRole('combobox')
     fireEvent.mouseDown(selectElement)
@@ -73,9 +80,17 @@ describe('SortMenu', () => {
     fireEvent.click(ratingOption)
 
     assert(() => {
-      expect(mockSetSearchParams).toHaveBeenCalledWith({ sort: 'rating' })
-    })
+      expect(mockSetSearchParams).toHaveBeenCalledWith((params) => {
+        expect(params.get('sort')).toEqual('rating')
+        return params
+      })
 
-    expect(screen.getByRole('combobox')).toHaveAttribute('data-value', 'rating')
+      expect(mockSetSort).toHaveBeenCalledWith('rating')
+
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'data-value',
+        'rating'
+      )
+    })
   })
 })

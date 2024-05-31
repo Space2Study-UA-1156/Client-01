@@ -33,8 +33,7 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
     errors: {
       firstName: '',
       lastName: '',
-      professionalSummary: '',
-      message: ''
+      professionalSummary: ''
     }
   })
 
