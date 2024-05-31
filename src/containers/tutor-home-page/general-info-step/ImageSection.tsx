@@ -8,7 +8,7 @@ const ImageSection: React.FC = () => {
         display: { xs: 'none', md: 'block' },
         width: '100%',
         height: 'auto',
-        maxWidth: { xs: '100%', sm: '320px', lg: '600px' },
+        maxWidth: { xs: '100%', sm: '320px', lg: '380px' },
         margin: '0 auto',
         '& img': {
           width: '100%',
@@ -20,5 +20,4 @@ const ImageSection: React.FC = () => {
     </Box>
   )
 }
-
 export default ImageSection
