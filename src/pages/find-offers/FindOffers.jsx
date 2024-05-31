@@ -29,7 +29,7 @@ const FindOffers = () => {
   const [role, setRole] = useState(() => searchParams.get('role') || userRole)
   const [page, setPage] = useState(() => searchParams.get('page') || 1)
   const [numberOfPages, setNumberOfPages] = useState(1)
-  const offersPerPage = 3 //==============9
+  const offersPerPage = 9
 
   const categoryId = searchParams.get('categoryId') || ''
   const subjectId = searchParams.get('subjectId') || ''
@@ -92,15 +92,13 @@ const FindOffers = () => {
     })
   }, [view, categoryId, subjectId, search, sort, role, page, setSearchParams])
 
-  //==================================
   useEffect(() => {
     setPage(1)
   }, [categoryId, subjectId, search, sort, role])
-  //==================================
 
   useEffect(() => {
     fetchOffers()
-  }, [fetchOffers, categoryId, subjectId, search, sort, role, page]) // add search params
+  }, [fetchOffers, categoryId, subjectId, search, sort, role, page])
 
   return (
     <PageWrapper>
@@ -112,9 +110,7 @@ const FindOffers = () => {
         <ExploreOffers />
 
         <Box sx={styles.filterSwitcherMenuViewContainer}>
-          {!isMobile && !isTablet && (
-            <AppViewSwitcher setView={setView} view={view} />
-          )}
+          {!isMobile && <AppViewSwitcher setView={setView} view={view} />}
           {!isMobile && !isTablet && (
             <AppContentSwitcher
               active={role === userRole}
@@ -143,6 +139,7 @@ const FindOffers = () => {
           page={Number(page)}
           pageCount={numberOfPages}
         />
+
         <PopularCategories />
       </Box>
     </PageWrapper>

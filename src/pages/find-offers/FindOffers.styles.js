@@ -11,8 +11,8 @@ export const styles = {
   filterSwitcherMenuViewContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: { sm: 'flex-end', md: 'space-between' },
-    alignItems: { sm: 'flex-end', md: 'center' },
+    justifyContent: 'space-between',
+    alignItems: 'center',
     maxWidth: '1128px',
     margin: '0 auto',
     width: '100%',
@@ -21,6 +21,12 @@ export const styles = {
   },
 
   rootFindOffers: {
+    maxWidth: '1128px',
+    margin: '0 auto',
+    width: '100%'
+  },
+
+  offersContainerFindOffersPage: {
     maxWidth: '1128px',
     margin: '0 auto',
     width: '100%'
