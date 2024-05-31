@@ -5,10 +5,6 @@ import TextFieldGroup from '~/containers/tutor-home-page/general-info-step/TextF
 import { studentStepLabels } from '~/components/user-steps-wrapper/constants'
 import { renderWithProviders } from '../../../../test-utils'
 
-const props = {
-  onMessageChange: vi.fn()
-}
-
 const handleStepDataMock = vi.fn()
 const setFormValidationMock = vi.fn()
 
@@ -19,7 +15,7 @@ vi.mock('~/context/step-context', () => ({
     setFormValidation: setFormValidationMock,
     stepLabels: studentStepLabels,
     stepData: {
-      'General Info': {
+      [studentStepLabels[0]]: {
         data: {
           firstName: '',
           lastName: '',
@@ -69,7 +65,7 @@ vi.mock('~/components/app-text-field/AppTextField', () => ({
 
 describe('TextFieldGroup component', () => {
   it('should render', () => {
-    renderWithProviders(<TextFieldGroup {...props} />, {
+    renderWithProviders(<TextFieldGroup />, {
       preloadedState: {
         appMain: {
           userId: 'testUserId',

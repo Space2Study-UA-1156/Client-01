@@ -42,7 +42,8 @@ const AddPhotoStep = ({ btnsBox }) => {
 
     const image = {
       src: resizedImageUrl,
-      name: file.name
+      name: file.name,
+      type: file.type
     }
 
     setErrorMessage('')
