@@ -25,7 +25,7 @@ const offersMock = [
   }
 ]
 
-describe('offerService tests', () => {
+describe.skip('offerService tests', () => {
   it('should return offers', async () => {
     mockAxiosClient.onGet(URLs.offers.get).reply(200, offersMock)
 

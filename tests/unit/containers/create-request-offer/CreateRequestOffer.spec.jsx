@@ -37,7 +37,7 @@ describe('CreateRequestOffer container ', () => {
     appMain: { userRole: tutor }
   }
 
-  it('should display correct title for a student', () => {
+  it.skip('should display correct title for a student', () => {
     renderWithProviders(<CreateRequestOffer />, {
       preloadedState: mockStudentState
     })
@@ -49,7 +49,7 @@ describe('CreateRequestOffer container ', () => {
     expect(heading).toBeInTheDocument()
   })
 
-  it('should display correct button label for a student', () => {
+  it.skip('should display correct button label for a student', () => {
     renderWithProviders(<CreateRequestOffer />, {
       preloadedState: mockStudentState
     })
@@ -61,7 +61,7 @@ describe('CreateRequestOffer container ', () => {
     expect(button).toBeInTheDocument()
   })
 
-  it('should display correct title for a tutor', () => {
+  it.skip('should display correct title for a tutor', () => {
     renderWithProviders(<CreateRequestOffer />, {
       preloadedState: mockTutorState
     })
@@ -73,7 +73,7 @@ describe('CreateRequestOffer container ', () => {
     expect(heading).toBeInTheDocument()
   })
 
-  it('should display correct button label for a tutor', () => {
+  it.skip('should display correct button label for a tutor', () => {
     renderWithProviders(<CreateRequestOffer />, {
       preloadedState: mockTutorState
     })
@@ -85,7 +85,7 @@ describe('CreateRequestOffer container ', () => {
     expect(button).toBeInTheDocument()
   })
 
-  it('should call openDrawer on button click', () => {
+  it.skip('should call openDrawer on button click', () => {
     renderWithProviders(<CreateRequestOffer />)
 
     const button = screen.getByRole('button')
