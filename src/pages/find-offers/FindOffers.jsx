@@ -29,7 +29,7 @@ const FindOffers = () => {
   const [role, setRole] = useState(() => searchParams.get('role') || userRole)
   const [page, setPage] = useState(() => searchParams.get('page') || 1)
   const [numberOfPages, setNumberOfPages] = useState(1)
-  const offersPerPage = 9
+  const offersPerPage = 3 //==============9
 
   const categoryId = searchParams.get('categoryId') || ''
   const subjectId = searchParams.get('subjectId') || ''
@@ -37,7 +37,6 @@ const FindOffers = () => {
   const [sort, setSort] = useState(() => searchParams.get('sort') || 'newest')
 
   const onResponse = useCallback((res) => {
-    console.log('API response:', res)
     if (res?.items) {
       setOffers(res.items)
       setNumberOfPages(() => Math.ceil(res.count / offersPerPage))
@@ -93,9 +92,15 @@ const FindOffers = () => {
     })
   }, [view, categoryId, subjectId, search, sort, role, page, setSearchParams])
 
+  //==================================
+  useEffect(() => {
+    setPage(1)
+  }, [categoryId, subjectId, search, sort, role])
+  //==================================
+
   useEffect(() => {
     fetchOffers()
-  }, [fetchOffers])
+  }, [fetchOffers, categoryId, subjectId, search, sort, role, page]) // add search params
 
   return (
     <PageWrapper>
