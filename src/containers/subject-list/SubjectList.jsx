@@ -1,13 +1,11 @@
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-
 import Box from '@mui/material/Box'
 import CardList from '~/components/card-list/CardList'
 import AppButton from '~/components/app-button/AppButton'
 import CategoryCard from '~/components/category-card/CategoryCard'
 import ResultsNotFound from '~/components/results-not-found/ResultsNotFound'
-
 import useViewMore from '~/hooks/use-view-more'
 import { subjectService } from '~/services/subject-service'
 import { styles } from '~/containers/subject-list/SubjectList.styles'
@@ -17,7 +15,9 @@ import { authRoutes } from '~/router/constants/authRoutes'
 const CATEGORY_ID_SEARCH_PARAMS_KEY = 'categoryId'
 const SUBJECT_NAME_SEARCH_PARAMS_KEY = 'subjectName'
 
-const SubjectList = ({ cardsPerPage = 24 }) => {
+const CardListWithLoader = withLoader(CardList)
+
+const SubjectList = ({ cardsPerPage = 24, showViewMore = true }) => {
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const categoryId = searchParams.get(CATEGORY_ID_SEARCH_PARAMS_KEY)
@@ -52,9 +52,13 @@ const SubjectList = ({ cardsPerPage = 24 }) => {
 
   return (
     <Box>
-      <CardListWithLoader cards={subjects} isLoading={loading} />
+      <CardListWithLoader
+        cards={subjects}
+        isLoading={loading && !data.length}
+        styles={styles.cardList}
+      />
 
-      {isViewMoreVisable && (
+      {showViewMore && isViewMoreVisable && (
         <AppButton
           disabled={loading}
           onClick={handleViewMore}
@@ -68,7 +72,5 @@ const SubjectList = ({ cardsPerPage = 24 }) => {
     </Box>
   )
 }
-
-const CardListWithLoader = withLoader(CardList)
 
 export default SubjectList

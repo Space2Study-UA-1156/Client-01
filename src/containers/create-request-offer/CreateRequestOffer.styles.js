@@ -1,8 +1,8 @@
 export const styles = {
   main: {
     margin: '0 auto',
-    width: '100%',
-    marginBottom: '40px'
+    maxWidth: '1128px',
+    width: '100%'
   },
 
   root: {
