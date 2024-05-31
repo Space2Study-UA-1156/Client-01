@@ -145,4 +145,5 @@ const FindOffers = () => {
     </PageWrapper>
   )
 }
+
 export default FindOffers
