@@ -96,7 +96,7 @@ const ExploreOffers = () => {
       params.delete('search')
       setSearchParams(params)
     }
-  }, [isMobile, isTablet, setSearchParams, searchParams.toString()])
+  }, [isMobile, isTablet, setSearchParams, searchParams])
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
