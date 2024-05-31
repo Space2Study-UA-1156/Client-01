@@ -32,13 +32,15 @@ export const URLs = {
   },
   categories: {
     get: '/categories',
+    create: '/categories',
     getNames: '/categories/names',
     priceRange: '/price-range',
     getOffers: '/categories/:categoryId/subjects/:subjectId/offers'
   },
   subjects: {
     get: '/subjects',
-    getNames: '/subjects/names'
+    getNames: '/subjects/names',
+    create: '/subjects'
   },
   cooperations: {
     get: '/cooperations',
@@ -47,5 +49,8 @@ export const URLs = {
   },
   languages: {
     get: '/languages'
+  },
+  requests: {
+    create: '/requests'
   }
 }

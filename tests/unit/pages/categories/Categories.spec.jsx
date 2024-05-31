@@ -14,9 +14,9 @@ vi.mock('~/containers/categories-title-input/CategoriesTitleInput', () => ({
   default: () => <div data-testid='categories-title-input' />
 }))
 
-vi.mock('~/containers/category-list/CategoryList', () => ({
+vi.mock('~/containers/category-list-wrapper/CategoryListWrapper', () => ({
   __esModule: true,
-  default: () => <div data-testid='category-list' />
+  default: () => <div data-testid='category-list-wrapper' />
 }))
 
 describe('Categories', () => {
@@ -25,6 +25,6 @@ describe('Categories', () => {
 
     expect(screen.getByTestId('create-request')).toBeInTheDocument()
     expect(screen.getByTestId('categories-title-input')).toBeInTheDocument()
-    expect(screen.getByTestId('category-list')).toBeInTheDocument()
+    expect(screen.getByTestId('category-list-wrapper')).toBeInTheDocument()
   })
 })
